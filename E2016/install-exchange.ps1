@@ -32,17 +32,15 @@ $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 
-$DB1 = "DB1_"+$env:COMPUTERNAME
-$DBpath =  New-Item -ItemType Directory -Path M:\DB1
-$LogPath = New-Item -ItemType Directory -Path N:\DB1
 
 .$Nodescriptdir\test-sharedfolders.ps1
 
 $Setuppath = "$SourcePath\$ex_version$ex_cu\$Setupcmd"
 .$Nodescriptdir\test-setup -setup Exchange -setuppath $Setuppath
 
+$DB1 = "DB1_"+$env:COMPUTERNAME
 
-Start-Process $Setuppath -ArgumentList "/mode:Install /role:Mailbox /OrganizationName:`"$Env:USERDOMAIN`" /IAcceptExchangeServerLicenseTerms /MdbName:$DB1 /DbFilePath:$ExDatabasesBase\DB1\DB1.EDB /LogFolderPath:$ExDatabasesBase\DB1\DB1.LOG" -Wait
+Start-Process $Setuppath -ArgumentList "/mode:Install /role:Mailbox /OrganizationName:`"$Env:USERDOMAIN`" /IAcceptExchangeServerLicenseTerms /MdbName:$DB1 /DbFilePath:$ExDatabasesBase\DB1\DB1.DB\DB1.EDB /LogFolderPath:$ExDatabasesBase\DB1\DB1.LOG" -Wait
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {
     Pause

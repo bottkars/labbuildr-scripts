@@ -13,6 +13,8 @@ $DAGIP = ([System.Net.IPAddress])::None,
 [ValidateSet('IPv4','IPv6','IPv4IPv6')][string]$AddressFamily = 'IPv4',
 $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
 $ex_version= "E2016",
+$ExDatabasesBase = "C:\ExchangeDatabases",
+$ExVolumesBase = "C:\ExchangeVolumes",
 $logpath = "c:\Scripts"
 
 )
@@ -35,7 +37,7 @@ if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
 $Domain = $env:USERDOMAIN
 $Dagname = $Domain+"DAG"
 $WitnessDirectory = "C:\FSW_"+$Dagname
-$DBNAME = $Dagname+"_DB1"
+$DBNAME = "DB2"
 $PlainPassword = "Password123!"
 $DomainUser = "$Domain\Administrator"
 $SecurePassword = $PlainPassword | ConvertTo-SecureString -AsPlainText -Force
@@ -51,7 +53,10 @@ Add-ADGroupMember -Identity $ADAdminGroup -Members $ADTrustedEXGroup  -Credentia
 Write-Host "Creating the DAG" -foregroundColor Yellow
 
 New-DatabaseAvailabilityGroup -name $DAGName -WitnessServer $WitnessServer -WitnessDirectory $WitnessDirectory -DatabaseAvailabilityGroupIPAddress $DAGIP
-
+Set-DatabaseAvailabilityGroup $Dagname -AutoDagDatabasesRootFolderPath $ExDatabasesBase
+Set-DatabaseAvailabilityGroup $Dagname -AutoDagVolumesRootFolderPath $ExVolumesBase
+Set-DatabaseAvailabilityGroup $Dagname -AutoDagVolumesRootFolderPath $ExVolumesBase
+Set-DatabaseAvailabilityGroup $Dagname -AutoDagDatabaseCopiesPerVolume 1
 Write-Host "Adding DAG Member" $Server -ForeGroundColor Yellow
 
 $MailboxServers = Get-MailboxServer "$($EX_Version)*"| Select -expandProperty Name
@@ -74,7 +79,7 @@ Start-ClusterResource -Name $res
 ################# Create database
 
 Write-Host "Creating Mailbox Database $DBName " -foregroundcolor yellow
-New-MailboxDatabase -Name $DBName -EDBFilePath "O:\$DBNAME\$DBName.edb" -LogFolderPath "P:\$DBNAME\Log" -Server $env:COMPUTERNAME
+New-MailboxDatabase -Name $DBName -EDBFilePath "$ExDatabasesBase\$DB\$DB.EDB\$DB.EDB" -LogFolderPath "$ExDatabasesBase\$DB\$DB.Log" -Server $env:COMPUTERNAME
 Mount-Database -id $DBName
 Write-Host "Setting Offline Address Book" -foregroundcolor Yellow
 Set-MailboxDatabase $DBName -offlineAddressBook "Default Offline Address Book"

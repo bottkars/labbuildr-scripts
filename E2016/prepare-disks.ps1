@@ -49,7 +49,7 @@ foreach ($Disk in $Disks)
             {
             $DataBaseMountpoint = New-Item -ItemType Directory -Path "$ExDatabasesBase\DB$vol" 
             $Partition | Add-PartitionAccessPath  -AccessPath "$ExDatabasesBase\DB$vol"
-            New-Item -Name "DB$Vol.EDB" -ItemType Directory -Path $DataBaseMountpoint
+            New-Item -Name "DB$Vol.DB" -ItemType Directory -Path $DataBaseMountpoint
             New-Item -Name "DB$Vol.LOG" -ItemType Directory -Path $DataBaseMountpoint
             }
         Write-Output $Disk
