@@ -25,7 +25,7 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 $dnsroot = '@' + (Get-ADDomain).DNSRoot
 $accountPassword = (ConvertTo-SecureString "Password123!" -AsPlainText -force)
-Import-Csv c:\scripts\adminuser.csv | foreach-object {
+Import-Csv $Builddir\adminuser.csv | foreach-object {
    
     if ($_.OU -ne "") { $OU = "OU=" + $_.OU + ',' + (Get-ADDomain).DistinguishedName }
     if (!(Get-ADOrganizationalUnit -Filter * | where name -match $_.OU -ErrorAction SilentlyContinue )){New-ADOrganizationalUnit -Name $_.OU; Write-Host $OU }
