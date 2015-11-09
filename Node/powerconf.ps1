@@ -11,7 +11,8 @@
 param(
 $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
 $SourcePath = "\\vmware-host\Shared Folders\Sources",
-$logpath = "c:\Scripts"
+$logpath = "c:\Scripts",
+$Domain = "$env:USERDOMAIN"
 )
 $Nodescriptdir = "$Scriptdir\Node"
 $ScriptName = $MyInvocation.MyCommand.Name
@@ -26,7 +27,6 @@ $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 .$Nodescriptdir\Add-DomainUserToLocalGroup.ps1 -group "WinRMRemoteWMIUsers__" -user svc_winrm -domain $Domain -computer $env:COMPUTERNAME
-New-Item -ItemType file  "$Builddir\$ScriptName$Logtime.log"
 powercfg.exe /setacvalueindex SCHEME_CURRENT SUB_VIDEO VIDEOIDLE 0
 powercfg.exe /setacvalueindex SCHEME_CURRENT SUB_VIDEO VIDEOCONLOCK 0
 powercfg.exe /setactive SCHEME_CURRENT
