@@ -41,7 +41,7 @@ foreach ($Disk in $Disks)
         $Disk | Set-Disk -IsOffline  $false
         $Disk | Initialize-Disk -PartitionStyle GPT
         $Partition = $Disk | New-Partition -UseMaximumSize
-        $Partition | Set-Partition -NoDefaultDriveLetter
+        $Partition | Set-Partition -NoDefaultDriveLetter:$true
         $Job = Format-Volume -Partition $Partition -NewFileSystemLabel $Label -AllocationUnitSize 64kb -FileSystem NTFS -Force -AsJob
         while ($JOB.state -ne "completed"){}
         $VolumeMountpoint = New-Item -ItemType Directory -Path "$ExVolumesBase\Volume$Vol"
