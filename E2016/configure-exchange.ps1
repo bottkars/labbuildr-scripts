@@ -88,12 +88,12 @@ foreach ($localgroup in ( "Administrators", "Backup Operators","Remote Desktop U
 
 ##### setting managed availablty diskspace counter
 New-ItemProperty "HKLM:Software\Microsoft\ExchangeServer\v15\ActiveMonitoring\Parameters\" -Name "SpaceMonitorLowSpaceThresholdInMB" -Value 10 -PropertyType "DWord" 
-####### Installing CDO
+<####### Installing CDO
 $Setupcmd = "ExchangeMapiCdo.msi"
 $Setuppath = "$SourcePath\$ex_version$Prereq\ExchangeMapiCdo\$Setupcmd"
 .$Nodescriptdir\test-setup -setup $Setupcmd -setuppath $Setuppath
 Start-Process $Setuppath -ArgumentList "/quiet /passive" -Wait
-######################
+######################>
 cd c:\windows\system32\inetsrv
 c:\windows\system32\inetsrv\appcmd.exe set config "Default Web Site/Powershell" -section:system.webServer/security/authentication/windowsAuthentication /useKernelMode:"False"  /commit:apphost
 
