@@ -20,7 +20,7 @@ param(
     $ex_version= "E2016",
     $Prereq ="Prereq" 
 )
-$Nodescriptdir = "$Scriptdir\$ex_version"
+$Nodescriptdir = "$Scriptdir\NODE"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
@@ -34,18 +34,17 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 $Domain = $env:USERDNSDOMAIN
 Write-Verbose $Domain
-
 .$Nodescriptdir\test-sharedfolders.ps1
 if ($Nmm_ver -lt 'nmm85')
     {
-    $Setuppath = "\\vmware-host\Shared Folders\Sources\$nmm_ver\win_x64\networkr\setup.exe" 
+    $Setuppath = "$SourcePath\$nmm_ver\win_x64\networkr\setup.exe" 
     .$Nodescriptdir\test-setup -setup NMM -setuppath $Setuppath
     $argumentlist = '/s /v" /qn /l*v c:\scripts\nmm.log RMEXCHDOMAIN='+$Domain+' RMEXCHUSER=NMMBackupUser RMEXCHPASSWORD=Password123! RMCPORT=6730 RMDPORT=6731"'
     start-process -filepath "$Setuppath\setup.exe" -ArgumentList $argumentlist -wait
     }
 else
     {
-    $Setuppath = "\\vmware-host\Shared Folders\Sources\$nmm_ver\win_x64\networkr\nwvss.exe" 
+    $Setuppath = "$SourcePath\$nmm_ver\win_x64\networkr\nwvss.exe" 
     .$Nodescriptdir\test-setup -setup NMM -setuppath $Setuppath
     Start-Process -Wait -FilePath $Setuppath -ArgumentList "/s /q /log `"C:\scripts\NMM_nw_install_detail.log`" InstallLevel=200 RebootMachine=0 NwGlrFeature=1 EnableClientPush=1 WriteCacheFolder=`"C:\Program Files\EMC NetWorker\nsr\tmp\nwfs`" MountPointFolder=`"C:\Program Files\EMC NetWorker\nsr\tmp\nwfs\NetWorker Virtual File System`" BBBMountPointFolder=`"C:\Program Files\EMC NetWorker\nsr\tmp\BBBMountPoint`" SetupType=Install"
     Write-Verbose "Configuring NMM Backup User"

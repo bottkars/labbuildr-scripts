@@ -16,7 +16,7 @@ $ex_version= "E2016",
 $logpath = "c:\Scripts"
 
 )
-$Nodescriptdir = "$Scriptdir\$ex_version"
+$Nodescriptdir = "$Scriptdir\NODE"
 
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"

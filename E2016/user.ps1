@@ -18,7 +18,7 @@ $logpath = "c:\Scripts",
 $ex_version= "E2016",
 $Prereq ="Prereq" 
 )
-$Nodescriptdir = "$Scriptdir\$ex_version"
+$Nodescriptdir = "$Scriptdir\NODE"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
@@ -48,7 +48,7 @@ Follow me on twritter @Hyperv_Guy
 Make sure to Rate in my Blog !
 https://community.emc.com/blogs/bottk/2015/03/30/labbuildrbeta
 "
-$AttachDir =  '\\vmware-host\Shared Folders\Sources\Attachments'
+$AttachDir =  "$SourcePath\Attachments"
 $PlainPassword = "Password123!"
 $DomainUser = "$Domain\Administrator"
 $SecurePassword = $PlainPassword | ConvertTo-SecureString -AsPlainText -Force
@@ -70,19 +70,17 @@ New-Item -ItemType Directory -Path S:\rdb
 New-MailboxDatabase -Recovery -Name rdb$env:COMPUTERNAME -server $Smtpserver -EdbFilePath R:\rdb\rdb.edb  -logFolderPath S:\rdb
 Restart-Service MSExchangeIS
 Get-AddressList  | Update-AddressList
-
 Send-MailMessage -From $SenderSMTP -Subject $Subject -To "$BackupAdmin$maildom"  -Body $Body -Attachments $attachment[0].FullName -DeliveryNotificationOption None -SmtpServer $Smtpserver -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
 Send-MailMessage -From $SenderSMTP -Subject $Subject -To $SenderSMTP -Body $Body -Attachments $attachment[0].FullName -DeliveryNotificationOption None -SmtpServer $Smtpserver -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
-
 get-ExchangeServer  | add-adpermission -user $BackupAdmin -accessrights ExtendedRight -extendedrights Send-As, Receive-As, ms-Exch-Store-Admin
 if (Get-DatabaseAvailabilityGroup)
     {
     $DAGDatabase = Get-MailboxDatabase | where ReplicationType -eq Remote
     $Database = $DAGDatabase.Name}
-    $Users = Import-CSV C:\Scripts\user.csv 
-    if (Test-Path '\\vmware-host\Shared Folders\Sources\customuser*.csv')
+    $Users = Import-CSV $Builddir\user.csv 
+    if (Test-Path "$SourcePath\customuser*.csv")
         {
-        $Users += Import-CSV '\\vmware-host\Shared Folders\Sources\customuser*.csv'
+        $Users += Import-CSV "$SourcePath\customuser*.csv"
         }
     $Users | ForEach {
 $givenname=$_.givenname

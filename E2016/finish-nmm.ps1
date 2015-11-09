@@ -18,7 +18,7 @@ $Password = "Password123!",
 $BackupUser = "NMMBackupUser"
  
 )
-$Nodescriptdir = "$Scriptdir\$ex_version"
+$Nodescriptdir = "$Scriptdir\NODE"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot

@@ -18,7 +18,7 @@ $ex_version= "E2016",
 $Prereq ="Prereq", 
 $Setupcmd = "Setup.exe"
 )
-$Nodescriptdir = "$Scriptdir\$ex_version"
+$Nodescriptdir = "$Scriptdir\NODE"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
@@ -41,7 +41,7 @@ $Setuppath = "$SourcePath\$ex_version$ex_cu\$Setupcmd"
 .$Nodescriptdir\test-setup -setup Exchange -setuppath $Setuppath
 
 
-Start-Process $Setuppath -ArgumentList "/mode:Install /role:Mailbox /OrganizationName:`"labbuildr`" /IAcceptExchangeServerLicenseTerms /MdbName:$DB1 /DbFilePath:M:\DB1\DB1.edb /LogFolderPath:N:\DB1" -Wait
+Start-Process $Setuppath -ArgumentList "/mode:Install /role:Mailbox /OrganizationName:`"$Env:USERDOMAIN`" /IAcceptExchangeServerLicenseTerms /MdbName:$DB1 /DbFilePath:M:\DB1\DB1.edb /LogFolderPath:N:\DB1" -Wait
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {
     Pause

@@ -15,7 +15,7 @@ $logpath = "c:\Scripts",
 $ex_version= "E2016",
 $Prereq ="Prereq" 
 )
-$Nodescriptdir = "$Scriptdir\$ex_version"
+$Nodescriptdir = "$Scriptdir\NODE"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
