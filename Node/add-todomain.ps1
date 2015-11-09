@@ -32,7 +32,6 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 Set-Content -Path $Logfile -Value "$Domain"
 New-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce -Name "Pass3" -Value "$PSHOME\powershell.exe -Command `"New-Item -ItemType File -Path c:\scripts\3.pass`""
-# Start-Process C:\scripts\Autologon.exe -ArgumentList "Administrator $Domain Password123! /Accepteula"
 ######Newtwork Sanity Check #######
 If ($AddressFamily -match "IPv6")
     {
@@ -70,6 +69,6 @@ Do {
     }
 Until ($Domain_OK.HasSucceeded)    
 New-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce -Name "Computerinfo" -Value "$PSHOME\powershell.exe -file '.$Nodescriptdir\set-computerinfo.ps1'"
-Start-Process "$Nodescriptdir\Autologon.exe" -ArgumentList "Administrator $Domain Password123! /Accepteula" -Wait
-
+."$Nodescriptdir\set-autologon.ps1" -domain $Domain -user "Administrator" -Password $password
+strator
 Restart-Computer
