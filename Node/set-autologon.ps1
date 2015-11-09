@@ -13,7 +13,7 @@ Param(
 [Parameter(Mandatory=$false)][string]$user,
 [Parameter(Mandatory=$false)][string]$Password = "Password123!" 
 )
-$WinLogonPath = "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
-Set-ItemProperty $WinLogonPath "AutoAdminLogon" -Value "1" 
-Set-ItemProperty $WinLogonPath "DefaultUsername" -Value "$Env:USERDOMAIN\$User"
-Set-ItemProperty $WinLogonPath "DefaultPassword" -Value "$Password"
+$WinLogonPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
+Set-ItemProperty $WinLogonPath -Name "AutoAdminLogon" -Value "1" 
+Set-ItemProperty $WinLogonPath -Name "DefaultUsername" -Value "$Env:USERDOMAIN\$User"
+Set-ItemProperty $WinLogonPath -Name "DefaultPassword" -Value "$Password"
