@@ -29,4 +29,4 @@ $nodename = $env:COMPUTERNAME
 $Computerinfo = .$Nodescriptdir\get-vmxcomputerinfo.ps1
 $Arglist = 'Set-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters -Name "srvcomment" -Value "'+$Computerinfo.nodename+'running on '+$Computerinfo.Hypervisor+'"'
 Start-Process -Verb "RunAs" "$PSHOME\powershell.exe"  -ArgumentList $Arglist
-Set-ADComputer -identity $nodename -Description "VMHost: $($Computerinfo.Hypervisor), Builddate: $($Computerinfo.Builddate), last Powered on: $($Computerinfo.Powerontime), last Suspended: $($Computerinfo.Suspendtime)"
+Set-ADComputer -identity $nodename -Description "VMHost: $($Computerinfo.Hypervisor), Builddate: $($Computerinfo.Builddate)"
