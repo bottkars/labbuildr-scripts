@@ -15,7 +15,7 @@ $logpath = "c:\Scripts",
 $ex_version= "E2016",
 $Prereq ="Prereq" 
 )
-$Nodescriptdir = "$Scriptdir\$ex_version"
+$Nodescriptdir = "$Scriptdir\Node"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
@@ -28,7 +28,6 @@ $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 .$Nodescriptdir\test-sharedfolders.ps1
-
 
 $Setupcmd = "UcmaRuntimeSetup.exe"
 $Setuppath = "$SourcePath\$ex_version$Prereq\$Setupcmd"
