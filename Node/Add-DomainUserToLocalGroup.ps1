@@ -36,4 +36,5 @@ $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
 New-Item -ItemType file  "$Builddir\$ScriptName$Logtime.log"
 ############
 $de = [ADSI]"WinNT://$computer/$Group,group" 
+Write-Verbose "Calling ADD with $Domain $User"
 $de.psbase.Invoke("Add",([ADSI]"WinNT://$domain/$user").path)
