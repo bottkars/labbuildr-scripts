@@ -11,6 +11,7 @@
 param(
 [Parameter(Mandatory=$true)]
 [ValidateSet('Preview1','final')]$ex_cu,
+$ExDatabasesBase = "C:\ExchangeDatabases",
 $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
 $SourcePath = "\\vmware-host\Shared Folders\Sources",
 $logpath = "c:\Scripts",
@@ -41,7 +42,7 @@ $Setuppath = "$SourcePath\$ex_version$ex_cu\$Setupcmd"
 .$Nodescriptdir\test-setup -setup Exchange -setuppath $Setuppath
 
 
-Start-Process $Setuppath -ArgumentList "/mode:Install /role:Mailbox /OrganizationName:`"$Env:USERDOMAIN`" /IAcceptExchangeServerLicenseTerms /MdbName:$DB1 /DbFilePath:M:\DB1\DB1.edb /LogFolderPath:N:\DB1" -Wait
+Start-Process $Setuppath -ArgumentList "/mode:Install /role:Mailbox /OrganizationName:`"$Env:USERDOMAIN`" /IAcceptExchangeServerLicenseTerms /MdbName:$DB1 /DbFilePath:$ExDatabasesBase\DB1\DB1.EDB /LogFolderPath:$ExDatabasesBase\DB1\DB1.LOG" -Wait
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {
     Pause
