@@ -13,7 +13,10 @@ $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
 $SourcePath = "\\vmware-host\Shared Folders\Sources",
 $logpath = "c:\Scripts",
 $ex_version= "E2016",
-$Prereq ="Prereq" 
+$Prereq ="Prereq",
+$Password = "Password123!",
+$BackupUser = "NMMBackupUser"
+ 
 )
 $Nodescriptdir = "$Scriptdir\$ex_version"
 $ScriptName = $MyInvocation.MyCommand.Name
@@ -30,5 +33,4 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 $Domain = $env:USERDOMAIN
 Copy-Item -Path 'C:\scripts\Networker User for Microsoft.lnk' C:\Users\Public\Desktop
 # Copy-Item -Path 'C:\scripts\ecp.website' C:\Users\Public\Desktop
-# C:\scripts\Autologon.exe NMMBackupUser brslab Password123! /accepteula
-Start-Process C:\scripts\Autologon.exe -ArgumentList "NMMBackupUser $Domain Password123! /Accepteula"
+."$Nodescriptdir\set-autologon.ps1" -domain $Domain -user $BackupUser -Password $password
