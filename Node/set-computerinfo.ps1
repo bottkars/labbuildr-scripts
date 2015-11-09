@@ -26,7 +26,7 @@ $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 $nodename = $env:COMPUTERNAME
-$Computerinfo = .$Nodescriptdir\get-vmxcomputerinfo.ps1
+$Computerinfo = ."$Nodescriptdir\get-vmxcomputerinfo.ps1"
 $Arglist = 'Set-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters -Name "srvcomment" -Value "'+$Computerinfo.nodename+'running on '+$Computerinfo.Hypervisor+'"'
 Start-Process -Verb "RunAs" "$PSHOME\powershell.exe"  -ArgumentList $Arglist
 Set-ADComputer -identity $nodename -Description "VMHost: $($Computerinfo.Hypervisor), Builddate: $($Computerinfo.Builddate)"
