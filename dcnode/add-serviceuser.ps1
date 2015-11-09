@@ -42,21 +42,21 @@ Import-Csv $Builddir\adminuser.csv | foreach-object {
             -EmailAddress ($_.SamAccountName + $dnsroot) -Title $_.Title `
             -UserPrincipalName ($_.SamAccountName + $dnsroot) -Path $OU -Enabled $true `
             -ChangePasswordAtLogon $false -PasswordNeverExpires $true `
-            -AccountPassword $accountPassword -PassThru
+            -AccountPassword $accountPassword -PassThru -ErrorAction SilentlyContinue
     }
     else {
         $newUser = New-ADUser -Name $Name -SamAccountName $_.SamAccountName -DisplayName $Name -Description $_.Description -GivenName $_.FirstName -Surname $_.LastName `
             -EmailAddress ($_.SamAccountName + $dnsroot) -Title $_.Title`
             -UserPrincipalName ($_.SamAccountName + $dnsroot) -Path $OU -Enabled $true `
             -ChangePasswordAtLogon $false -Manager $_.Manager -PasswordNeverExpires $true `
-            -AccountPassword $accountPassword -PassThru
+            -AccountPassword $accountPassword -PassThru -ErrorAction SilentlyContinue
     }
 
     if ($_.SecurityGroup -ne ""){
         if (!($SecurityGroup = Get-ADGroup -filter * | where name -match $_.SecurityGroup -ErrorAction SilentlyContinue)){ 
         $SecurityGroup = New-ADGroup -Name $_.SecurityGroup -GroupScope Global -GroupCategory Security
         }
-    Add-ADGroupMember -Identity $_.SecurityGroup -Members $newUser -ErrorAction SilentlyContinue
+    Add-ADGroupMember -Identity $_.SecurityGroup -Members $newUser -erroaction 
     }
         
  
