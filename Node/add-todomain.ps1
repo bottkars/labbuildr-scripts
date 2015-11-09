@@ -69,6 +69,6 @@ Do {
         }
     }
 Until ($Domain_OK.HasSucceeded)    
-New-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce -Name "Computerinfo" -Value "$PSHOME\powershell.exe -file .'$Nodescriptdir\set-computerinfo.ps1'"
+New-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce -Name "Computerinfo" -Value "$PSHOME\powershell.exe -command `".'$Nodescriptdir\set-computerinfo.ps1'`""
 ."$Nodescriptdir\set-autologon.ps1" -domain $Domain -user "Administrator" -Password $PlainPassword
 Restart-Computer
