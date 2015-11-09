@@ -54,7 +54,8 @@ Do {
     }
 Until ($Ping)    
 $Mydomain = "$Domain$domainsuffix"
-$password = "Password123!" | ConvertTo-SecureString -asPlainText -Force
+$PlainPassword = "Password123!" 
+$password = $PlainPassword | ConvertTo-SecureString -asPlainText -Force
 $username = "$domain\Administrator" 
 $credential = New-Object System.Management.Automation.PSCredential($username,$password)
 Do {
@@ -69,6 +70,6 @@ Do {
     }
 Until ($Domain_OK.HasSucceeded)    
 New-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce -Name "Computerinfo" -Value "$PSHOME\powershell.exe -file '.$Nodescriptdir\set-computerinfo.ps1'"
-."$Nodescriptdir\set-autologon.ps1" -domain $Domain -user "Administrator" -Password $password
+."$Nodescriptdir\set-autologon.ps1" -domain $Domain -user "Administrator" -Password $PlainPassword
 strator
 Restart-Computer

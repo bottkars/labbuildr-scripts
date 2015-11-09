@@ -16,5 +16,5 @@ Param(
 $WinLogonPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
 Set-ItemProperty $WinLogonPath -Name "AutoAdminLogon" -Value "1" 
 Set-ItemProperty $WinLogonPath -Name "DefaultUsername" -Value "$domain\$User"
-Set-ItemProperty $WinLogonPath -Name "DefaultDomainname" -Value "$domain\$User"
+Set-ItemProperty $WinLogonPath -Name "DefaultDomainname" -Value "$domain"
 Set-ItemProperty $WinLogonPath -Name "DefaultPassword" -Value "$Password"
