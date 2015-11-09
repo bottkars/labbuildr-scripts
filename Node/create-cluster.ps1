@@ -8,18 +8,27 @@
 #>
 #requires -version 3
 [CmdletBinding()]
-param (
-[string]$Nodeprefix,
-$IPaddress,
-$IPv6Prefix = "",
-[ValidateSet('8','24','32','48','64')]$IPv6PrefixLength = '8',
-[Validateset('IPv4','IPv6','IPv4IPv6')]$AddressFamily
+param(
+    [string]$Nodeprefix,
+    $IPaddress,
+    $IPv6Prefix = "",
+    [ValidateSet('8','24','32','48','64')]$IPv6PrefixLength = '8',
+    [Validateset('IPv4','IPv6','IPv4IPv6')]$AddressFamily,
+    $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
+    $SourcePath = "\\vmware-host\Shared Folders\Sources",
+    $logpath = "c:\Scripts"
 )
+$Nodescriptdir = "$Scriptdir\Node"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
 $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
-New-Item -ItemType file  "$Builddir\$ScriptName$Logtime.log"
+if (!(Test-Path $logpath))
+    {
+    New-Item -ItemType Directory -Path $logpath -Force
+    }
+$Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
+Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ###########
 $IPv6subnet = "$IPv6Prefix$IPv4Subnet"
 $IPv6Address = "$IPv6Prefix$IPaddress"
@@ -27,10 +36,6 @@ Write-Verbose $IPv6PrefixLength
 Write-Verbose $IPv6Address
 Write-Verbose $IPv6subnet
 Write-Verbose $AddressFamily
-
-
-
-
 $Domain = $env:USERDOMAIN
 $DomainController = (Get-ADDomainController).name
 $NodeLIST = @()
@@ -43,17 +48,13 @@ $NodeLIST += $Clusternode.Name
 # write-Host " Enabling Cluster feature on Node $($Clusternode.Name)"
 # Add-WindowsFeature -Name failover-Clustering -IncludeManagementTools -ComputerName $Clusternode.Name
 }
-
 switch ($AddressFamily)
     {
 	
 	"IPv4"
         {
         New-Cluster -Name $Clustername -Node $NodeLIST -StaticAddress $IPAddress -NoStorage
-        
         }
-    
-
 	"IPv6"
         {
         New-Cluster -Name $Clustername -Node $NodeLIST
@@ -64,8 +65,6 @@ switch ($AddressFamily)
         Set-ClusterResourceDependency -Dependency "[Ipv6 Cluster Address]" -InputObject $res
         Start-ClusterResource $res
         }
-    
-
 	"IPv4IPv6"
         {
         New-Cluster -Name $Clustername -Node $NodeLIST -StaticAddress $IPAddress -NoStorage
@@ -76,8 +75,6 @@ switch ($AddressFamily)
         Set-ClusterResourceDependency -Dependency "[Ipv6 Cluster Address]" -InputObject $res
         Start-ClusterResource $res
         }
-    
-
     }
 #### generating fsw #####
 Invoke-Command -ComputerName $DomainController -ScriptBlock {
@@ -85,11 +82,8 @@ param( $Nodeprefix, $Nodes )
 New-Item -ItemType Directory -Path "C:\FSW_$Nodeprefix"
 New-SmbShare -Name "FSW_$Nodeprefix" -FullAccess everyone -Path "C:\FSW_$Nodeprefix"
 } -ArgumentList $Nodeprefix, $Nodes
-
 ##### set fsw quorum #####
 Set-ClusterQuorum -FileShareWitness "\\$DomainController\FSW_$Nodeprefix"
-
-
 Write-Host "Setting Cluster Access"
 write-host "Changing PTR Record" 
 ########## changing cluster to register PTR record 

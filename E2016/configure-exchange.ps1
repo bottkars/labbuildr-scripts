@@ -9,15 +9,23 @@
 #requires -version 3
 [CmdletBinding()]
 param(
-$ex_version= "E2016",
+$Scriptdir = "\\vmware-host\Shared Folders\Scripts",
 $SourcePath = "\\vmware-host\Shared Folders\Sources",
+$logpath = "c:\Scripts",
+$ex_version= "E2016",
 $Prereq ="Prereq" 
 )
+$Nodescriptdir = "$Scriptdir\$ex_version"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
 $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
-New-Item -ItemType file  "$Builddir\$ScriptName$Logtime.log"
+if (!(Test-Path $logpath))
+    {
+    New-Item -ItemType Directory -Path $logpath -Force
+    }
+$Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
+Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 $ADDomain = (get-addomain).forest
 $maildom= "@"+$ADDomain
@@ -83,7 +91,7 @@ New-ItemProperty "HKLM:Software\Microsoft\ExchangeServer\v15\ActiveMonitoring\Pa
 ####### Installing CDO
 $Setupcmd = "ExchangeMapiCdo.msi"
 $Setuppath = "$SourcePath\$ex_version$Prereq\ExchangeMapiCdo\$Setupcmd"
-.$Builddir\test-setup -setup $Setupcmd -setuppath $Setuppath
+.$Nodescriptdir\test-setup -setup $Setupcmd -setuppath $Setuppath
 Start-Process $Setuppath -ArgumentList "/quiet /passive" -Wait
 ######################
 cd c:\windows\system32\inetsrv

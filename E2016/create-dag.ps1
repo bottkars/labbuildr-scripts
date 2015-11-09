@@ -11,14 +11,18 @@
 param (
 $DAGIP = ([System.Net.IPAddress])::None,
 [ValidateSet('IPv4','IPv6','IPv4IPv6')][string]$AddressFamily = 'IPv4',
-$EX_Version = "E2016"
+$Scriptdir = "\\vmware-host\Shared Folders\Scripts",
+$ex_version= "E2016",
+$logpath = "c:\Scripts"
+
 )
+$Nodescriptdir = "$Scriptdir\$ex_version"
 
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
 $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
-New-Item -ItemType file  "$Builddir\$ScriptName$Logtime.log"
+New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 ############
 Write-Verbose $AddressFamily
 Write-Verbose $DAGIP

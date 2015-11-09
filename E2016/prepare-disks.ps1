@@ -8,9 +8,25 @@
 #>
 #requires -version 3
 [CmdletBinding()]
-param (
-
+param(
+$Scriptdir = "\\vmware-host\Shared Folders\Scripts",
+$SourcePath = "\\vmware-host\Shared Folders\Sources",
+$logpath = "c:\Scripts",
+$ex_version= "E2016",
+$Prereq ="Prereq" 
 )
+$Nodescriptdir = "$Scriptdir\$ex_version"
+$ScriptName = $MyInvocation.MyCommand.Name
+$Host.UI.RawUI.WindowTitle = "$ScriptName"
+$Builddir = $PSScriptRoot
+$Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
+if (!(Test-Path $logpath))
+    {
+    New-Item -ItemType Directory -Path $logpath -Force
+    }
+$Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
+Set-Content -Path $Logfile $MyInvocation.BoundParameters
+############
 
 function Createvolume {
 param ($Number,$Label,$letter)
@@ -23,12 +39,7 @@ while ($JOB.state -ne "completed"){}
 $Partition | Set-Partition -NewDriveLetter $letter
 }
 
-$ScriptName = $MyInvocation.MyCommand.Name
-$Host.UI.RawUI.WindowTitle = "$ScriptName"
-$Builddir = $PSScriptRoot
-$Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
-New-Item -ItemType file  "$Builddir\$ScriptName$Logtime.log"
-###########
+
 Createvolume -Number 1 -Label $env:COMPUTERNAME"_DB1" -letter M
 Createvolume -Number 2 -Label $env:COMPUTERNAME"_LOG1" -letter N
 Createvolume -Number 3 -Label $env:COMPUTERNAME"_DAG_DB1" -letter O

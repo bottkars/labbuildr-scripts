@@ -9,38 +9,45 @@
 #requires -version 3
 [CmdletBinding()]
 param(
-$ex_version= "E2016",
+$Scriptdir = "\\vmware-host\Shared Folders\Scripts",
 $SourcePath = "\\vmware-host\Shared Folders\Sources",
-$Prereq ="Prereq"
+$logpath = "c:\Scripts",
+$ex_version= "E2016",
+$Prereq ="Prereq" 
 )
-
+$Nodescriptdir = "$Scriptdir\$ex_version"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
 $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
-New-Item -ItemType file  "$Builddir\$ScriptName$Logtime.log"
+if (!(Test-Path $logpath))
+    {
+    New-Item -ItemType Directory -Path $logpath -Force
+    }
+$Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
+Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
-.$Builddir\test-sharedfolders.ps1
+.$Nodescriptdir\test-sharedfolders.ps1
 
 
 $Setupcmd = "UcmaRuntimeSetup.exe"
 $Setuppath = "$SourcePath\$ex_version$Prereq\$Setupcmd"
-.$Builddir\test-setup -setup $Setupcmd -setuppath $Setuppath
+.$Nodescriptdir\test-setup -setup $Setupcmd -setuppath $Setuppath
 .$Setuppath /passive /norestart
 
 $Setupcmd = "NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
 $Setuppath = "$SourcePath\$ex_version$Prereq\$Setupcmd"
-.$Builddir\test-setup -setup $Setupcmd -setuppath $Setuppath
+.$Nodescriptdir\test-setup -setup $Setupcmd -setuppath $Setuppath
 Start-Process $Setuppath -ArgumentList "/passive /norestart" -Wait
 <#
 $Setupcmd = "FilterPack64bit.exe"
 $Setuppath = "$SourcePath\$ex_version$Prereq\$Setupcmd"
-.$Builddir\test-setup -setup $Setupcmd -setuppath $Setuppath
+.$Nodescriptdir\test-setup -setup $Setupcmd -setuppath $Setuppath
 .$Setuppath /passive /norestart
 
 $Setupcmd = "filterpack2010sp1-kb2460041-x64-fullfile-en-us.exe"
 $Setuppath = "$SourcePath\$ex_version$Prereq\$Setupcmd"
-.$Builddir\test-setup -setup $Setupcmd -setuppath $Setuppath
+.$Nodescriptdir\test-setup -setup $Setupcmd -setuppath $Setuppath
 .$Setuppath /passive /norestart
 #>
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)

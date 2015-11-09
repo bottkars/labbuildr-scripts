@@ -8,28 +8,37 @@
 #>
 #requires -version 3
 [CmdletBinding()]
-param (
-$nodeIP,
-$nodename,
-$IPv4Subnet = "192.168.2",
-[ValidateSet('24')]$IPv4PrefixLength = '24',
-$IPv6Prefix = "",
-[ValidateSet('8','24','32','48','64')]$IPv6PrefixLength = '8',
-[Validateset('IPv4','IPv6','IPv4IPv6')]$AddressFamily,
-$AddonFeatures,
-[ipaddress]$DefaultGateway,
-$Domain
+param(
+    $nodeIP,
+    $nodename,
+    $IPv4Subnet = "192.168.2",
+    [ValidateSet('24')]$IPv4PrefixLength = '24',
+    $IPv6Prefix = "",
+    [ValidateSet('8','24','32','48','64')]$IPv6PrefixLength = '8',
+    [Validateset('IPv4','IPv6','IPv4IPv6')]$AddressFamily,
+    $AddonFeatures,
+    [ipaddress]$DefaultGateway,
+    $Domain,
+    $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
+    $SourcePath = "\\vmware-host\Shared Folders\Sources",
+    $logpath = "c:\Scripts"
 )
-$Addonfeatures = $Addonfeatures.Replace(" ","")
-$Features = $AddonFeatures.split(",")
-$IPv6subnet = "$IPv6Prefix$IPv4Subnet"
-$IPv6Address = "$IPv6Prefix$nodeIP"
+$Nodescriptdir = "$Scriptdir\Node"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
 $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
-New-Item -ItemType file  "$Builddir\$ScriptName$Logtime.log"
-Set-Content -Path "$Builddir\$ScriptName$Logtime.log" "$nodeIP, $IPv4Subnet, $nodename"
+if (!(Test-Path $logpath))
+    {
+    New-Item -ItemType Directory -Path $logpath -Force
+    }
+$Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
+Set-Content -Path $Logfile -Value "$($MyInvocation.BoundParameters)"
+$Addonfeatures = $Addonfeatures.Replace(" ","")
+$Features = $AddonFeatures.split(",")
+$IPv6subnet = "$IPv6Prefix$IPv4Subnet"
+$IPv6Address = "$IPv6Prefix$nodeIP"
+Set-Content -Path $Logfile -Value "$nodeIP, $IPv4Subnet, $nodename"
 Write-Verbose $IPv6PrefixLength
 Write-Verbose $IPv6Address
 Write-Verbose $IPv6subnet

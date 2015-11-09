@@ -7,14 +7,26 @@
    https://community.emc.com/blogs/bottk/2015/03/30/labbuildrbeta
 #>
 #requires -version 3
+[CmdletBinding()]
+param(
+$Scriptdir = "\\vmware-host\Shared Folders\Scripts",
+$SourcePath = "\\vmware-host\Shared Folders\Sources",
+$logpath = "c:\Scripts"
+)
+$Nodescriptdir = "$Scriptdir\Node"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
 $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
-New-Item -ItemType file  "$Builddir\$ScriptName$Logtime.log"
+if (!(Test-Path $logpath))
+    {
+    New-Item -ItemType Directory -Path $logpath -Force
+    }
+$Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
+Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 $nodename = $env:COMPUTERNAME
-$Computerinfo = c:\scripts\get-vmxcomputerinfo.ps1
+$Computerinfo = .$Nodescriptdir\get-vmxcomputerinfo.ps1
 $Arglist = 'Set-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters -Name "srvcomment" -Value "'+$Computerinfo.nodename+'running on '+$Computerinfo.Hypervisor+'"'
 Start-Process -Verb "RunAs" "$PSHOME\powershell.exe"  -ArgumentList $Arglist
 Set-ADComputer -identity $nodename -Description "VMHost: $($Computerinfo.Hypervisor), Builddate: $($Computerinfo.Builddate), last Powered on: $($Computerinfo.Powerontime), last Suspended: $($Computerinfo.Suspendtime)"

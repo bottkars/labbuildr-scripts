@@ -1,9 +1,19 @@
-﻿[CmdletBinding()]
-param (
+﻿<#
+.Synopsis
+   Short description
+.DESCRIPTION
+   labbuildr is a Self Installing Windows/Networker/NMM Environemnt Supporting Exchange 2013 and NMM 3.0
+.LINK
+   https://community.emc.com/blogs/bottk/2015/03/30/labbuildrbeta
+#>
+#requires -version 3
+[CmdletBinding()]
+param(
 $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
 $SourcePath = "\\vmware-host\Shared Folders\Sources",
 $logpath = "c:\Scripts"
 )
+$Nodescriptdir = "$Scriptdir\dcnode"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
@@ -31,5 +41,5 @@ function Extract-Zip
 		$destinationFolder.CopyHere($zipPackage.Items(),$copyFlag)
 	}
 }
-Extract-Zip "$Scriptdir\dcnode\gpo.zip" c:\
+Extract-Zip "$Nodescriptdir\gpo.zip" c:\
 Import-GPO -BackupGpoName "Default Domain Policy" -TargetName "Default Domain Policy" -Path C:\GPO

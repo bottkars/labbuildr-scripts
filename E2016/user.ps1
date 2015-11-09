@@ -11,14 +11,25 @@
 param(
 $Subnet = "192.168.2",
 [ValidateSet('IPv4','IPv6','IPv4IPv6')][string]$AddressFamily = 'IPv4',
-$IPV6Prefix
+$IPV6Prefix,
+$Scriptdir = "\\vmware-host\Shared Folders\Scripts",
+$SourcePath = "\\vmware-host\Shared Folders\Sources",
+$logpath = "c:\Scripts",
+$ex_version= "E2016",
+$Prereq ="Prereq" 
 )
-Write-Output "Setting user credentials to perform installation and configuration"
+$Nodescriptdir = "$Scriptdir\$ex_version"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
 $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
-New-Item -ItemType file  "$Builddir\$ScriptName$Logtime.log"
+if (!(Test-Path $logpath))
+    {
+    New-Item -ItemType Directory -Path $logpath -Force
+    }
+$Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
+Set-Content -Path $Logfile $MyInvocation.BoundParameters
+############
 $Dot = "."
 $Domain = $env:USERDOMAIN
 $ADDomain = $env:USERDNSDOMAIN

@@ -8,21 +8,31 @@
 #>
 #requires -version 3
 [CmdletBinding()]
-param (
+param(    
     [Parameter(Mandatory=$true)]
     [ValidateSet('MDM','TB','SDS','SDC','gateway','LIA')]$role,
     [Parameter(Mandatory=$true)]$Disks,
     [Parameter(Mandatory=$true)]
     [ValidateSet('1.30-426.0','1.31-258.2','1.31-1277.3','1.31-2333.2','1.32-277.0','1.32-402.1','1.32-403.2','1.32-2451.4')][alias('siover')]$ScaleIOVer,
     [Parameter(Mandatory=$false)]$mdmipa,
-    [Parameter(Mandatory=$false)]$mdmipb
+    [Parameter(Mandatory=$false)]$mdmipb,
+    $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
+    $SourcePath = "\\vmware-host\Shared Folders\Sources",
+    $logpath = "c:\Scripts"
 )
+$Nodescriptdir = "$Scriptdir\Node"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
 $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
-New-Item -ItemType file  "$Builddir\$ScriptName$Logtime.log"
-.$Builddir\test-sharedfolders.ps1
+if (!(Test-Path $logpath))
+    {
+    New-Item -ItemType Directory -Path $logpath -Force
+    }
+$Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
+Set-Content -Path $Logfile $MyInvocation.BoundParameters
+############
+.$NodeScriptDir\test-sharedfolders.ps1
 $ScaleIORoot = "\\vmware-host\shared folders\sources\Scaleio\"
 While ((Test-Path $ScaleIORoot) -Ne $true)
     {
@@ -33,12 +43,6 @@ While ((Test-Path $ScaleIORoot) -Ne $true)
     pause
     }
 $ScaleIO_Major = ($ScaleIOVer.Split("-"))[0]
-<#
-$ScaleIORoot = "\\vmware-host\shared folders\sources\Scaleio\"
-$Setuppath = Join-Path $ScaleIOPath "EMC-ScaleIO-$role-$ScaleIOVer.msi"
-.$Builddir\test-setup.ps1 -setup "Saleio$role$ScaleIOVer" -setuppath $Setuppath
-$ScaleIOArgs = '/i "'+$Setuppath+'" /quiet'
-#>
 if ($role -eq 'gateway')
     {
     While (!($Setuppath = (Get-ChildItem -Path $ScaleIORoot -Recurse -Filter "*-$role-$ScaleIOVer-x64.msi" -Exclude ".*" ).FullName))
@@ -72,14 +76,14 @@ else
     if ($role -ne "SDS")
         {
         $Setuppath = Join-Path $ScaleIOPath "EMC-ScaleIO-$role-$ScaleIOVer.msi"
-        .$Builddir\test-setup.ps1 -setup "Saleio$role$ScaleIOVer" -setuppath $Setuppath
+        .$NodeScriptDir\test-setup.ps1 -setup "Saleio$role$ScaleIOVer" -setuppath $Setuppath
         $ScaleIOArgs = '/i "'+$Setuppath+'" /quiet'
         Start-Process -FilePath "msiexec.exe" -ArgumentList $ScaleIOArgs -PassThru -Wait
         }
     foreach ($role in("sds","sdc","lia"))
         {
         $Setuppath = Join-Path $ScaleIOPath "EMC-ScaleIO-$role-$ScaleIOVer.msi"
-        .$Builddir\test-setup -setup "Saleio$role$ScaleIOVer" -setuppath $Setuppath
+        .$NodeScriptDir\test-setup -setup "Saleio$role$ScaleIOVer" -setuppath $Setuppath
         $ScaleIOArgs = '/i "'+$Setuppath+'" /quiet'
         Start-Process -FilePath "msiexec.exe" -ArgumentList $ScaleIOArgs -PassThru -Wait
         }

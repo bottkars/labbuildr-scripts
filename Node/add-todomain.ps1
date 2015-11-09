@@ -7,21 +7,32 @@
    https://community.emc.com/blogs/bottk/2015/03/30/labbuildrbeta
 #>
 #requires -version 3
-param (
-$Domain="labbuildr",
-$domainsuffix = ".local",
-$subnet = "192.168.2",
-[Validateset('IPv4','IPv6','IPv4IPv6')]$AddressFamily,
-$IPv6Subnet
+[CmdletBinding()]
+param(
+    $Domain="labbuildr",
+    $domainsuffix = ".local",
+    $subnet = "192.168.2",
+    [Validateset('IPv4','IPv6','IPv4IPv6')]$AddressFamily,
+    $IPv6Subnet,
+    $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
+    $SourcePath = "\\vmware-host\Shared Folders\Sources",
+    $logpath = "c:\Scripts"
 )
+$Nodescriptdir = "$Scriptdir\Node"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
 $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
-New-Item -ItemType file  "$Builddir\$ScriptName$Logtime.log"
-Set-Content -Path "$Builddir\$ScriptName$Logtime.log" "$Domain"
+if (!(Test-Path $logpath))
+    {
+    New-Item -ItemType Directory -Path $logpath -Force
+    }
+$Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
+Set-Content -Path $Logfile $MyInvocation.BoundParameters
+############
+Set-Content -Path $Logfile -Value "$Domain"
 New-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce -Name "Pass3" -Value "$PSHOME\powershell.exe -Command `"New-Item -ItemType File -Path c:\scripts\3.pass`""
-Start-Process C:\scripts\Autologon.exe -ArgumentList "Administrator $Domain Password123! /Accepteula"
+# Start-Process C:\scripts\Autologon.exe -ArgumentList "Administrator $Domain Password123! /Accepteula"
 ######Newtwork Sanity Check #######
 If ($AddressFamily -match "IPv6")
     {
@@ -58,7 +69,7 @@ Do {
         }
     }
 Until ($Domain_OK.HasSucceeded)    
-New-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run -Name "Computerinfo" -Value "$PSHOME\powershell.exe -file c:\scripts\set-computerinfo.ps1"
-Start-Process C:\scripts\Autologon.exe -ArgumentList "Administrator $Domain Password123! /Accepteula" -Wait
+New-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce -Name "Computerinfo" -Value "$PSHOME\powershell.exe -file '.$Nodescriptdir\set-computerinfo.ps1'"
+Start-Process "$Nodescriptdir\Autologon.exe" -ArgumentList "Administrator $Domain Password123! /Accepteula" -Wait
 
 Restart-Computer

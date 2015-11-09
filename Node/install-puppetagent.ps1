@@ -8,21 +8,30 @@
 #>
 #requires -version 3
 [CmdletBinding()]
-param(
+param(    
     [ValidateSet('1.2.6')]
     $puppetagentver='1.2.6',
-    $Puppetmaster = 'PuppetMaster1'
+    $Puppetmaster = 'PuppetMaster1',
+    $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
+    $SourcePath = "\\vmware-host\Shared Folders\Sources",
+    $logpath = "c:\Scripts"
 )
+$Nodescriptdir = "$Scriptdir\Node"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
 $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
-New-Item -ItemType file  "$Builddir\$ScriptName$Logtime.log"
-
+if (!(Test-Path $logpath))
+    {
+    New-Item -ItemType Directory -Path $logpath -Force
+    }
+$Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
+Set-Content -Path $Logfile $MyInvocation.BoundParameters
+############
 $Puppetmaster = "$Puppetmaster.$env:USERDOMAIN"
-.$Builddir\test-sharedfolders.ps1
+.$NodeScriptDir\test-sharedfolders.ps1
 $Setuppath = "\\vmware-host\Shared Folders\Sources\Puppet\puppet-agent-$puppetagentver-x64.msi"
-.$Builddir\test-setup -setup PuppetAgent -setuppath $Setuppath
+.$NodeScriptDir\test-setup -setup PuppetAgent -setuppath $Setuppath
 Write-Warning "Installing Puppet Agent $puppetagentver"
 $PuppetArgs = '/qn /norestart /i "'+$Setuppath+'" PUPPET_MASTER_SERVER='+$Puppetmaster
 Start-Process -FilePath "msiexec.exe" -ArgumentList $PuppetArgs -PassThru -Wait

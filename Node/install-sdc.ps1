@@ -4,22 +4,32 @@
 .DESCRIPTION
    labbuildr is a Self Installing Windows/Networker/NMM Environemnt Supporting Exchange 2013 and NMM 3.0
 .LINK
-   https://github.com/bottkars/labbuildr/wiki/Helper-Scripts#install-sdc
+   https://community.emc.com/blogs/bottk/2015/03/30/labbuildrbeta
 #>
 #requires -version 3
 [CmdletBinding()]
-param (
+param(
     [Parameter(Mandatory=$true)]
     [ValidateSet('1.30-426.0','1.31-258.2','1.31-1277.3','1.31-2333.2','1.32-277.0','1.32-402.1','1.32-403.2','1.32-2451.4')][alias('siover')]$ScaleIOVer,
     [Parameter(Mandatory=$true)][ValidateScript({$_ -match [IPAddress]$_ })][ipaddress]$mdma,
-    [Parameter(Mandatory=$false)][ValidateScript({$_ -match [IPAddress]$_ })][ipaddress]$mdmb
+    [Parameter(Mandatory=$false)][ValidateScript({$_ -match [IPAddress]$_ })][ipaddress]$mdmb,
+    $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
+    $SourcePath = "\\vmware-host\Shared Folders\Sources",
+    $logpath = "c:\Scripts"
 )
+$Nodescriptdir = "$Scriptdir\Node"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
 $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
-New-Item -ItemType file  "$Builddir\$ScriptName$Logtime.log"
-.$Builddir\test-sharedfolders.ps1
+if (!(Test-Path $logpath))
+    {
+    New-Item -ItemType Directory -Path $logpath -Force
+    }
+$Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
+Set-Content -Path $Logfile $MyInvocation.BoundParameters
+############
+.$Nodescriptdir\test-sharedfolders.ps1
 $ScaleIORoot = "\\vmware-host\shared folders\Sources\Scaleio\"
 While ((Test-Path $ScaleIORoot) -Ne $true)
     {
@@ -40,7 +50,7 @@ While (!($ScaleIOPath = (Get-ChildItem -Path $ScaleIORoot -Recurse -Filter "*mdm
     }
 $role = "sdc"
 $Setuppath = Join-Path $ScaleIOPath "EMC-ScaleIO-$role-$ScaleIOVer.msi"
-.$Builddir\test-setup -setup "Saleio$role$ScaleIOVer" -setuppath $Setuppath
+.$NodeScriptDir\test-setup -setup "Saleio$role$ScaleIOVer" -setuppath $Setuppath
 $ScaleIOArgs = '/i "'+$Setuppath+'" /quiet'
 Start-Process -FilePath "msiexec.exe" -ArgumentList $ScaleIOArgs -PassThru -Wait
 $ScaleIO_Major = ($ScaleIOVer.Split("-"))[0]
