@@ -46,6 +46,7 @@ foreach ($Disk in $Disks)
         while ($JOB.state -ne "completed"){}
         $VolumeMountpoint = New-Item -ItemType Directory -Path "$ExVolumesBase\Volume$Vol"
         $Partition | Add-PartitionAccessPath  -AccessPath "$ExVolumesBase\Volume$Vol"
+        $Partition | Set-Partition -NoDefaultDriveLetter:$true
         if ($Disk -ne $Disks[-1])
             {
             $DataBaseMountpoint = New-Item -ItemType Directory -Path "$ExDatabasesBase\DB$vol" 

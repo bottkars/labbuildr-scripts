@@ -79,7 +79,7 @@ Start-ClusterResource -Name $res
 ################# Create database
 
 Write-Host "Creating Mailbox Database $DB " -foregroundcolor yellow
-New-MailboxDatabase -Name $DB -EDBFilePath "$ExDatabasesBase\$DB\$DB.EDB\$DB.EDB" -LogFolderPath "$ExDatabasesBase\$DB\$DB.Log" -Server $env:COMPUTERNAME
+New-MailboxDatabase -Name $DB -EDBFilePath "$ExDatabasesBase\$DB\$DB.DB\$DB.EDB" -LogFolderPath "$ExDatabasesBase\$DB\$DB.Log" -Server $env:COMPUTERNAME
 Mount-Database -id $DB
 Write-Host "Setting Offline Address Book" -foregroundcolor Yellow
 Set-MailboxDatabase $DB -offlineAddressBook "Default Offline Address Book"
