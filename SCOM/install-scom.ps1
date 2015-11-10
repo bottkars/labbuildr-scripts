@@ -49,12 +49,15 @@ if ($SCOM_ver -eq "SC2012_R2_SCOM")
     Start-Process $Setuppath -ArgumentList "/q"
    
 
-    $Setupcmd = "ReportViewer.msi"
-    $Setuppath = "$SourcePath\$scom_ver$Prereq\$Setupcmd"
-    .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
-    Write-Warning "Starting Report Viewer Setup"
-    Start-Process $Setuppath -ArgumentList "/q"
+
     }
+
+$Setupcmd = "ReportViewer.msi"
+$Setuppath = "$SourcePath\$scom_ver$Prereq\$Setupcmd"
+.$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
+Write-Warning "Starting Report Viewer Setup"
+Start-Process $Setuppath -ArgumentList "/q"
+
 $Setupcmd = "setup.exe"
 $Setuppath = "$SourcePath\$SCOM_VER\$Setupcmd"
 .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
