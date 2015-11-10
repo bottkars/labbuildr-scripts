@@ -53,6 +53,7 @@ foreach ($Disk in $Disks)
             $Partition | Add-PartitionAccessPath  -AccessPath "$ExDatabasesBase\DB$vol"
             New-Item -Name "DB$Vol.DB" -ItemType Directory -Path $DataBaseMountpoint
             New-Item -Name "DB$Vol.LOG" -ItemType Directory -Path $DataBaseMountpoint
+            $Partition | Set-Partition -NoDefaultDriveLetter:$true
             }
         Write-Output $Disk
         Write-Verbose $Vol
