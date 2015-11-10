@@ -7,13 +7,29 @@
    https://community.emc.com/blogs/bottk/2015/03/30/labbuildrbeta
 #>
 #requires -version 3
+[CmdletBinding()]
+param(
+    [Parameter(mandatory = $true)]$BackupAdmin,
+    [Parameter(mandatory = $true)]$Hostprefix,
+    $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
+    $SourcePath = "\\vmware-host\Shared Folders\Sources",
+    $logpath = "c:\Scripts",
+    $Prereq ="Prereq"
+     
+)
+$Nodescriptdir = "$Scriptdir\Node"
+$NWScriptDir = "$Scriptdir\nwserver"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
 $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
-New-Item -ItemType file  "$Builddir\$ScriptName$Logtime.log"
+if (!(Test-Path $logpath))
+    {
+    New-Item -ItemType Directory -Path $logpath -Force
+    }
+$Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
+Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
-
 $Domain = (get-addomain).name
 foreach ($Client in (Get-ADComputer -Filter *).DNSHOSTname)
 {
