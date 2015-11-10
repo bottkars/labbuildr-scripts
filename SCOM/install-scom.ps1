@@ -9,8 +9,7 @@
 #requires -version 3
 [CmdletBinding()]
 param(
-    [ValidateSet('SC2012_R2_SCOM')]
-    $SCOM_ver='SC2012_R2_SCOM',
+    [ValidateSet('SC2012_R2_SCOM','SCTP3_SCOM')]$SCOM_VER = "SC2012_R2_SCOM",
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
     $logpath = "c:\Scripts",
