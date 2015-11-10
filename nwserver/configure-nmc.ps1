@@ -37,7 +37,7 @@ do
         }
     catch #[Microsoft.PowerShell.Commands.InvokeWebRequestCommand]
         {
-        Write-Warning "Error $_ Catched, NMC still not running, waiting 10 Seconds"
+        Write-Warning "Error '$_' Catched, NMC still not running, waiting 10 Seconds"
         sleep -Seconds 10
         }
     }

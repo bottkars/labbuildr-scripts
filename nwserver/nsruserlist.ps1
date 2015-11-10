@@ -40,7 +40,7 @@ foreach ($Client in (Get-ADComputer -Filter * | where name -match "E2013*").DNSH
 & 'C:\Program Files\EMC NetWorker\nsr\bin\nsraddadmin.exe'  -u "user=NMMBAckupUser,host=$Client"
 }
 
-foreach ($Client in (Get-ADComputer -Filter * | where name -match "*DAG*").DNSHostname) { 
+foreach ($Client in (Get-ADComputer -Filter * | where name -match "DAG").DNSHostname) { 
 & 'C:\Program Files\EMC NetWorker\nsr\bin\nsraddadmin.exe'  -u "user=NMMBAckupUser,host=$Client"
 }
 
