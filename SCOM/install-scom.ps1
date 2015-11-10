@@ -43,28 +43,28 @@ $Components = "OMServer,OMConsole"
 if ($SCOM_ver -eq "SC2012_R2_SCOM")
     {
     $Setupcmd = "SQLSysClrTypes.msi"
-    $Setuppath = "$SourcePath\$SCOMver$Prereq\$Setupcmd"
+    $Setuppath = "$SourcePath\$scom_ver$Prereq\$Setupcmd"
     .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
     Write-Warning "Starting SQL Cleartype Setup"
     Start-Process $Setuppath -ArgumentList "/q"
    
 
     $Setupcmd = "ReportViewer.msi"
-    $Setuppath = "$SourcePath\$SCOMver$Prereq\$Setupcmd"
+    $Setuppath = "$SourcePath\$scom_ver$Prereq\$Setupcmd"
     .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
     Write-Warning "Starting Report Viewer Setup"
     Start-Process $Setuppath -ArgumentList "/q"
     }
 $Setupcmd = "setup.exe"
-$Setuppath = "$SourcePath\$SCOMver\$Setupcmd"
+$Setuppath = "$SourcePath\$SCOM_VER\$Setupcmd"
 .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
-Write-Warning "Starting $SCSCOMVER setup, this may take a while"
+Write-Warning "Starting $scom_ver setup, this may take a while"
 Start-Process "$Setuppath" -ArgumentList "/install /components:$Components /ManagementGroupName:$MGMTGrp /SqlServerInstance:$INSTANCENAME /DatabaseName:OperationsManager /DWSqlServerInstance:$INSTANCENAME /DWDatabaseName:OperationsManagerDW /ActionAccountUser:$Action_ACT /ActionAccountPassword:$Password /DASAccountUser:$DAS_ACT /DASAccountPassword:$Password /DatareaderUser:$Data_Reader /DatareaderPassword:$Password /DataWriterUser:$Data_Writer /DataWriterPassword:$Password /EnableErrorReporting:Never /SendCEIPReports:0 /UseMicrosoftUpdate:0 /AcceptEndUserLicenseAgreement:1 /silent" -Wait
    
 Write-Warning "Checking for Updates"
 foreach ($Updatepattern in ("*AMD64-server.msp","*AMD64-ENU-Console.msp"))
     {
-    $SCOMUpdate = Get-ChildItem "$($SourcePath)\$($SCOMver)updates"  -Filter $Updatepattern
+    $SCOMUpdate = Get-ChildItem "$($SourcePath)\$($scom_ver)updates"  -Filter $Updatepattern
     if ($SCOMUpdate)
         {
         $SOMUpdate = $SCOMUpdate | Sort-Object -Property Name -Descending
