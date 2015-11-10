@@ -40,17 +40,14 @@ $Password = "Password123!"
 $MGMTGrp = "$($Domain)Mgmt"
 $Components = "OMServer,OMConsole"
 
-if ($SCOM_ver -eq "SC2012_R2_SCOM")
-    {
-    $Setupcmd = "SQLSysClrTypes.msi"
-    $Setuppath = "$SourcePath\$scom_ver$Prereq\$Setupcmd"
-    .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
-    Write-Warning "Starting SQL Cleartype Setup"
-    Start-Process $Setuppath -ArgumentList "/q"
-   
 
+$Setupcmd = "SQLSysClrTypes.msi"
+$Setuppath = "$SourcePath\$scom_ver$Prereq\$Setupcmd"
+.$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
+ 
+Write-Warning "Starting SQL Cleartype Setup"
+Start-Process $Setuppath -ArgumentList "/q"
 
-    }
 
 $Setupcmd = "ReportViewer.msi"
 $Setuppath = "$SourcePath\$scom_ver$Prereq\$Setupcmd"
