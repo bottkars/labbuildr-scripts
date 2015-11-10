@@ -37,7 +37,7 @@ if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
 $Domain = $env:USERDOMAIN
 $Dagname = $Domain+"DAG"
 $WitnessDirectory = "C:\FSW_"+$Dagname
-$DBNAME = "DB2"
+$DB = "DB2"
 $PlainPassword = "Password123!"
 $DomainUser = "$Domain\Administrator"
 $SecurePassword = $PlainPassword | ConvertTo-SecureString -AsPlainText -Force
@@ -78,18 +78,18 @@ Start-ClusterResource -Name $res
 
 ################# Create database
 
-Write-Host "Creating Mailbox Database $DBName " -foregroundcolor yellow
-New-MailboxDatabase -Name $DBName -EDBFilePath "$ExDatabasesBase\$DB\$DB.EDB\$DB.EDB" -LogFolderPath "$ExDatabasesBase\$DB\$DB.Log" -Server $env:COMPUTERNAME
-Mount-Database -id $DBName
+Write-Host "Creating Mailbox Database $DB " -foregroundcolor yellow
+New-MailboxDatabase -Name $DB -EDBFilePath "$ExDatabasesBase\$DB\$DB.EDB\$DB.EDB" -LogFolderPath "$ExDatabasesBase\$DB\$DB.Log" -Server $env:COMPUTERNAME
+Mount-Database -id $DB
 Write-Host "Setting Offline Address Book" -foregroundcolor Yellow
-Set-MailboxDatabase $DBName -offlineAddressBook "Default Offline Address Book"
+Set-MailboxDatabase $DB -offlineAddressBook "Default Offline Address Book"
 
 ############### create copies
 	
 foreach($Server in $MailboxServers){
 		if(!($Server -eq $ENV:ComputerName)){
-		Write-Host "Creating database Copy $DBName" -foregroundcolor yellow
-			Add-MailboxDatabaseCopy -id $DBName -MailboxServer $Server
+		Write-Host "Creating database Copy $DB" -foregroundcolor yellow
+			Add-MailboxDatabaseCopy -id $DB -MailboxServer $Server
 		}
 	}
 
