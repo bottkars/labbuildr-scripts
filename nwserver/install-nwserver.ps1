@@ -64,7 +64,7 @@ if ($NW_ver -lt 'nw85')
     }
 else
     {
-    Write-Warning "Installing Networker 8.5v Beta"
+    Write-Warning "Installing Networker $nw_ver"
     Write-Warning "evaluating setup version"
     if ($setup = Get-ChildItem "$SourcePath\$NW_ver\win_x64\networkr\networker-*")
         {
@@ -88,7 +88,7 @@ else
 if (!(Test-Path "$env:USERPROFILE\AppData\LocalLow\Sun\Java\Deployment\security\exception.sites"))
     {
     Write-Verbose "Creating Java exception.sites for User"
-    New-Item -ItemType File "$env:USERPROFILE\AppData\LocalLow\Sun\Java\Deployment\security\exception.sites" | Out-Null
+    New-Item -ItemType File "$env:USERPROFILE\AppData\LocalLow\Sun\Java\Deployment\security\exception.sites" -Force | Out-Null
     }
 $javaSites = @()
 $javaSites += "http://$($env:computername):9000"
@@ -101,7 +101,7 @@ foreach ($javaSite in $Javasites)
         If  ((!$CurrentContent) -or ($CurrentContent -notmatch $javaSite))
             {
             Write-Verbose "adding $javaSite Java exception to $env:USERPROFILE\AppData\LocalLow\Sun\Java\Deployment\security\exception.sites"
-            add-Content -Value $javaSite -Path "$env:USERPROFILE\AppData\LocalLow\Sun\Java\Deployment\security\exception.sites" 
+            add-Content -Value $javaSite -Path "$env:USERPROFILE\AppData\LocalLow\Sun\Java\Deployment\security\exception.sites" -Force
             }
     }
 

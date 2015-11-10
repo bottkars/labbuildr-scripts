@@ -9,8 +9,6 @@
 #requires -version 3
 [CmdletBinding()]
 param(
-    [Parameter(mandatory = $true)]$BackupAdmin,
-    [Parameter(mandatory = $true)]$Hostprefix,
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
     $logpath = "c:\Scripts",
