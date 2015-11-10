@@ -9,18 +9,28 @@
 #requires -version 3
 [CmdletBinding()]
 param(
-$SourcePath = "\\vmware-host\Shared Folders\Sources",
-$Prereq ="Prereq",
-[ValidateSet('SQL2012SP1','SQL2012SP2','SQL2012SP1SLIP','SQL2014')]$SQLVER = "SQL2012SP1",
-[switch]$DefaultDBpath,
-[switch]$reboot
+    $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
+    $SourcePath = "\\vmware-host\Shared Folders\Sources",
+    $logpath = "c:\Scripts",
+    $Prereq ="Prereq",
+    [ValidateSet('SQL2012SP1','SQL2012SP2','SQL2012SP1SLIP','SQL2014')]$SQLVER = "SQL2012SP1",
+    [switch]$DefaultDBpath,
+    [switch]$reboot 
 )
+$Nodescriptdir = "$Scriptdir\Node"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
 $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
-New-Item -ItemType file  "$Builddir\$ScriptName$Logtime.log"
-############ addin Domin Service Accounts
+if (!(Test-Path $logpath))
+    {
+    New-Item -ItemType Directory -Path $logpath -Force
+    }
+$Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
+Set-Content -Path $Logfile $MyInvocation.BoundParameters
+############
+.$Nodescriptdir\test-sharedfolders.ps1
+############ adding Domin Service Accounts
 $Domain = $env:USERDOMAIN
 net localgroup "Backup Operators" $Domain\SVC_SQLADM /Add
 net localgroup "Administrators" $DOMAIN\SVC_SQLADM /Add
@@ -37,32 +47,32 @@ Switch ($SQLVER)
         $UpdateSource = "/UpdateSource=`"$SourcePath\$SQLVER`""
         $Setupcmd = "setup.exe"
         $Setuppath = "$SourcePath\SQLFULL_x64_ENU\$Setupcmd"
-        .$Builddir\test-setup -setup $Setupcmd -setuppath $Setuppath
+        .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
         }
     'SQL2012SP2'
         {
         $UpdateSource = "/UpdateSource=`"$SourcePath\$SQLVER`""
         $Setupcmd = "setup.exe"
         $Setuppath = "$SourcePath\SQLFULL_x64_ENU\$Setupcmd"
-        .$Builddir\test-setup -setup $Setupcmd -setuppath $Setuppath
+        .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
         }
     'SQL2012SP1SLIP'
         {
         $Setupcmd = "setup.exe"
         $Setuppath = "$SourcePath\$SQLVER\$Setupcmd"
-        .$Builddir\test-setup -setup $Setupcmd -setuppath $Setuppath
+        .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
         }
     'SQL2012'
         {
         $Setupcmd = "setup.exe"
         $Setuppath = "$SourcePath\$SQLVER\$Setupcmd"
-        .$Builddir\test-setup -setup $Setupcmd -setuppath $Setuppath
+        .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
         }
     'SQL2014'
         {
         $Setupcmd = "setup.exe"
         $Setuppath = "$SourcePath\$SQLVER\$Setupcmd"
-        .$Builddir\test-setup -setup $Setupcmd -setuppath $Setuppath
+        .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
         }
     }
 if (!$DefaultDBpath.IsPresent)
