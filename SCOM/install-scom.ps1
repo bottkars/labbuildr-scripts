@@ -64,7 +64,7 @@ Start-Process "$Setuppath" -ArgumentList "/install /components:$Components /Mana
 Write-Warning "Checking for Updates"
 foreach ($Updatepattern in ("*AMD64-server.msp","*AMD64-ENU-Console.msp"))
     {
-    $SCOMUpdate = Get-ChildItem "$($SourcePath)\$($scom_ver)updates"  -Filter $Updatepattern
+    $SCOMUpdate = Get-ChildItem "$($SourcePath)\$($scom_ver)updates" -Filter $Updatepattern -ErrorAction SilentlyContinue
     if ($SCOMUpdate)
         {
         $SOMUpdate = $SCOMUpdate | Sort-Object -Property Name -Descending
