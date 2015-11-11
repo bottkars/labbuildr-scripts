@@ -138,7 +138,7 @@ If ($NewPFMailbox)
         Send-MailMessage -From $SenderSMTP -Subject "Welcome To Public Folders" -To $Folder$maildom -Body "This is Public Folder $Folder" -DeliveryNotificationOption None -SmtpServer $Smtpserver -Credential $Credential -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
         }
     }
-ipmo
+ipmo dnsserver
 Write-Host -ForegroundColor Yellow "Setting Up C-record for mailhost"
 If ($AddressFamily -match 'IPv4')
     {
