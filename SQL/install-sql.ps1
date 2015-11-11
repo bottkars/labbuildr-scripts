@@ -35,11 +35,13 @@ $Domain = $env:USERDOMAIN
 net localgroup "Backup Operators" $Domain\SVC_SQLADM /Add
 net localgroup "Administrators" $DOMAIN\SVC_SQLADM /Add
 net localgroup "Administrators" $DOMAIN\SVC_SCVMM /Add
+<#
 $Files = Get-ChildItem -Path $Builddir -Filter Configuration*.ini
 foreach ($file in $Files) {
 $content = Get-Content -path $File.fullname
 $content | foreach {$_ -replace "brslab", "$Domain"} | Set-Content $file.FullName
-}
+
+}#>
 Switch ($SQLVER)
     {
     'SQL2012SP1'
