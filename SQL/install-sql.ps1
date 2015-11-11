@@ -13,7 +13,7 @@ param(
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
     $logpath = "c:\Scripts",
     $Prereq ="Prereq",
-    [ValidateSet('SQL2012SP1','SQL2012SP2','SQL2012SP1SLIP','SQL2014')]$SQLVER = "SQL2012SP1",
+	[ValidateSet('SQL2014SP1slip','SQL2012','SQL2012SP1','SQL2012SP2','SQL2012SP1SLIP','SQL2014')]$SQLVER,
     [switch]$DefaultDBpath,
     [switch]$reboot 
 )
