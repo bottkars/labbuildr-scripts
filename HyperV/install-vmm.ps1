@@ -9,14 +9,25 @@
 #requires -version 3
 [CmdletBinding()]
 param(
-$SCVMMVER = "SCVMM2012R2",
-$SourcePath = "\\vmware-host\Shared Folders\Sources"
+    $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
+    $SourcePath = "\\vmware-host\Shared Folders\Sources",
+    $logpath = "c:\Scripts",
+    [ValidateSet('SC2012_R2_SCVMM','SCTP3_SCVMM')]$SCVMM_VER = "SC2012_R2_SCVMM"
+
 )
+$Nodescriptdir = "$Scriptdir\NODE"
+$EXScriptDir = "$Scriptdir\$ex_version"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
 $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
-New-Item -ItemType file  "$Builddir\$ScriptName$Logtime.log"
+if (!(Test-Path $logpath))
+    {
+    New-Item -ItemType Directory -Path $logpath -Force
+    }
+$Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
+Set-Content -Path $Logfile $MyInvocation.BoundParameters
+######################################################################
 $Domain = $env:USERDOMAIN
 $Setupcmd = "setup.exe"
 $Setuppath = "$SourcePath\$SCVMMVER\$Setupcmd"
@@ -45,5 +56,3 @@ set-acl -Path "C:\Program Files\Microsoft System Center 2012 R2\Virtual Machine 
 $acl.SetAccessRuleProtection($True, $False) 
 $Acl.AddAccessRule($rule) 
 set-acl -Path "C:\Program Files\Microsoft System Center 2012 R2\Virtual Machine Manager\bin\AddInPipeline" $Acl
-
-

@@ -9,14 +9,25 @@
 #requires -version 3
 [CmdletBinding()]
 param(
+$Scriptdir = "\\vmware-host\Shared Folders\Scripts",
+$SourcePath = "\\vmware-host\Shared Folders\Sources",
+$logpath = "c:\Scripts",
 [switch]$Cluster
 )
-Write-Output "Setting user credentials to perform installation and configuration"
+$Nodescriptdir = "$Scriptdir\NODE"
+$EXScriptDir = "$Scriptdir\$ex_version"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
 $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
-New-Item -ItemType file  "$Builddir\$ScriptName$Logtime.log"
+if (!(Test-Path $logpath))
+    {
+    New-Item -ItemType Directory -Path $logpath -Force
+    }
+$Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
+Set-Content -Path $Logfile $MyInvocation.BoundParameters
+######################################################################
+Write-Output "Setting user credentials to perform installation and configuration"
 $Domain = $env:USERDOMAIN
 $PlainPassword = "Password123!"
 $DomainUser = "$Domain\Administrator"

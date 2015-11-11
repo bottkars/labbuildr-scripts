@@ -8,11 +8,29 @@
 #>
 #requires -version 3
 [CmdletBinding()]
-param (
-[string]$vmname = "HV-VM1",
-[string]$sourcevhd = "\\vmware-host\Shared Folders\Sources\HyperV\9600.16415.amd64fre.winblue_refresh.130928-2229_server_serverdatacentereval_en-us.vhd",
-[string]$Clustervolume = "C:\ClusterStorage\Volume1"
+param(
+    $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
+    $SourcePath = "\\vmware-host\Shared Folders\Sources",
+    $logpath = "c:\Scripts",
+
+    [string]$vmname = "HV-VM1",
+    [string]$sourcevhd = "$SourcePath\HyperV\9600.16415.amd64fre.winblue_refresh.130928-2229_server_serverdatacentereval_en-us.vhd",
+    [string]$Clustervolume = "C:\ClusterStorage\Volume1"
+
 )
+$Nodescriptdir = "$Scriptdir\NODE"
+$EXScriptDir = "$Scriptdir\$ex_version"
+$ScriptName = $MyInvocation.MyCommand.Name
+$Host.UI.RawUI.WindowTitle = "$ScriptName"
+$Builddir = $PSScriptRoot
+$Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
+if (!(Test-Path $logpath))
+    {
+    New-Item -ItemType Directory -Path $logpath -Force
+    }
+$Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
+Set-Content -Path $Logfile $MyInvocation.BoundParameters
+######################################################################
 if (!(Test-Path $sourcevhd))
     {
     Write-Warning "Source VHD $sourcevhd does not exist, please download a Source VHD"
