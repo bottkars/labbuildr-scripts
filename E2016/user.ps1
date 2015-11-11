@@ -65,10 +65,13 @@ $Roles = ("Database Copies", "Databases", "Disaster Recovery", "Mailbox Import E
 New-RoleGroup -Name $RoleGroup -DisplayName $RoleGroup -Members $BackupAdmin -Roles $Roles -Description "This role group allows its users to perform database recovery and GLR"
 Add-RoleGroupMember "Discovery Management" –Member $BackupAdmin
 Get-MailboxDatabase | Set-MailboxDatabase -CircularLoggingEnabled $false
+#### rdb stuff
+<#
 New-Item -ItemType Directory -Path R:\rdb
 New-Item -ItemType Directory -Path S:\rdb
 New-MailboxDatabase -Recovery -Name rdb$env:COMPUTERNAME -server $Smtpserver -EdbFilePath R:\rdb\rdb.edb  -logFolderPath S:\rdb
 Restart-Service MSExchangeIS
+#>
 Get-AddressList  | Update-AddressList
 Send-MailMessage -From $SenderSMTP -Subject $Subject -To "$BackupAdmin$maildom"  -Body $Body -Attachments $attachment[0].FullName -DeliveryNotificationOption None -SmtpServer $Smtpserver -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
 Send-MailMessage -From $SenderSMTP -Subject $Subject -To $SenderSMTP -Body $Body -Attachments $attachment[0].FullName -DeliveryNotificationOption None -SmtpServer $Smtpserver -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
