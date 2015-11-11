@@ -36,13 +36,7 @@ $Domain = $env:USERDOMAIN
 net localgroup "Backup Operators" $Domain\SVC_SQLADM /Add
 net localgroup "Administrators" $DOMAIN\SVC_SQLADM /Add
 net localgroup "Administrators" $DOMAIN\SVC_SCVMM /Add
-<#
-$Files = Get-ChildItem -Path $Builddir -Filter Configuration*.ini
-foreach ($file in $Files) {
-$content = Get-Content -path $File.fullname
-$content | foreach {$_ -replace "brslab", "$Domain"} | Set-Content $file.FullName
 
-}#>
 Switch ($SQLVER)
     {
     'SQL2012SP1'
@@ -89,7 +83,7 @@ $Time = Measure-Command {Start-Process $Setuppath -ArgumentList  $Arguments -Wai
 $Time | Set-Content "$Builddir\sqlsetup$SQLVER.txt" -Force
 If ($LASTEXITCODE -lt 0)
     {
-    Write-Warning "Error $LASTEXITCODE during SQL SETUP, Please Check Ibstaller Logfile"
+    Write-Warning "Error $LASTEXITCODE during SQL SETUP, Please Check Installer Logfile"
     Set-Content -Value $LASTEXITCODE -Path $Builddir\sqlexit.txt
     Pause
     }
@@ -103,7 +97,6 @@ if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {
     Pause
     }
-# New-Item -ItemType File -Path c:\scripts\sql.pass
 if ($reboot.IsPresent)
     { 
     Restart-Computer
