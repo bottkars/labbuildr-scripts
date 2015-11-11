@@ -56,13 +56,13 @@ Switch ($SQLVER)
         $Setuppath = "$SourcePath\SQLFULL_x64_ENU\$Setupcmd"
         .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
         }
-    'SQL2012SP1SLIP'
+    default
         {
         $Setupcmd = "setup.exe"
         $Setuppath = "$SourcePath\$SQLVER\$Setupcmd"
         .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
         }
-    'SQL2012'
+   <# 'SQL2012'
         {
         $Setupcmd = "setup.exe"
         $Setuppath = "$SourcePath\$SQLVER\$Setupcmd"
@@ -73,7 +73,7 @@ Switch ($SQLVER)
         $Setupcmd = "setup.exe"
         $Setuppath = "$SourcePath\$SQLVER\$Setupcmd"
         .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
-        }
+        }#>
     }
 if (!$DefaultDBpath.IsPresent)
     {
