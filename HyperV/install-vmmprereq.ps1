@@ -30,7 +30,7 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ######################################################################
 ############ WAIK Setup
 $Setupcmd = "adksetup.exe"
-$Setuppath = "$SourcePath\$SCVMMVER$Prereq\$Setupcmd"
+$Setuppath = "$SourcePath\$SCVMM_VER$Prereq\$Setupcmd"
 .$NodeScriptDir\test-setup.ps1 -setup $Setupcmd -setuppath $Setuppath
 Write-Warning "Starting ADKSETUP"
 Start-Process $Setuppath -ArgumentList "/ceip off /features OptionID.DeploymentTools OptionID.WindowsPreinstallationEnvironment /quiet"
