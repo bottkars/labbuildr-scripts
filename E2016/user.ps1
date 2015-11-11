@@ -129,7 +129,7 @@ If ($NewPFMailbox)
         Send-MailMessage -From $SenderSMTP -Subject $file.name -To $PFSMTP -Attachments $file.FullName -DeliveryNotificationOption None -SmtpServer $Smtpserver -Credential $Credential -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
         $incr++
         }
-    Import-CSV C:\Scripts\folders.csv | ForEach {
+    Import-CSV $Builddir\folders.csv | ForEach {
         $Folder=$_.Folder
         $Path=$_.Path -replace "BRSLAB", "PF$Domain" 
         $Path 
@@ -138,6 +138,7 @@ If ($NewPFMailbox)
         Send-MailMessage -From $SenderSMTP -Subject "Welcome To Public Folders" -To $Folder$maildom -Body "This is Public Folder $Folder" -DeliveryNotificationOption None -SmtpServer $Smtpserver -Credential $Credential -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
         }
     }
+ipmo
 Write-Host -ForegroundColor Yellow "Setting Up C-record for mailhost"
 If ($AddressFamily -match 'IPv4')
     {
