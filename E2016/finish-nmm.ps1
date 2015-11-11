@@ -19,7 +19,7 @@ $BackupUser = "NMMBackupUser"
  
 )
 $Nodescriptdir = "$Scriptdir\NODE"
-$EXScriptDir = "$SourcePath\$ex_version"
+$EXScriptDir = "$Scriptdir\$ex_version"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
