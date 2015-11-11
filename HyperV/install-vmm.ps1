@@ -30,14 +30,14 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ######################################################################
 $Domain = $env:USERDOMAIN
 $Setupcmd = "setup.exe"
-$Setuppath = "$SourcePath\$SCVMMVER\$Setupcmd"
+$Setuppath = "$SourcePath\$SCVMM_VER\$Setupcmd"
 .$Builddir\test-setup -setup $Setupcmd -setuppath $Setuppath
-Write-Warning "Starting $SCVMMVER setup, this may take a while"
+Write-Warning "Starting $SCVMM_VER setup, this may take a while"
 start-process "$Setuppath" -ArgumentList "/server /i /f C:\scripts\VMServer.ini /SqlDBAdminDomain $Domain /SqlDBAdminName SVC_SQL /SqlDBAdminPassword Password123! /VmmServiceDomain $Domain /VmmServiceUserName SVC_SCVMM /VmmServiceUserPassword Password123! /IACCEPTSCEULA" -Wait 
 write-verbose "Checking for Updates"
 foreach ($Updatepattern in ("*vmmserver*.msp","*Admin*.msp"))
     {
-    $VMMUpdate = Get-ChildItem "$($SourcePath)\$($SCVMMVER)updates"  -Filter $Updatepattern
+    $VMMUpdate = Get-ChildItem "$($SourcePath)\$($SCVMM_VER)updates"  -Filter $Updatepattern
     if ($VMMUpdate)
         {
         $VMMUpdate = $VMMUpdate | Sort-Object -Property Name -Descending

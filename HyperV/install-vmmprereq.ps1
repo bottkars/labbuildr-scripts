@@ -42,19 +42,19 @@ Write-Host -NoNewline -ForegroundColor Yellow "."
 
 
 $Setupcmd = "sqlncli.msi"
-$Setuppath = "$SourcePath\$SCVMMVER$Prereq\$Setupcmd"
+$Setuppath = "$SourcePath\$SCVMM_VER$Prereq\$Setupcmd"
 .$NodeScriptDir\test-setup.ps1 -setup $Setupcmd -setuppath $Setuppath
 $SetupArgs = '/i "'+$Setuppath+'" /quiet'
 Start-Process -FilePath "msiexec.exe" -ArgumentList $SetupArgs -PassThru -Wait
 
 $Setupcmd = "SqlCmdLnUtils.msi"
-$Setuppath = "$SourcePath\$SCVMMVER$Prereq\$Setupcmd"
+$Setuppath = "$SourcePath\$SCVMM_VER$Prereq\$Setupcmd"
 .$NodeScriptDir\test-setup.ps1 -setup $Setupcmd -setuppath $Setuppath
 $SetupArgs = '/i "'+$Setuppath+'" /quiet'
 Start-Process -FilePath "msiexec.exe" -ArgumentList $SetupArgs -PassThru -Wait
 
 # NETFX 4.52 Setup
 $Setupcmd = "NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
-$Setuppath = "$SourcePath\$SCVMMVER$Prereq\$Setupcmd"
+$Setuppath = "$SourcePath\$SCVMM_VER$Prereq\$Setupcmd"
 .$NodeScriptDir\test-setup.ps1 -setup $Setupcmd -setuppath $Setuppath
 Start-Process $Setuppath -ArgumentList "/passive /norestart" -Wait
