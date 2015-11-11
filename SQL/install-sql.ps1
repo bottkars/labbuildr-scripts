@@ -14,6 +14,7 @@ param(
     $logpath = "c:\Scripts",
     $Prereq ="Prereq",
 	[ValidateSet('SQL2014SP1slip','SQL2012','SQL2012SP1','SQL2012SP2','SQL2012SP1SLIP','SQL2014')]$SQLVER,
+    $Diskparameter = "",
     [switch]$DefaultDBpath,
     [switch]$reboot 
 )
