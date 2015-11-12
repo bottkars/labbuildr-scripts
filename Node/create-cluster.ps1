@@ -10,6 +10,7 @@
 [CmdletBinding()]
 param(
     [string]$Nodeprefix,
+    [String]$ClusterName,
     $IPaddress,
     $IPv6Prefix = "",
     [ValidateSet('8','24','32','48','64')]$IPv6PrefixLength = '8',
@@ -42,7 +43,10 @@ $NodeLIST = @()
 $Clusternodes = Get-ADComputer -Filter * | where name -like "$Nodeprefix*"
 $Nodeprefix = $Nodeprefix.ToUpper()
 $Nodeprefix = $Nodeprefix.TrimEnd("NODE")
-$Clustername = $Nodeprefix+"Cluster"
+if (!$ClusterName)
+    {
+    $Clustername = $Nodeprefix+"Cluster"
+    }
 foreach ($Clusternode in $Clusternodes){
 $NodeLIST += $Clusternode.Name
 # write-Host " Enabling Cluster feature on Node $($Clusternode.Name)"
