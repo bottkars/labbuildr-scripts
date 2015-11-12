@@ -9,18 +9,31 @@
 #requires -version 3
 [CmdletBinding()]
 param(
-    [ValidateSet('nw822','nw8218','nw8217','nw8216','nw8215','nw8214','nw8213','nw8212','nw8211','nw821','nw8205','nw8204','nw8203','nw8202','nw82','nw8116','nw8115','nw8114', 'nw8113','nw8112', 'nw811',  'nw8105','nw8104','nw8102', 'nw81','nw85','nw85.BR1','nw85.BR2','nw85.BR3','nw85.BR4','nw90.DA','nwunknown')]
-    $nw_ver
+    [ValidateSet('nw8221','nw822','nw8218','nw8217','nw8216','nw8215','nw8214','nw8213','nw8212','nw8211','nw821','nw8205','nw8204','nw8203','nw8202','nw82','nw8116','nw8115','nw8114', 'nw8113','nw8112', 'nw811',  'nw8105','nw8104','nw8102', 'nw81','nw85','nw85.BR1','nw85.BR2','nw85.BR3','nw85.BR4','nw90.DA','nwunknown')]
+    $nw_ver,
+    $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
+    $SourcePath = "\\vmware-host\Shared Folders\Sources",
+    $logpath = "c:\Scripts",
+    $Prereq ="Prereq"
+     
 )
+$Nodescriptdir = "$Scriptdir\Node"
+$NWScriptDir = "$Scriptdir\nwserver"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
 $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
-$Logfile = New-Item -ItemType file  "$Builddir\$ScriptName$Logtime.log"
+if (!(Test-Path $logpath))
+    {
+    New-Item -ItemType Directory -Path $logpath -Force
+    }
+$Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
+Set-Content -Path $Logfile $MyInvocation.BoundParameters
+############
 ############
 $Password = "Password123!"
 $dbusername = "postgres"
-Set-Content -Path $Logfile $MyInvocation.BoundParameters
+
 Write-Verbose "Setting Up SNMP"
 Add-WindowsFeature snmp-service  -IncludeAllSubFeature -IncludeManagementTools
 Set-Service SNMPTRAP -StartupType Automatic
@@ -36,30 +49,24 @@ New-ItemProperty  -Path  HKLM:\SYSTEM\CurrentControlSet\Services\SNMP\Parameters
 New-ItemProperty  -Path  HKLM:\SYSTEM\CurrentControlSet\Services\SNMP\Parameters\ValidCommunities -Name "networker" -PropertyType "dword" -Value 8 -Force
 
 
-.$Builddir\test-sharedfolders.ps1
-$Setuppath = "\\vmware-host\Shared Folders\Sources\$NW_ver\win_x64\networkr"
-.$Builddir\test-setup -setup NWServer -setuppath $Setuppath
+.$Nodescriptdir\test-sharedfolders.ps1
+$Setuppath = "$SourcePath\$NW_ver\win_x64\networkr"
+.$Nodescriptdir\test-setup -setup NWServer -setuppath $Setuppath
 
 if ($NW_ver -lt 'nw85')
     {
     Start-Process -Wait -FilePath "$Setuppath\setup.exe" -ArgumentList ' /S /v" /passive /l*v c:\scripts\nwserversetup2.log INSTALLLEVEL=300 CONFIGFIREWALL=1 setuptype=Install"'
     Start-Process -Wait -FilePath "$Setuppath\setup.exe" -ArgumentList '/S /v" /passive /l*v c:\scripts\nwserversetup2.log INSTALLLEVEL=300 CONFIGFIREWALL=1 NW_FIREWALL_CONFIG=1 setuptype=Install"'
-    
-    $Setuppath = "\\vmware-host\Shared Folders\Sources\$NW_ver\win_x64\networkr\nmc\setup.exe"
-    .$Builddir\test-setup -setup NWConsole -setuppath $Setuppath
+    $Setuppath = "$SourcePath\$NW_ver\win_x64\networkr\nmc\setup.exe"
+    .$Nodescriptdir\test-setup -setup NWConsole -setuppath $Setuppath
     Start-Process -Wait -FilePath "$Setuppath" -ArgumentList '/S /v" /passive /l*v c:\scripts\nmcsetup2.log CONFIGFIREWALL=1 NW_FIREWALL_CONFIG=1 setuptype=Install"'
-
     Write-Verbose "Setting up NMC"
-    # Start-Process -Wait -FilePath "javaws.exe" -ArgumentList "-import -silent -system -shortcut -association http://localhost:9000/gconsole.jnlp"
-    # start-process http://localhost:9000/gconsole.jnlp
-
-    
     }
 else
     {
-    Write-Warning "Installing Networker 8.5v Beta"
+    Write-Warning "Installing Networker $nw_ver"
     Write-Warning "evaluating setup version"
-    if ($setup = Get-ChildItem "\\vmware-host\shared folders\Sources\$NW_ver\win_x64\networkr\networker-*")
+    if ($setup = Get-ChildItem "$SourcePath\$NW_ver\win_x64\networkr\networker-*")
         {
         write-warning "creating postgres user"
         $cn = [ADSI]"WinNT://$env:COMPUTERNAME"
@@ -70,7 +77,6 @@ else
         $user.SetInfo()
         Write-Warning "Starting Install"
         Start-Process -Wait -FilePath "$($Setup.fullname)" -ArgumentList "/s /v InstallLevel=300 ConfigureFirewall=1 StartServices=1 OptionGetNMC=1 DbUsername=$dbusername DbPassword=$Password AdminPassword=$Password KSFPassword=$Password TSFPassword=$Password"
-        # Start-Process -Wait -FilePath "$($Setup.fullname)" -ArgumentList "/s /v /q /l InstallLevel=300 ConfigureFirewall=1 OptionGetNMC=1 DbPassword=$Password AdminPassword=$Password KSFPassword=$Password TSFPassword=$Password"
         }
     else
         {
@@ -82,7 +88,7 @@ else
 if (!(Test-Path "$env:USERPROFILE\AppData\LocalLow\Sun\Java\Deployment\security\exception.sites"))
     {
     Write-Verbose "Creating Java exception.sites for User"
-    New-Item -ItemType File "$env:USERPROFILE\AppData\LocalLow\Sun\Java\Deployment\security\exception.sites" | Out-Null
+    New-Item -ItemType File "$env:USERPROFILE\AppData\LocalLow\Sun\Java\Deployment\security\exception.sites" -Force | Out-Null
     }
 $javaSites = @()
 $javaSites += "http://$($env:computername):9000"
@@ -95,7 +101,7 @@ foreach ($javaSite in $Javasites)
         If  ((!$CurrentContent) -or ($CurrentContent -notmatch $javaSite))
             {
             Write-Verbose "adding $javaSite Java exception to $env:USERPROFILE\AppData\LocalLow\Sun\Java\Deployment\security\exception.sites"
-            add-Content -Value $javaSite -Path "$env:USERPROFILE\AppData\LocalLow\Sun\Java\Deployment\security\exception.sites" 
+            add-Content -Value $javaSite -Path "$env:USERPROFILE\AppData\LocalLow\Sun\Java\Deployment\security\exception.sites" -Force
             }
     }
 

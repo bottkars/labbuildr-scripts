@@ -32,12 +32,12 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 $Setupcmd = "UcmaRuntimeSetup.exe"
 $Setuppath = "$SourcePath\$ex_version$Prereq\$Setupcmd"
 .$Nodescriptdir\test-setup -setup $Setupcmd -setuppath $Setuppath
-.$Setuppath /passive /norestart
+Start-Process $Setuppath -ArgumentList "/q /norestart" -Wait
 
 $Setupcmd = "NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
 $Setuppath = "$SourcePath\$ex_version$Prereq\$Setupcmd"
 .$Nodescriptdir\test-setup -setup $Setupcmd -setuppath $Setuppath
-Start-Process $Setuppath -ArgumentList "/passive /norestart" -Wait
+Start-Process $Setuppath -ArgumentList "/q /norestart" -Wait
 <#
 $Setupcmd = "FilterPack64bit.exe"
 $Setuppath = "$SourcePath\$ex_version$Prereq\$Setupcmd"

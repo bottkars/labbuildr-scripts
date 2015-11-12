@@ -41,17 +41,19 @@ foreach ($Disk in $Disks)
         $Disk | Set-Disk -IsOffline  $false
         $Disk | Initialize-Disk -PartitionStyle GPT
         $Partition = $Disk | New-Partition -UseMaximumSize
-        $Partition | Set-Partition -NoDefaultDriveLetter
+        $Partition | Set-Partition -NoDefaultDriveLetter:$true
         $Job = Format-Volume -Partition $Partition -NewFileSystemLabel $Label -AllocationUnitSize 64kb -FileSystem NTFS -Force -AsJob
         while ($JOB.state -ne "completed"){}
         $VolumeMountpoint = New-Item -ItemType Directory -Path "$ExVolumesBase\Volume$Vol"
         $Partition | Add-PartitionAccessPath  -AccessPath "$ExVolumesBase\Volume$Vol"
+        $Partition | Set-Partition -NoDefaultDriveLetter:$true
         if ($Disk -ne $Disks[-1])
             {
             $DataBaseMountpoint = New-Item -ItemType Directory -Path "$ExDatabasesBase\DB$vol" 
             $Partition | Add-PartitionAccessPath  -AccessPath "$ExDatabasesBase\DB$vol"
             New-Item -Name "DB$Vol.DB" -ItemType Directory -Path $DataBaseMountpoint
             New-Item -Name "DB$Vol.LOG" -ItemType Directory -Path $DataBaseMountpoint
+            $Partition | Set-Partition -NoDefaultDriveLetter:$true
             }
         Write-Output $Disk
         Write-Verbose $Vol

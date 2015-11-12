@@ -65,10 +65,13 @@ $Roles = ("Database Copies", "Databases", "Disaster Recovery", "Mailbox Import E
 New-RoleGroup -Name $RoleGroup -DisplayName $RoleGroup -Members $BackupAdmin -Roles $Roles -Description "This role group allows its users to perform database recovery and GLR"
 Add-RoleGroupMember "Discovery Management" –Member $BackupAdmin
 Get-MailboxDatabase | Set-MailboxDatabase -CircularLoggingEnabled $false
+#### rdb stuff
+<#
 New-Item -ItemType Directory -Path R:\rdb
 New-Item -ItemType Directory -Path S:\rdb
 New-MailboxDatabase -Recovery -Name rdb$env:COMPUTERNAME -server $Smtpserver -EdbFilePath R:\rdb\rdb.edb  -logFolderPath S:\rdb
 Restart-Service MSExchangeIS
+#>
 Get-AddressList  | Update-AddressList
 Send-MailMessage -From $SenderSMTP -Subject $Subject -To "$BackupAdmin$maildom"  -Body $Body -Attachments $attachment[0].FullName -DeliveryNotificationOption None -SmtpServer $Smtpserver -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
 Send-MailMessage -From $SenderSMTP -Subject $Subject -To $SenderSMTP -Body $Body -Attachments $attachment[0].FullName -DeliveryNotificationOption None -SmtpServer $Smtpserver -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
@@ -126,7 +129,7 @@ If ($NewPFMailbox)
         Send-MailMessage -From $SenderSMTP -Subject $file.name -To $PFSMTP -Attachments $file.FullName -DeliveryNotificationOption None -SmtpServer $Smtpserver -Credential $Credential -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
         $incr++
         }
-    Import-CSV C:\Scripts\folders.csv | ForEach {
+    Import-CSV $Builddir\folders.csv | ForEach {
         $Folder=$_.Folder
         $Path=$_.Path -replace "BRSLAB", "PF$Domain" 
         $Path 
@@ -135,6 +138,7 @@ If ($NewPFMailbox)
         Send-MailMessage -From $SenderSMTP -Subject "Welcome To Public Folders" -To $Folder$maildom -Body "This is Public Folder $Folder" -DeliveryNotificationOption None -SmtpServer $Smtpserver -Credential $Credential -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
         }
     }
+ipmo dnsserver
 Write-Host -ForegroundColor Yellow "Setting Up C-record for mailhost"
 If ($AddressFamily -match 'IPv4')
     {

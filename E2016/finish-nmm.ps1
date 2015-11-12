@@ -19,6 +19,7 @@ $BackupUser = "NMMBackupUser"
  
 )
 $Nodescriptdir = "$Scriptdir\NODE"
+$EXScriptDir = "$Scriptdir\$ex_version"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
@@ -31,6 +32,5 @@ $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 $Domain = $env:USERDOMAIN
-Copy-Item -Path 'C:\scripts\Networker User for Microsoft.lnk' C:\Users\Public\Desktop
-# Copy-Item -Path 'C:\scripts\ecp.website' C:\Users\Public\Desktop
+Copy-Item -Path "$EXScriptDir\Networker User for Microsoft.lnk" C:\Users\Public\Desktop
 ."$Nodescriptdir\set-autologon.ps1" -domain $Domain -user $BackupUser -Password $password
