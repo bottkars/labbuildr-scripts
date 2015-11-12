@@ -41,10 +41,11 @@ $Domain = $env:USERDOMAIN
 $DomainController = (Get-ADDomainController).name
 $NodeLIST = @()
 $Clusternodes = Get-ADComputer -Filter * | where name -like "$Nodeprefix*"
-$Nodeprefix = $Nodeprefix.ToUpper()
-$Nodeprefix = $Nodeprefix.TrimEnd("NODE")
+
 if (!$ClusterName)
     {
+    $Nodeprefix = $Nodeprefix.ToUpper()
+    $Nodeprefix = $Nodeprefix.TrimEnd("NODE")
     $Clustername = $Nodeprefix+"Cluster"
     }
 foreach ($Clusternode in $Clusternodes){
@@ -82,12 +83,12 @@ switch ($AddressFamily)
     }
 #### generating fsw #####
 Invoke-Command -ComputerName $DomainController -ScriptBlock {
-param( $Nodeprefix, $Nodes )
-New-Item -ItemType Directory -Path "C:\FSW_$Nodeprefix"
-New-SmbShare -Name "FSW_$Nodeprefix" -FullAccess everyone -Path "C:\FSW_$Nodeprefix"
-} -ArgumentList $Nodeprefix, $Nodes
+param( $ClusterName, $Nodes )
+New-Item -ItemType Directory -Path "C:\FSW_$ClusterName"
+New-SmbShare -Name "FSW_$ClusterName" -FullAccess everyone -Path "C:\FSW_$ClusterName"
+} -ArgumentList $ClusterName, $Nodes
 ##### set fsw quorum #####
-Set-ClusterQuorum -FileShareWitness "\\$DomainController\FSW_$Nodeprefix"
+Set-ClusterQuorum -FileShareWitness "\\$DomainController\FSW_$ClusterName"
 Write-Host "Setting Cluster Access"
 write-host "Changing PTR Record" 
 ########## changing cluster to register PTR record 
