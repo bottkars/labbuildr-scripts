@@ -31,9 +31,9 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 $Domain = $env:USERDOMAIN
 $Setupcmd = "setup.exe"
 $Setuppath = "$SourcePath\$SCVMM_VER\$Setupcmd"
-.$Builddir\test-setup -setup $Setupcmd -setuppath $Setuppath
+.$Nodescriptdir\test-setup.ps1 -setup $Setupcmd -setuppath $Setuppath
 Write-Warning "Starting $SCVMM_VER setup, this may take a while"
-start-process "$Setuppath" -ArgumentList "/server /i /f C:\scripts\VMServer.ini /SqlDBAdminDomain $Domain /SqlDBAdminName SVC_SQL /SqlDBAdminPassword Password123! /VmmServiceDomain $Domain /VmmServiceUserName SVC_SCVMM /VmmServiceUserPassword Password123! /IACCEPTSCEULA" -Wait 
+start-process "$Setuppath" -ArgumentList "/server /i /SqlDBAdminDomain $Domain /SqlDBAdminName SVC_SQL /SqlDBAdminPassword Password123! /VmmServiceDomain $Domain /VmmServiceUserName SVC_SCVMM /VmmServiceUserPassword Password123! /IACCEPTSCEULA" -Wait 
 write-verbose "Checking for Updates"
 foreach ($Updatepattern in ("*vmmserver*.msp","*Admin*.msp"))
     {
