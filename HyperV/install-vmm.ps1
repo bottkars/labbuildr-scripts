@@ -42,7 +42,7 @@ foreach ($Updatepattern in ("*vmmserver*.msp","*Admin*.msp"))
         {
         $VMMUpdate = $VMMUpdate | Sort-Object -Property Name -Descending
 	    $LatestVMMUpdate = $VMMUpdate[0]
-        .$Builddir\test-setup -setup $LatestVMMUpdate.BaseName -setuppath $LatestVMMUpdate.FullName
+        .$Builddir\test-setup.ps1 -setup $LatestVMMUpdate.BaseName -setuppath $LatestVMMUpdate.FullName
         Write-Warning "Starting VMM Patch setup, this may take a while"
         start-process $LatestVMMUpdate.FullName -ArgumentList "/Passive" -Wait 
         }
