@@ -31,9 +31,26 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 $Domain = $env:USERDOMAIN
 $Setupcmd = "setup.exe"
 $Setuppath = "$SourcePath\$SCVMM_VER\$Setupcmd"
+$Content = @()
+$Content = "[OPTIONS]
+UserName=$Domain user
+CompanyName=$Domain Eval
+CreateNewSqlDatabase=1
+SqlInstanceName=MSSQL$Domain
+SqlDatabaseName=VMMDB
+RemoteDatabaseImpersonation=0
+CreateNewLibraryShare=1
+LibraryShareName=MSSCVMMLibrary
+LibrarySharePath=C:\Virtual Machine Manager Library Files
+LibraryShareDescription=Virtual Machine Manager Library Files
+SQMOptIn = 0
+MUOptIn = 0"
+Set-Content  -Value $Content -Path "$logpath\VMServer.ini"
 .$Nodescriptdir\test-setup.ps1 -setup $Setupcmd -setuppath $Setuppath
 Write-Warning "Starting $SCVMM_VER setup, this may take a while"
-start-process "$Setuppath" -ArgumentList "/server /i /SqlDBAdminDomain $Domain /SqlDBAdminName SVC_SQL /SqlDBAdminPassword Password123! /VmmServiceDomain $Domain /VmmServiceUserName SVC_SCVMM /VmmServiceUserPassword Password123! /IACCEPTSCEULA" -Wait 
+# start-process "$Setuppath" -ArgumentList "/server /i /SqlDBAdminDomain $Domain /SqlDBAdminName SVC_SQL /SqlDBAdminPassword Password123! /VmmServiceDomain $Domain /VmmServiceUserName SVC_SCVMM /VmmServiceUserPassword Password123! /IACCEPTSCEULA" -Wait 
+start-process "$Setuppath" -ArgumentList "/server /i /f $logpath\VMServer.ini /SqlDBAdminDomain $Domain /SqlDBAdminName SVC_SQL /SqlDBAdminPassword Password123! /VmmServiceDomain $Domain /VmmServiceUserName SVC_SCVMM /VmmServiceUserPassword Password123! /IACCEPTSCEULA" -Wait 
+
 write-verbose "Checking for Updates"
 foreach ($Updatepattern in ("*vmmserver*.msp","*Admin*.msp"))
     {
