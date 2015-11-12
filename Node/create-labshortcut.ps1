@@ -25,7 +25,7 @@ if (!(Test-Path $logpath))
 $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ######################################################################
-
+Set-Content $logpath\profile.ps1 -Value 'function Global:prompt {"PS [$Env:username]$(Split-Path $pwd -Leaf)>"}'
 function Create-Shortcut
 {
 	$wshell = New-Object -comObject WScript.Shell
@@ -34,8 +34,7 @@ function Create-Shortcut
 	# $path1, $path2 | ForEach-Object {
 	$link = $wshell.CreateShortcut("$Deskpath\labbuildr.lnk")
 	$link.TargetPath = "$psHome\powershell.exe"
-	$link.Arguments = "-noexit"
-	#  -command ". profile.ps1" '
+	$link.Arguments = "-noexit -command $logpath\profile.ps1"
 	$link.Description = "Labbuildr Scripts"
 	$link.WorkingDirectory = "$Scriptdir"
 	$link.IconLocation = 'powershell.exe'
