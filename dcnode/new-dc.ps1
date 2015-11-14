@@ -98,8 +98,8 @@ Install-WindowsFeature –Name AD-Domain-Services,RSAT-ADDS –IncludeManagement
 
 if ($setwsman)
     {
-    Enable-PSRemoting -force -Confirm:$true
-    Set-Item wsman:\localhost\client\trustedhosts *
+    Enable-PSRemoting -force 
+    Set-Item wsman:\localhost\client\trustedhosts * -Force
     }
 
 New-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce -Name "Pass2" -Value "$PSHOME\powershell.exe -Command `"New-Item -ItemType File -Path c:\scripts\2.pass`""
