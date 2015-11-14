@@ -39,7 +39,7 @@
             <FirstLogonCommands>
                 <SynchronousCommand wcm:action="add">
                     <RequiresUserInput>false</RequiresUserInput>
-                    <CommandLine>start /wait %SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe d:\scripts\start-customize.ps1</CommandLine>
+                    <CommandLine>c:\windows\system32\WindowsPowerShell\v1.0\powershell.exe -file d:\scripts\start-customize.ps1</CommandLine>
                     <Order>1</Order>
                     <Description>Run first customization program</Description>
                 </SynchronousCommand>
