@@ -98,7 +98,7 @@ Install-WindowsFeature –Name AD-Domain-Services,RSAT-ADDS –IncludeManagement
 
 if ($setwsman)
     {
-    Enable-PSRemoting -force -Confirm:$false
+    Enable-PSRemoting -force -Confirm:$true
     Set-Item wsman:\localhost\client\trustedhosts *
     }
 
