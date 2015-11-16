@@ -54,7 +54,7 @@ Import-Csv $Builddir\adminuser.csv | foreach-object {
 
     if ($_.SecurityGroup -ne ""){
         if (!($SecurityGroup = Get-ADGroup -filter * | where name -match $_.SecurityGroup -ErrorAction SilentlyContinue)){ 
-        $SecurityGroup = New-ADGroup -Name $_.SecurityGroup -GroupScope Global -GroupCategory Security
+        $SecurityGroup = New-ADGroup -Name $_.SecurityGroup -GroupScope Global -GroupCategory Security -ErrorAction SilentlyContinue
         }
     Add-ADGroupMember -Identity $_.SecurityGroup -Members $newUser -ErrorAction SilentlyContinue
     }
