@@ -18,6 +18,7 @@ $IPv6Prefix = "",
 [ValidateSet('24')]$IPv4PrefixLength = '24',
 [ValidateSet('8','24','32','48','64')]$IPv6PrefixLength = '8',
 [ipaddress]$DefaultGateway,
+[switch]$setwsman,
 $logpath = "c:\Scripts"
 )
 $ScriptName = $MyInvocation.MyCommand.Name
@@ -94,5 +95,12 @@ Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server' 
 Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name UserAuthentication -Value 1
 Set-NetFirewallRule -DisplayGroup 'Remote Desktop' -Enabled True
 Install-WindowsFeature –Name AD-Domain-Services,RSAT-ADDS –IncludeManagementTools
+
+if ($setwsman)
+    {
+    Enable-PSRemoting -force 
+    Set-Item wsman:\localhost\client\trustedhosts * -Force
+    }
+
 New-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce -Name "Pass2" -Value "$PSHOME\powershell.exe -Command `"New-Item -ItemType File -Path c:\scripts\2.pass`""
 restart-computer -force

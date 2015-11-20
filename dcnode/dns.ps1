@@ -27,7 +27,6 @@ if (!(Test-Path $logpath))
     }
 $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
-$PSCmdlet.MyInvocation.BoundParameter | Set-Content  "$Builddir\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $PSCmdlet.MyInvocation.BoundParameters
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {

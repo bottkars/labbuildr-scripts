@@ -27,14 +27,15 @@ if (!(Test-Path $logpath))
     {
     New-Item -ItemType Directory -Path $logpath -Force
     }
-$Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
-Set-Content -Path $Logfile $MyInvocation.BoundParameters
-$ScriptName = $MyInvocation.MyCommand.Name
-$Host.UI.RawUI.WindowTitle = "$ScriptName"
-$Builddir = $PSScriptRoot
-$Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
-New-Item -ItemType file  "$Builddir\$ScriptName$Logtime.log"
+$Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log" -ErrorAction SilentlyContinue
 ############
-$de = [ADSI]"WinNT://$computer/$Group,group" 
-Write-Verbose "Calling ADD with $Domain $User"
-$de.psbase.Invoke("Add",([ADSI]"WinNT://$domain/$user").path)
+try
+    {
+    $de = [ADSI]"WinNT://$computer/$Group,group" 
+    Write-Verbose "Calling ADD with $Domain $User"
+    $de.psbase.Invoke("Add",([ADSI]"WinNT://$domain/$user").path)
+    }
+catch
+    {
+    Write-Warning "$group does not exist"
+    }
