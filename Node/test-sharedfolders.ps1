@@ -8,13 +8,15 @@
 #>
 #requires -version 3
 [CmdletBinding()]
-param ()
+param (
+$Folder = "\\vmware-host\shared folders"
+)
 do {
 
-    $Enabled = Test-Path "\\vmware-host\shared folders"
+    $Enabled = Test-Path $folder
     if ($Enabled -notmatch $True)
         { 
-        write-warning "Shared folders not available. Please run set-vmxsharedfolderstate -enable fom labbuildr commandline or enable from vm ui"
+        write-warning "Shared folders $Folder not available."
         write-warning "Script will continue once enabled"
         $([char]7)
         Start-Sleep -Seconds 5

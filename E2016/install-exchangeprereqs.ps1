@@ -27,8 +27,7 @@ if (!(Test-Path $logpath))
 $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
-.$Nodescriptdir\test-sharedfolders.ps1
-
+.$Nodescriptdir\test-sharedfolders.ps1 -folder $Sourcepath
 $Setupcmd = "UcmaRuntimeSetup.exe"
 $Setuppath = "$SourcePath\$ex_version$Prereq\$Setupcmd"
 .$Nodescriptdir\test-setup -setup $Setupcmd -setuppath $Setuppath
