@@ -33,7 +33,7 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 
 
-.$Nodescriptdir\test-sharedfolders.ps1
+.$Nodescriptdir\test-sharedfolders.ps1 -folder $Sourcepath
 
 $Setuppath = "$SourcePath\$ex_version$ex_cu\$Setupcmd"
 .$Nodescriptdir\test-setup -setup Exchange -setuppath $Setuppath
