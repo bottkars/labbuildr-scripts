@@ -20,5 +20,5 @@ $Range1 = New-Item -Path $Ranges -Name "Range1" -Force
 
 Set-ItemProperty $ZoneMap -Name "UNCAsIntranet" -Value "1" 
 Set-ItemProperty $ZoneMap -Name "AutoDetect" -Value "1" 
-Set-ItemProperty $Range1 -Name "*" -Value  "1"
-Set-ItemProperty $Range1 -Name ":Range" -Value "file://$HostIP"
+$Range1 | Set-ItemProperty -Name "*" -Value  "1"
+$Range1 | Set-ItemProperty -Name ":Range" -Value "file://$HostIP"
