@@ -29,5 +29,5 @@ $Zonemap = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Zo
     $Range1 | Set-ItemProperty -Name "*" -Value  "1"
     $Range1 | Set-ItemProperty -Name ":Range" -Value "file://$HostIP"
 #    }
-Pause
+
 
