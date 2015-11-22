@@ -36,7 +36,14 @@ if ((Get-WmiObject -Class Win32_ComputerSystem).Manufacturer -match "Microsoft")
     {
     .$ScriptDir\Node\set-vmguesttask.ps1 -Task Domain -Status $env:USERDOMAIN
     .$ScriptDir\Node\set-vmguesttask.ps1 -Task IPAddress -Status (Get-NetIPAddress -AddressFamily IPv4 | where IPAddress -ne "127.0.0.1").ipaddress
-    .$ScriptDir\Node\set-vmguesttask.ps1 -Task Gateway -Status (Get-NetIPConfiguration).ipv4DefaultGateway.NextHop
+    try
+        {
+        .$ScriptDir\Node\set-vmguesttask.ps1 -Task Gateway -Status (Get-NetIPConfiguration).ipv4DefaultGateway.NextHop
+        }
+    catch
+        {
+        .$ScriptDir\Node\set-vmguesttask.ps1 -Task Gateway ""
+        }
     .$ScriptDir\Node\set-vmguesttask.ps1 -Task DCNODE -Status finished
     }
 
