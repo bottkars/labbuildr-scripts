@@ -11,12 +11,12 @@
 param (
 $DAGIP = ([System.Net.IPAddress])::None,
 [ValidateSet('IPv4','IPv6','IPv4IPv6')][string]$AddressFamily = 'IPv4',
-$Scriptdir = "\\vmware-host\Shared Folders\Scripts",
-$ex_version= "E2016",
+  $ex_version= "E2016",
 $ExDatabasesBase = "C:\ExchangeDatabases",
 $ExVolumesBase = "C:\ExchangeVolumes",
+$Scriptdir = "\\vmware-host\Shared Folders\Scripts",
+$SourcePath = "\\vmware-host\Shared Folders\Sources",
 $logpath = "c:\Scripts"
-
 )
 $Nodescriptdir = "$Scriptdir\NODE"
 

@@ -42,7 +42,6 @@ if ((Get-WmiObject -Class Win32_ComputerSystem).Manufacturer -match "Microsoft")
         }
     catch
         {
-        .$ScriptDir\Node\set-vmguesttask.ps1 -Task Gateway ""
         }
     .$ScriptDir\Node\set-vmguesttask.ps1 -Task DCNODE -Status finished
     }
