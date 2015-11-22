@@ -9,7 +9,7 @@
 #requires -version 3
 [CmdletBinding()]
 param(
-	[ValidateSet('nmm8221','nmm8211','nmm8212','nmm8214','nmm8216','nmm8217','nmm8218','nmm822','nmm821','nmm300', 'nmm301', 'nmm2012', 'nmm3012', 'nmm82','nmm85','nmm85.BR1','nmm85.BR2','nmm85.BR3','nmm85.BR4','nmm90.DA')]
+	[ValidateSet('nmm8211','nmm8212','nmm8214','nmm8216','nmm8217','nmm8218','nmm822','nmm821','nmm300', 'nmm301', 'nmm2012', 'nmm3012', 'nmm82','nmm85','nmm85.BR1','nmm85.BR2','nmm85.BR3','nmm85.BR4','nmm90.DA','nmm9001')]
     $nmm_ver,
     $nmmusername = "NMMBackupUser",
     $nmmPassword = "Password123!",
@@ -34,7 +34,7 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 $Domain = $env:USERDNSDOMAIN
 Write-Verbose $Domain
-.$Nodescriptdir\test-sharedfolders.ps1
+.$Nodescriptdir\test-sharedfolders.ps1 -Folder $SourcePath
 if ($Nmm_ver -lt 'nmm85')
     {
     $Setuppath = "$SourcePath\$nmm_ver\win_x64\networkr\setup.exe" 
