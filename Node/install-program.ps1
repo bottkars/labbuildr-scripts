@@ -27,7 +27,7 @@ if (!(Test-Path $logpath))
 $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
-.$NodeScriptDir\test-sharedfolders.ps1
+.$Nodescriptdir\test-sharedfolders.ps1 -folder $Sourcepath
 $Setuppath = "$SourcePath\$Program"
 .$NodeScriptDir\test-setup -setup $Program -setuppath $Setuppath
 Start-Process -FilePath $Setuppath -ArgumentList $ArgumentList -Wait

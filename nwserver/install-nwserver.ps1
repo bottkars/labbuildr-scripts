@@ -49,7 +49,7 @@ New-ItemProperty  -Path  HKLM:\SYSTEM\CurrentControlSet\Services\SNMP\Parameters
 New-ItemProperty  -Path  HKLM:\SYSTEM\CurrentControlSet\Services\SNMP\Parameters\ValidCommunities -Name "networker" -PropertyType "dword" -Value 8 -Force
 
 
-.$Nodescriptdir\test-sharedfolders.ps1
+.$Nodescriptdir\test-sharedfolders.ps1 -folder $Sourcepath
 $Setuppath = "$SourcePath\$NW_ver\win_x64\networkr"
 .$Nodescriptdir\test-setup -setup NWServer -setuppath $Setuppath
 
