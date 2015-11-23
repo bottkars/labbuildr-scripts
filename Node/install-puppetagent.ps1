@@ -29,7 +29,7 @@ $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 $Puppetmaster = "$Puppetmaster.$env:USERDOMAIN"
-.$Nodescriptdir\test-sharedfolders.ps1 -Folder $Sourcedir
+.$Nodescriptdir\test-sharedfolders.ps1 -Folder $Sourcepath
 $Setuppath = "\\vmware-host\Shared Folders\Sources\Puppet\puppet-agent-$puppetagentver-x64.msi"
 .$NodeScriptDir\test-setup -setup PuppetAgent -setuppath $Setuppath
 Write-Warning "Installing Puppet Agent $puppetagentver"
