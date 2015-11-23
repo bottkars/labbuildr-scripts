@@ -34,8 +34,8 @@ set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Syste
 set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "EnableLUA" -Value 00000000 
 if ([environment]::OSVersion.Version.Major -ge 10)
     {
-    New-ItemProperty HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -Name "FilterAdministratorToken" -Value 1 -PropertyType DWORD
-    Set-ItemProperty HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\UIPI\ -Name "(Default)" -Value 1
+    New-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "FilterAdministratorToken" -Value 1 -PropertyType DWORD
+    Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\UIPI" -Name "(Default)" -Value 1
     }
 
 
