@@ -43,5 +43,7 @@ do
     }
 Until ($gconsole_ready.StatusCode -eq "200")
 Write-Verbose "Setting Up NMC"
-start-process $Uri
+Start-Process -Wait -FilePath "javaws.exe" -ArgumentList "-import -silent -system -shortcut -association http://localhost:9000/gconsole.jnlp" 
+
+# start-process $Uri 
 
