@@ -80,11 +80,11 @@ $Arguments = "/q /ACTION=Install /FEATURES=SQL,SSMS $UpdateSource $Diskparameter
 Write-Verbose $Arguments
 Write-Warning "Starting SQL Setup $SQLVER"
 $Time = Measure-Command {Start-Process $Setuppath -ArgumentList  $Arguments -Wait}
-$Time | Set-Content "$Builddir\sqlsetup$SQLVER.txt" -Force
+$Time | Set-Content "$logpath\sqlsetup$SQLVER.txt" -Force
 If ($LASTEXITCODE -lt 0)
     {
     Write-Warning "Error $LASTEXITCODE during SQL SETUP, Please Check Installer Logfile"
-    Set-Content -Value $LASTEXITCODE -Path $Builddir\sqlexit.txt
+    Set-Content -Value $LASTEXITCODE -Path $logpath\sqlexit.txt
     Pause
     }
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
