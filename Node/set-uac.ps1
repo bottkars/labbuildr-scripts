@@ -32,12 +32,13 @@ Set-NetFirewallProfile -Profile Domain,Private -Enabled False
 write-verbose "Configuring UAC"
 set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "ConsentPromptBehaviorAdmin" -Value 00000000 
 set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "EnableLUA" -Value 00000000 
+<#
 if ([environment]::OSVersion.Version.Major -ge 10)
     {
     New-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "FilterAdministratorToken" -Value 1 -PropertyType DWORD
     Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\UIPI" -Name "(Default)" -Value 1
     }
-
+#>
 
 Write-Verbose "computer needs to be rebooted to finish UAC"
 # Restart-Computer
