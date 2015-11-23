@@ -1,4 +1,4 @@
-<#
+﻿<#
 .Synopsis
 set-unisphereexception.ps1 -Domainname <Object> [<CommonParameters>]
 

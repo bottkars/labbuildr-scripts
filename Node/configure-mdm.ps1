@@ -1,4 +1,4 @@
-<#
+﻿<#
 .Synopsis
    This script builds the scaleio mdm, sds and sdc for a hyper-v cluster
 .DESCRIPTION

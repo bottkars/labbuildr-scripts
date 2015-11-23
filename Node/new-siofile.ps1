@@ -1,4 +1,4 @@
-[CmdletBinding(DefaultParametersetName = "version",
+﻿[CmdletBinding(DefaultParametersetName = "version",
     SupportsShouldProcess=$true,
     ConfirmImpact="Medium")]
 	[OutputType([psobject])]

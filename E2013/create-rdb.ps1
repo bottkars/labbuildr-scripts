@@ -1,4 +1,4 @@
-<#
+ï»¿<#
 .Synopsis
    Short description
 .DESCRIPTION
@@ -19,7 +19,7 @@ $Domain = $Env:USERDOMAIN
 $PlainPassword = "Password123!"
 $DomainUser = "$Domain\Administrator"
 $SecurePassword = $PlainPassword | ConvertTo-SecureString -AsPlainText -Force
-$Credential = New-Object –TypeName System.Management.Automation.PSCredential –ArgumentList $DomainUser, $SecurePassword
+$Credential = New-Object â€“TypeName System.Management.Automation.PSCredential â€“ArgumentList $DomainUser, $SecurePassword
 $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$env:COMPUTERNAME/PowerShell/ -Authentication Kerberos -Credential $Credential
 Import-PSSession $Session
 $ADDomain = (get-addomain).forest

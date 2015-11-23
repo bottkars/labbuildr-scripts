@@ -1,4 +1,4 @@
-<#
+ï»¿<#
 .Synopsis
    Short description
 .DESCRIPTION
@@ -34,7 +34,7 @@ $NodeLIST += $AAGNode.Name+"\MSSQL"+$Domain
 write-Host "Adding Node $AAGnode to AAG Nodelist"
 }
 ## - Loading the SQL Server SMO Assembly"
-Import-Module “sqlps” -DisableNameChecking
+Import-Module â€œsqlpsâ€ -DisableNameChecking
 [System.Reflection.Assembly]::loadwithPartialName("Microsoft.SQLServer.SMO")
 foreach ($server in $NodeList)
 {

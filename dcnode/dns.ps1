@@ -1,4 +1,4 @@
-<#
+﻿<#
 .Synopsis
    Short description
 .DESCRIPTION
@@ -41,7 +41,7 @@ if ( $AddressFamily -match 'IPv4')
     $reverse = $IPv4subnet+'.0/'+$IPv4PrefixLength
     Add-DnsServerPrimaryZone -NetworkID $reverse -ReplicationScope "Forest" -DynamicUpdate NonsecureAndSecure
     Add-DnsServerForwarder -IPAddress 8.8.8.8
-    Write-Verbose "Setting Ressource Records for EMC VA�s"
+    Write-Verbose "Setting Ressource Records for EMC VA´s"
     Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name Vipr1 -IPv4Address "$IPv4Subnet.9" -ZoneName $zone.Zonename
     Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name "NVENode1" -IPv4Address "$IPv4Subnet.12" -ZoneName $zone.Zonename
     Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name PuppetMaster1 -IPv4Address "$IPv4Subnet.15" -ZoneName $zone.Zonename

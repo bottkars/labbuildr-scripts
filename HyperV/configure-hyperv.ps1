@@ -1,4 +1,4 @@
-<#
+ï»¿<#
 .Synopsis
    Short description
 .DESCRIPTION
@@ -27,7 +27,7 @@ $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ######################################################################
 Write-Verbose "Setting Switches"
-New-VMSwitch -Name External -NetAdapterName $env:USERDOMAIN -AllowManagementOS $True -Notes "Management,VM´s and External"
-New-VMSwitch -Name Internal -SwitchType Internal -Notes "VM´s and VMHost"
-New-VMSwitch -Name Internal -SwitchType Private -Notes "VM´s only"
+New-VMSwitch -Name External -NetAdapterName $env:USERDOMAIN -AllowManagementOS $True -Notes "Management,VMÂ´s and External"
+New-VMSwitch -Name Internal -SwitchType Internal -Notes "VMÂ´s and VMHost"
+New-VMSwitch -Name Internal -SwitchType Private -Notes "VMÂ´s only"
 

@@ -1,4 +1,4 @@
-[CmdletBinding(DefaultParametersetName = "version",
+ï»¿[CmdletBinding(DefaultParametersetName = "version",
     SupportsShouldProcess=$true,
     ConfirmImpact="Medium")]
 	[OutputType([psobject])]
@@ -9,9 +9,9 @@ param (
     [Parameter(Mandatory = $false)][string]$HostIP = "192.168.7.3"
 )
 $SecurePassword = $Password | ConvertTo-SecureString -AsPlainText -Force
-$Credential = New-Object –TypeName System.Management.Automation.PSCredential –ArgumentList $user, $SecurePassword
-New-PSDrive –Name “Z” –PSProvider FileSystem –Root “\\$HostIP\Scripts” –Persist -Credential $Credential -Scope Global
-New-PSDrive –Name “X” –PSProvider FileSystem –Root “\\$HostIP\Sources” –Persist -Credential $Credential -Scope Global
+$Credential = New-Object â€“TypeName System.Management.Automation.PSCredential â€“ArgumentList $user, $SecurePassword
+New-PSDrive â€“Name â€œZâ€ â€“PSProvider FileSystem â€“Root â€œ\\$HostIP\Scriptsâ€ â€“Persist -Credential $Credential -Scope Global
+New-PSDrive â€“Name â€œXâ€ â€“PSProvider FileSystem â€“Root â€œ\\$HostIP\Sourcesâ€ â€“Persist -Credential $Credential -Scope Global
  $Zonemaps = ("HKLM:\Software\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap",
 "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap")
 

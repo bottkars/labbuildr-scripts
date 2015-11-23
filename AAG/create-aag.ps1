@@ -1,4 +1,4 @@
-<#
+ï»¿<#
 .Synopsis
    Short description
 .DESCRIPTION
@@ -37,7 +37,7 @@ foreach ($AAGnode in $AAGnodes){
 $NodeLIST += $AAGNode.Name+"\MSSQL"+$Domain
 write-Host "Adding Node $AAGnode to AAG Nodelist"
 }
-Import-Module “sqlps” -DisableNameChecking
+Import-Module â€œsqlpsâ€ -DisableNameChecking
 # Initialize some collections
 $serverObjects = @()
 $replicas = @()
@@ -136,7 +136,7 @@ foreach ($secondary in $secondaries)
     Add-SqlAvailabilityDatabase -InputObject $ag -Database $DatabaseList 
 
 }
-#ADD LISTENER ‘MyAg2ListenerIvP6’ ( WITH IP ( ('2001:db88:f0:f00f::cf3c'),('2001:4898:e0:f213::4ce2') ) , PORT = 60173 ); 
+#ADD LISTENER â€˜MyAg2ListenerIvP6â€™ ( WITH IP ( ('2001:db88:f0:f00f::cf3c'),('2001:4898:e0:f213::4ce2') ) , PORT = 60173 ); 
 ## Creating the Listener
 
 
