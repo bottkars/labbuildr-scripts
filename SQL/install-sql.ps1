@@ -30,7 +30,7 @@ if (!(Test-Path $logpath))
 $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
-.$Nodescriptdir\test-sharedfolders.ps1
+.$Nodescriptdir\test-sharedfolders.ps1 -Folder $Sourcedir
 ############ adding Domin Service Accounts
 $Domain = $env:USERDOMAIN
 net localgroup "Backup Operators" $Domain\SVC_SQLADM /Add

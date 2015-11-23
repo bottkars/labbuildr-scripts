@@ -29,7 +29,7 @@ if (!(Test-Path $logpath))
 $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
-.$Nodescriptdir\test-sharedfolders.ps1
+.$Nodescriptdir\test-sharedfolders.ps1 -Folder $Sourcedir
 $ScaleIORoot = "\\vmware-host\shared folders\Sources\Scaleio\"
 While ((Test-Path $ScaleIORoot) -Ne $true)
     {
