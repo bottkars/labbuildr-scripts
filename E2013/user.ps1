@@ -1,4 +1,4 @@
-ï»¿<#
+<#
 .Synopsis
    Short description
 .DESCRIPTION
@@ -41,7 +41,7 @@ $AttachDir =  '\\vmware-host\Shared Folders\Sources\Attachments'
 $PlainPassword = "Password123!"
 $DomainUser = "$Domain\Administrator"
 $SecurePassword = $PlainPassword | ConvertTo-SecureString -AsPlainText -Force
-$Credential = New-Object â€“TypeName System.Management.Automation.PSCredential â€“ArgumentList $DomainUser, $SecurePassword
+$Credential = New-Object –TypeName System.Management.Automation.PSCredential –ArgumentList $DomainUser, $SecurePassword
 Set-TransportConfig -MaxReceiveSize 50MB
 Set-TransportConfig -MaxSendSize 50MB
 Enable-Mailbox -Identity $BackupAdmin
@@ -52,7 +52,7 @@ if (Test-Path $AttachDir)
 $RoleGroup = "EMC NMM Exchange Admin Roles"
 $Roles = ("Database Copies", "Databases", "Disaster Recovery", "Mailbox Import Export", "Mail Recipient Creation", "Mail Recipients", "View-Only Configuration", "View-Only Recipients")
 New-RoleGroup -Name $RoleGroup -DisplayName $RoleGroup -Members $BackupAdmin -Roles $Roles -Description "This role group allows its users to perform database recovery and GLR"
-Add-RoleGroupMember "Discovery Management" â€“Member $BackupAdmin
+Add-RoleGroupMember "Discovery Management" –Member $BackupAdmin
 Get-MailboxDatabase | Set-MailboxDatabase -CircularLoggingEnabled $false
 New-Item -ItemType Directory -Path R:\rdb
 New-Item -ItemType Directory -Path S:\rdb

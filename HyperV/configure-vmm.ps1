@@ -1,4 +1,4 @@
-ï»¿<#
+<#
 .Synopsis
    Short description
 .DESCRIPTION
@@ -35,7 +35,7 @@ Import-Module 'C:\Program Files\Microsoft System Center 2012 R2\Virtual Machine 
 Get-SCVMMServer $Env:COMPUTERNAME
 ####
 $SecurePassword = $PlainPassword | ConvertTo-SecureString -AsPlainText -Force
-$Credential = New-Object â€“TypeName System.Management.Automation.PSCredential â€“ArgumentList $DomainUser, $SecurePassword
+$Credential = New-Object –TypeName System.Management.Automation.PSCredential –ArgumentList $DomainUser, $SecurePassword
 $runAsAccount = New-SCRunAsAccount -Credential $credential -Name "LabbuildrRunAs" -Description "Labbuildr Admin Runas Account"
 Write-Output $runAsAccount
 $hostGroup = Get-SCVMHostGroup -Name "All Hosts"

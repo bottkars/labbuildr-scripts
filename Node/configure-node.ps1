@@ -1,4 +1,4 @@
-ï»¿<#
+<#
 .Synopsis
    Short description
 .DESCRIPTION
@@ -78,22 +78,22 @@ If ($AddressFamily -match 'IPv4')
 
     if ($DefaultGateway)
         {
-        New-NetIPAddress -InterfaceAlias "$Domain" -AddressFamily IPv4 â€“IPAddress "$nodeIP" â€“PrefixLength $IPv4PrefixLength -DefaultGateway "$DefaultGateway"
+        New-NetIPAddress -InterfaceAlias "$Domain" -AddressFamily IPv4 –IPAddress "$nodeIP" –PrefixLength $IPv4PrefixLength -DefaultGateway "$DefaultGateway"
         }
     else
         {
-        New-NetIPAddress -InterfaceAlias "$Domain"  -AddressFamily IPv4 â€“IPAddress "$nodeIP" â€“PrefixLength $IPv4PrefixLength
+        New-NetIPAddress -InterfaceAlias "$Domain"  -AddressFamily IPv4 –IPAddress "$nodeIP" –PrefixLength $IPv4PrefixLength
         }
 }
 If ($AddressFamily -match 'IPv6')
     {
     if ($DefaultGateway)
         {
-        New-NetIPAddress -InterfaceAlias "$Domain" -AddressFamily IPv6 â€“IPAddress $IPv6Address â€“PrefixLength $IPv6PrefixLength -DefaultGateway "$IPv6subnet.$(([System.Version]$DefaultGateway.ToString()).revision)"
+        New-NetIPAddress -InterfaceAlias "$Domain" -AddressFamily IPv6 –IPAddress $IPv6Address –PrefixLength $IPv6PrefixLength -DefaultGateway "$IPv6subnet.$(([System.Version]$DefaultGateway.ToString()).revision)"
         }
         else
         {
-        New-NetIPAddress -InterfaceAlias "$Domain" -AddressFamily IPv6 â€“IPAddress $IPv6Address â€“PrefixLength $IPv6PrefixLength
+        New-NetIPAddress -InterfaceAlias "$Domain" -AddressFamily IPv6 –IPAddress $IPv6Address –PrefixLength $IPv6PrefixLength
         }
 }
 

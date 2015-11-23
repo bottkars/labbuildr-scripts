@@ -1,4 +1,4 @@
-﻿<#
+<#
 .Synopsis
    Change Default gateway for Known Hosts
 .DESCRIPTION

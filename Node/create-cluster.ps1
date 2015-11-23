@@ -1,4 +1,4 @@
-ï»¿<#
+<#
 .Synopsis
    Short description
 .DESCRIPTION
@@ -64,7 +64,7 @@ switch ($AddressFamily)
         {
         New-Cluster -Name $Clustername -Node $NodeLIST
         Add-ClusterResource -Name "IPv6 Cluster Address" -ResourceType "IPv6 Address" -Group "Cluster Group"
-        Get-ClusterResource "IPv6 Cluster Address" | Set-ClusterParameter â€“Multiple @{"Network"="Cluster Network 1"; "Address"= "$IPv6Address";"PrefixLength"=$IPv6PrefixLength}
+        Get-ClusterResource "IPv6 Cluster Address" | Set-ClusterParameter –Multiple @{"Network"="Cluster Network 1"; "Address"= "$IPv6Address";"PrefixLength"=$IPv6PrefixLength}
         $res = Get-ClusterResource "Cluster Name" 
         Stop-ClusterResource -Name $res
         Set-ClusterResourceDependency -Dependency "[Ipv6 Cluster Address]" -InputObject $res
@@ -74,7 +74,7 @@ switch ($AddressFamily)
         {
         New-Cluster -Name $Clustername -Node $NodeLIST -StaticAddress $IPAddress -NoStorage
         Add-ClusterResource -Name "IPv6 Cluster Address" -ResourceType "IPv6 Address" -Group "Cluster Group"
-        Get-ClusterResource "IPv6 Cluster Address" | Set-ClusterParameter â€“Multiple @{"Network"="Cluster Network 1"; "Address"= "$IPv6Address";"PrefixLength"=$IPv6PrefixLength}
+        Get-ClusterResource "IPv6 Cluster Address" | Set-ClusterParameter –Multiple @{"Network"="Cluster Network 1"; "Address"= "$IPv6Address";"PrefixLength"=$IPv6PrefixLength}
         $res = Get-ClusterResource "Cluster Name" 
         Stop-ClusterResource -Name $res
         Set-ClusterResourceDependency -Dependency "[Ipv6 Cluster Address]" -InputObject $res

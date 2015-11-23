@@ -1,4 +1,4 @@
-ï»¿<#
+<#
 .Synopsis
    Short description
 .DESCRIPTION
@@ -25,7 +25,7 @@ if (!(Test-Path $logpath))
 $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ######################################################################
-# Test-Cluster â€“Node GenNode1, GenNode2, GenNode3, GenNode4â€“Include â€œStorage Spaces Directâ€,Inventory,Network,â€System Configurationâ€
+# Test-Cluster –Node GenNode1, GenNode2, GenNode3, GenNode4–Include “Storage Spaces Direct”,Inventory,Network,”System Configuration”
 Write-Host "Enabling Spaces Direct"
 Enable-ClusterStorageSpacesDirect
 $Domain = $env:USERDOMAIN
@@ -39,8 +39,8 @@ $Storagepool = $StorageSubSystem | New-StoragePool  -FriendlyName "$Domain-Pool1
 # Get-StoragePool Pool1 | Get-PhysicalDisk |? MediaType -eq SSD | Set-PhysicalDisk -Usage Journal
 Write-Host "Building CSV Volumes with ReFS"
 
-$Storagepool | New-Volume -FriendlyName VDISK1 -PhysicalDiskRedundancy 1 -FileSystem CSVFS_REFS â€“Size 50GB
-$Storagepool | New-VOlume -FriendlyName VDISK2 -PhysicalDiskRedundancy 2 -FileSystem CSVFS_REFS â€“Size 50GB
-$Storagepool | New-Volume -FriendlyName VDISK3 -PhysicalDiskRedundancy 1 -FileSystem CSVFS_REFS â€“Size 50GB -ResiliencySettingName Parity
+$Storagepool | New-Volume -FriendlyName VDISK1 -PhysicalDiskRedundancy 1 -FileSystem CSVFS_REFS –Size 50GB
+$Storagepool | New-VOlume -FriendlyName VDISK2 -PhysicalDiskRedundancy 2 -FileSystem CSVFS_REFS –Size 50GB
+$Storagepool | New-Volume -FriendlyName VDISK3 -PhysicalDiskRedundancy 1 -FileSystem CSVFS_REFS –Size 50GB -ResiliencySettingName Parity
 $Storagepool | New-Volume -FriendlyName VDISK4 -PhysicalDiskRedundancy 2 -FileSystem CSVFS_REFS -Size 50GB -ResiliencySettingName Parity
-#Set-FileIntegrity C:\ClusterStorage\Volume1 â€“Enable $false
+#Set-FileIntegrity C:\ClusterStorage\Volume1 –Enable $false

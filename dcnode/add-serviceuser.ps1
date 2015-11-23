@@ -1,4 +1,4 @@
-﻿<#
+<#
 .Synopsis
    labbuildr allows you to create Virtual Machines with VMware Workstation froim Predefined Scenarios.
    Scenarios include Exchange 2013, SQL, Hyper-V, SCVMM

@@ -1,4 +1,4 @@
-﻿############ massmailer Script   
+############ massmailer Script   
 # Karsten Bott  
 # Karsten.Bott@emc.com  
 # 24.05.2013

@@ -1,4 +1,4 @@
-﻿<#
+<#
 .Synopsis
    Short description
 .DESCRIPTION
@@ -55,7 +55,7 @@ $Targetfile = Copy-Item $sourcevhd -Destination "$Clustervolume\$vmname\$vmname.
 $NewVM = New-VM -Name $vmname -Path $Clustervolume -Memory 512MB  -VHDPath $Targetfile.FullName -SwitchName External
 $NewVM | Set-VMMemory -DynamicMemoryEnabled $true -MinimumBytes 128MB -StartupBytes 512MB -MaximumBytes 2GB -Priority 80 -Buffer 25
 $NewVM | Get-VMHardDiskDrive | Set-VMHardDiskDrive -MaximumIOPS 2000
-$Newvm | Set-VM –AutomaticStartAction Start
+$Newvm | Set-VM �AutomaticStartAction Start
 $NewVM | Add-ClusterVirtualMachineRole 
 $NewVM | start-vm
 $NewVM | Get-VM

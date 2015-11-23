@@ -1,4 +1,4 @@
-ï»¿<#
+<#
 .Synopsis
    Short description
 .DESCRIPTION
@@ -98,7 +98,7 @@ cd c:\windows\system32\inetsrv
 c:\windows\system32\inetsrv\appcmd.exe set config "Default Web Site/Powershell" -section:system.webServer/security/authentication/windowsAuthentication /useKernelMode:"False"  /commit:apphost
 
 write-output "setting exchange powershell to full language"
-$ExchangePath = â€˜HKLM:\SOFTWARE\Microsoft\ExchangeServer\v15\Setupâ€™
+$ExchangePath = ‘HKLM:\SOFTWARE\Microsoft\ExchangeServer\v15\Setup’
 $webconfig = Join-Path (Get-ItemProperty $ExchangePath).MsiInstallPath ClientAccess\PowerShell-Proxy\web.config
 (get-content $webconfig) | foreach-object {$_ -replace '<add key="PSLanguageMode" value="RestrictedLanguage"/>','<add key="PSLanguageMode" value="FullLanguage"/>'} | set-content $webconfig
 Restart-WebAppPool -name MSExchangePowerShellAppPool
