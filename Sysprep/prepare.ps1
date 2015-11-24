@@ -2,7 +2,7 @@
     ConfirmImpact="Medium")]
 param
     (
-    [ValidateSet('de-De','en-Us')]$Locale = 'de-De'
+    [ValidateSet('de-De','en-Us')]$Locale = 'en-Us'
     )
 $Builddir = $PSScriptRoot
 $Scriptdir = "c:\scripts"
