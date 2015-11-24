@@ -20,7 +20,7 @@ $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
 $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
-New-Item -ItemType file  "$Builddir\$ScriptName$Logtime.log"
+New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 ############
 .$Nodescriptdir\test-sharedfolders.ps1 -folder $Sourcepath
 

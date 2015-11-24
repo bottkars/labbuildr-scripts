@@ -11,14 +11,23 @@
 param(
 $Subnet = "192.168.2",
 [ValidateSet('IPv4','IPv6','IPv4IPv6')][string]$AddressFamily = 'IPv4',
-$IPV6Prefix
+$IPV6Prefix,
+$Scriptdir = "\\vmware-host\Shared Folders\Scripts",
+$SourcePath = "\\vmware-host\Shared Folders\Sources",
+$logpath = "c:\Scripts",
+$ex_version= "E2013",
+$Prereq ="Prereq" 
 )
-Write-Output "Setting user credentials to perform installation and configuration"
+$Nodescriptdir = "$Scriptdir\Node"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
 $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
-New-Item -ItemType file  "$Builddir\$ScriptName$Logtime.log"
+New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
+############
+.$Nodescriptdir\test-sharedfolders.ps1 -folder $Sourcepath
+
+
 $Dot = "."
 $Domain = $env:USERDOMAIN
 $ADDomain = $env:USERDNSDOMAIN
@@ -37,7 +46,7 @@ Follow me on twritter @Hyperv_Guy
 Make sure to Rate in my Blog !
 https://community.emc.com/blogs/bottk/2015/03/30/labbuildrbeta
 "
-$AttachDir =  '\\vmware-host\Shared Folders\Sources\Attachments'
+$AttachDir =  "$SourcePath\Attachments"
 $PlainPassword = "Password123!"
 $DomainUser = "$Domain\Administrator"
 $SecurePassword = $PlainPassword | ConvertTo-SecureString -AsPlainText -Force
@@ -69,9 +78,9 @@ if (Get-DatabaseAvailabilityGroup)
     $DAGDatabase = Get-MailboxDatabase | where ReplicationType -eq Remote
     $Database = $DAGDatabase.Name}
     $Users = Import-CSV C:\Scripts\user.csv 
-    if (Test-Path '\\vmware-host\Shared Folders\Sources\customuser*.csv')
+    if (Test-Path "$SourcePath\customuser*.csv")
         {
-        $Users += Import-CSV '\\vmware-host\Shared Folders\Sources\customuser*.csv'
+        $Users += Import-CSV "$SourcePath\customuser*.csv"
         }
     $Users | ForEach {
 $givenname=$_.givenname

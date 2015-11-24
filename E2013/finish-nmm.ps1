@@ -31,7 +31,7 @@ $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
 $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
-New-Item -ItemType file  "$Builddir\$ScriptName$Logtime.log"
+New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 ############
 $Domain = $env:USERDOMAIN
 Copy-Item -Path 'C:\scripts\Networker User for Microsoft.lnk' C:\Users\Public\Desktop

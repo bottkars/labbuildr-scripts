@@ -10,14 +10,17 @@
 [CmdletBinding()]
 param(
 $ex_version= "E2013",
+$Scriptdir = "\\vmware-host\Shared Folders\Scripts",
 $SourcePath = "\\vmware-host\Shared Folders\Sources",
-$Prereq ="Prereq" 
+$logpath = "c:\Scripts",
+$Prereq ="Prereq", 
+$Setupcmd = "Setup.exe"
 )
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
 $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
-New-Item -ItemType file  "$Builddir\$ScriptName$Logtime.log"
+New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 ############
 $ADDomain = (get-addomain).forest
 $maildom= "@"+$ADDomain
@@ -83,7 +86,7 @@ New-ItemProperty "HKLM:Software\Microsoft\ExchangeServer\v15\ActiveMonitoring\Pa
 ####### Installing CDO
 $Setupcmd = "ExchangeMapiCdo.msi"
 $Setuppath = "$SourcePath\$ex_version$Prereq\ExchangeMapiCdo\$Setupcmd"
-.$Builddir\test-setup -setup $Setupcmd -setuppath $Setuppath
+.$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
 Start-Process $Setuppath -ArgumentList "/quiet /passive" -Wait
 ######################
 cd c:\windows\system32\inetsrv

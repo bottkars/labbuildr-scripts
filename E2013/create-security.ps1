@@ -1,7 +1,7 @@
 ﻿$ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
-New-Item -ItemType file  "$Builddir\$ScriptName.log"
+New-Item -ItemType file  "c:\scripts\$ScriptName.log"
 $SeService = "SeServiceLogonRight = *"
 $SID = (get-aduser nmmbackupuser).SID.Value
 $AddSecurity = @('[Unicode]','Unicode=yes','[Version]','signature="$CHICAGO$"','Revision =1','[Privilege Rights]',"$SeService$Sid")

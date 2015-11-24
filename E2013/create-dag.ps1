@@ -10,14 +10,18 @@
 [CmdletBinding()]
 param (
 $DAGIP = ([System.Net.IPAddress])::None,
-[ValidateSet('IPv4','IPv6','IPv4IPv6')][string]$AddressFamily = 'IPv4'
+[ValidateSet('IPv4','IPv6','IPv4IPv6')][string]$AddressFamily = 'IPv4',
+$Scriptdir = "\\vmware-host\Shared Folders\Scripts",
+$SourcePath = "\\vmware-host\Shared Folders\Sources",
+$logpath = "c:\Scripts",
+$Prereq ="Prereq"
 )
 
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
 $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
-New-Item -ItemType file  "$Builddir\$ScriptName$Logtime.log"
+New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 ############
 Write-Verbose $AddressFamily
 Write-Verbose $DAGIP
