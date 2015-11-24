@@ -22,22 +22,22 @@ $Builddir = $PSScriptRoot
 $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
 New-Item -ItemType file  "$Builddir\$ScriptName$Logtime.log"
 ############
-.$Builddir\test-sharedfolders.ps1
+.$Nodescriptdir\test-sharedfolders.ps1 -folder $Sourcepath
 
 
 $Setupcmd = "UcmaRuntimeSetup.exe"
 $Setuppath = "$SourcePath\$ex_version$Prereq\$Setupcmd"
-.$Builddir\test-setup -setup $Setupcmd -setuppath $Setuppath
+.$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
 .$Setuppath /passive /norestart
 
 $Setupcmd = "FilterPack64bit.exe"
 $Setuppath = "$SourcePath\$ex_version$Prereq\$Setupcmd"
-.$Builddir\test-setup -setup $Setupcmd -setuppath $Setuppath
+.$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
 .$Setuppath /passive /norestart
 
 $Setupcmd = "filterpack2010sp1-kb2460041-x64-fullfile-en-us.exe"
 $Setuppath = "$SourcePath\$ex_version$Prereq\$Setupcmd"
-.$Builddir\test-setup -setup $Setupcmd -setuppath $Setuppath
+.$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
 .$Setuppath /passive /norestart
 
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
