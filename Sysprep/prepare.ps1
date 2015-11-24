@@ -5,6 +5,7 @@ param
     [ValidateSet('de-De','en-Us')]$Locale = 'de-De'
     )
 $Builddir = $PSScriptRoot
+$Scriptdir = "c:\scripts"
 write-host "Generating Answerfile with Locale $Locale"
 $Content = get-content "$Builddir\2016TP3_HV.xml"
 foreach ($Pattern in ('InputLocale','SystemLocale','UserLocale','UILanguage'))
@@ -12,8 +13,8 @@ foreach ($Pattern in ('InputLocale','SystemLocale','UserLocale','UILanguage'))
     $Content = $Content -replace  "^*<$Pattern>.*$"," <$Pattern>$Locale</$Pattern>"
     $Content = $Content -replace  "^*<UILanguageFallback>.*$","<UILanguageFallback>en-Us</UILanguageFallback>"       
     }
-new-item -ItemType Directory c:\scripts -force | out-null
-$Content | Set-Content -Path "c:\sysprep\answerfile.xml" -Force
+new-item -ItemType Directory $Scriptdir -force | out-null
+$Content | Set-Content -Path "$Scriptdir\answerfile.xml" -Force
 write-host "Checking for Net-Framework-Core"
 if ((Get-WindowsFeature net-framework-core).installstate -ne "installed")
     {
@@ -37,5 +38,5 @@ Write-Host "Starting Sysprep"
             pause
             }
 
-Start-Process "c:\windows\system32\sysprep\sysprep.exe" -ArgumentList "/generalize /oobe /unattend:c:\scripts\answerfile.xml"
+Start-Process "c:\windows\system32\sysprep\sysprep.exe" -ArgumentList "/generalize /oobe /unattend:$Scriptdir\answerfile.xml"
 
