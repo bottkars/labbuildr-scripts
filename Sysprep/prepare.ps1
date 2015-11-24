@@ -1,5 +1,4 @@
-﻿            
-param
+﻿param
     (
     [ValidateSet('de-De','en-Us')]$Locale = 'de-De'
     )
