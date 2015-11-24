@@ -18,7 +18,7 @@ write-host "Checking for Net-Framework-Core"
 if ((Get-WindowsFeature net-framework-core).installstate -ne "installed")
     {
     Write-Warning "We need to install Net-Framework-Core in order to run SQL Based VM´s"
-    $CDRom = (Get-Volume | where DriveType -Match CDROM).DriveLetter
+    $CDRom = (Get-Volume | where DriveType -Match "CD-ROM").DriveLetter
     if (!$CDRom)
         {
         Write-Warning "Please insert Windows INSTALL CD into VM"
