@@ -37,5 +37,5 @@ Write-Host "Starting Sysprep"
             pause
             }
 
-Start-Process "c:\windows\system32\sysprep\sysprep.exe" -ArgumentList "/generalize /oobe /unattend:$Builddir\answerfile.xml"
+Start-Process "c:\windows\system32\sysprep\sysprep.exe" -ArgumentList "/generalize /oobe /unattend:c:\scripts\answerfile.xml"
 
