@@ -1,9 +1,11 @@
-﻿param
+﻿[CmdletBinding(SupportsShouldProcess=$true,
+    ConfirmImpact="Medium")]
+param
     (
     [ValidateSet('de-De','en-Us')]$Locale = 'de-De'
     )
 $Builddir = $PSScriptRoot
-
+write-host "Generating Answerfile with Locale $Locale"
 $Content = get-content "$Builddir\2016TP3_HV.xml"
 foreach ($Pattern in ('InputLocale','SystemLocale','UserLocale','UILanguage'))
     {     
@@ -12,6 +14,7 @@ foreach ($Pattern in ('InputLocale','SystemLocale','UserLocale','UILanguage'))
     }
     
 $Content | Set-Content -Path "$Builddir\answerfile.xml"
+write-host "Checking for Net-Framework-Core"
 if ((Get-WindowsFeature net-framework-core).installstate -ne "installed")
     {
     Write-Warning "We need to install Net-Framework-Core in order to run SQL Based VM´s"
@@ -27,6 +30,12 @@ if ((Get-WindowsFeature net-framework-core).installstate -ne "installed")
         }
     Add-WindowsFeature net-framework-core -Source "$($CDRom):\sources\sxs"
     }
+Write-Host "Starting Sysprep"
+        if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
+            {
+            Write-Verbose "Press any Key to continue to sysprep"
+            pause
+            }
 
 Start-Process "c:\windows\system32\sysprep\sysprep.exe" -ArgumentList "/generalize /oobe /unattend:$Builddir\answerfile.xml"
 
