@@ -12,8 +12,8 @@ foreach ($Pattern in ('InputLocale','SystemLocale','UserLocale','UILanguage'))
     $Content = $Content -replace  "^*<$Pattern>.*$"," <$Pattern>$Locale</$Pattern>"
     $Content = $Content -replace  "^*<UILanguageFallback>.*$","<UILanguageFallback>en-Us</UILanguageFallback>"       
     }
-    
-$Content | Set-Content -Path "$Builddir\answerfile.xml"
+new-item -ItemType Directory c:\scripts -force | out-null
+$Content | Set-Content -Path "c:\sysprep\answerfile.xml" -Force
 write-host "Checking for Net-Framework-Core"
 if ((Get-WindowsFeature net-framework-core).installstate -ne "installed")
     {
