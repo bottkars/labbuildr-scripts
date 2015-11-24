@@ -9,7 +9,10 @@
 #requires -version 3
 [CmdletBinding()]
 param (
-
+$Scriptdir = "\\vmware-host\Shared Folders\Scripts",
+$SourcePath = "\\vmware-host\Shared Folders\Sources",
+$logpath = "c:\Scripts",
+$ex_version= "E2013"
 )
 
 function Createvolume {

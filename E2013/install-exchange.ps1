@@ -11,8 +11,10 @@
 param(
 [Parameter(Mandatory=$true)]
 [ValidateSet('cu1', 'cu2', 'cu3', 'sp1','cu5','cu6','cu7','cu8','cu9','cu10')]$ex_cu,
-$ex_version= "E2013",
+$Scriptdir = "\\vmware-host\Shared Folders\Scripts",
 $SourcePath = "\\vmware-host\Shared Folders\Sources",
+$logpath = "c:\Scripts",
+$ex_version= "E2013",
 $Setupcmd = "Setup.exe"
 )
 $ScriptName = $MyInvocation.MyCommand.Name

@@ -9,11 +9,13 @@
 #requires -version 3
 [CmdletBinding()]
 param(
-$ex_version= "E2013",
+$Scriptdir = "\\vmware-host\Shared Folders\Scripts",
 $SourcePath = "\\vmware-host\Shared Folders\Sources",
-$Prereq ="Prereq"
+$logpath = "c:\Scripts",
+$ex_version= "E2013",
+$Prereq ="Prereq" 
 )
-
+$Nodescriptdir = "$Scriptdir\Node"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
