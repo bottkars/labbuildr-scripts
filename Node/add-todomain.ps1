@@ -18,7 +18,7 @@ param(
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
     $logpath = "c:\Scripts"
 )
-$Nodescriptdir = "$Scriptdir\Node"
+$Nodescriptdir = join-path $Scriptdir "Node"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
