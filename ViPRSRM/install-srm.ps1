@@ -28,7 +28,7 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 .$Nodescriptdir\test-sharedfolders.ps1 -Folder $Sourcepath
 ############
-$Setuppath = "\\vmware-host\shared folders\Sources\ViPR_SRM_$($SRM_VER)_Win64.exe"
+$Setuppath = "$Scriptdir\ViPR_SRM_$($SRM_VER)_Win64.exe"
 Write-Warning "Installing SRM $SRM_VER, this could take up to 10 Minutes"
 .$Builddir\test-setup -setup SRM -setuppath $Setuppath
 Write-Warning "Installing SRM $SRM_VER"
