@@ -30,7 +30,7 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 $Setuppath = "$Scriptdir\ViPR_SRM_$($SRM_VER)_Win64.exe"
 Write-Warning "Installing SRM $SRM_VER, this could take up to 10 Minutes"
-.$Builddir\test-setup.ps1 -setup SRM -setuppath $Setuppath
+.$Nodescriptdir\test-setup.ps1 -setup SRM -setuppath $Setuppath
 Write-Warning "Installing SRM $SRM_VER"
 Start-Process -FilePath $Setuppath -ArgumentList "/S" -PassThru -Wait
 Start-Process "http://$($Env:COMPUTERNAME):58080/APG/"
