@@ -9,14 +9,14 @@
 #requires -version 3
 [CmdletBinding()]
 param(
-    $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
-    $SourcePath = "\\vmware-host\Shared Folders\Sources",
-    $logpath = "c:\Scripts",
     $Password = "Password123!",
     $ex_version= "E2013",
-    $BackupUser = "NMMBackupUser"
+    $BackupUser = "NMMBackupUser",
+    $Scriptdir = '\\vmware-host\Shared Folders\Scripts',
+    $SourcePath = '\\vmware-host\Shared Folders\Sources',
+    $logpath = "c:\Scripts"
 )
-$Nodescriptdir = "$Scriptdir\Node"
+$Nodescriptdir = Join-Path $Scriptdir "Node"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
@@ -27,11 +27,8 @@ if (!(Test-Path $logpath))
     }
 $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
-$ScriptName = $MyInvocation.MyCommand.Name
-$Host.UI.RawUI.WindowTitle = "$ScriptName"
-$Builddir = $PSScriptRoot
-$Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
-New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
+############
+
 ############
 $Domain = $env:USERDOMAIN
 Copy-Item -Path 'C:\scripts\Networker User for Microsoft.lnk' C:\Users\Public\Desktop

@@ -11,34 +11,37 @@
 param(
 [Parameter(Mandatory=$true)]
 [ValidateSet('cu1', 'cu2', 'cu3', 'sp1','cu5','cu6','cu7','cu8','cu9','cu10')]$ex_cu,
+$ExDatabasesBase = "C:\ExchangeDatabases",
 $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
 $SourcePath = "\\vmware-host\Shared Folders\Sources",
 $logpath = "c:\Scripts",
 $ex_version= "E2013",
+$Prereq ="Prereq", 
 $Setupcmd = "Setup.exe"
 )
+$Nodescriptdir = "$Scriptdir\NODE"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
-New-Item -ItemType file  "$Builddir\$ScriptName.log"
-$Nodescriptdir = "$Scriptdir\NODE"
+$Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
+if (!(Test-Path $logpath))
+    {
+    New-Item -ItemType Directory -Path $logpath -Force
+    }
+$Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
+Set-Content -Path $Logfile $MyInvocation.BoundParameters
+############
 
-$DB1 = "DB1_"+$env:COMPUTERNAME
-$DBpath =  New-Item -ItemType Directory -Path M:\DB1
-$LogPath = New-Item -ItemType Directory -Path N:\DB1
 
 .$Nodescriptdir\test-sharedfolders.ps1 -folder $Sourcepath
-
 
 $Setuppath = "$SourcePath\$ex_version$ex_cu\$Setupcmd"
 .$Nodescriptdir\test-setup -setup Exchange -setuppath $Setuppath
 
+$DB1 = "DB1_"+$env:COMPUTERNAME
 
-Start-Process $Setuppath -ArgumentList "/mode:Install /role:ClientAccess,Mailbox /OrganizationName:`"labbuildr`" /IAcceptExchangeServerLicenseTerms /MdbName:$DB1 /DbFilePath:M:\DB1\DB1.edb /LogFolderPath:N:\DB1" -Wait
+Start-Process $Setuppath -ArgumentList "/mode:Install /role:Mailbox /OrganizationName:`"$Env:USERDOMAIN`" /IAcceptExchangeServerLicenseTerms /MdbName:$DB1 /DbFilePath:$ExDatabasesBase\DB1\DB1.DB\DB1.EDB /LogFolderPath:$ExDatabasesBase\DB1\DB1.LOG" -Wait
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {
     Pause
     }
-# New-Item -ItemType File -Path "c:\scripts\exchange.pass"
-New-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce -Name $ScriptName -Value "$PSHOME\powershell.exe -Command `"New-Item -ItemType File -Path c:\scripts\exchange.pass`""
-Restart-Computer

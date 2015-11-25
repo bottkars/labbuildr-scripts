@@ -10,17 +10,23 @@
 [CmdletBinding()]
 param(
 $ex_version= "E2013",
-$Scriptdir = "\\vmware-host\Shared Folders\Scripts",
-$SourcePath = "\\vmware-host\Shared Folders\Sources",
-$logpath = "c:\Scripts",
 $Prereq ="Prereq", 
-$Setupcmd = "Setup.exe"
+$Setupcmd = "Setup.exe",
+$Scriptdir = '\\vmware-host\Shared Folders\Scripts',
+$SourcePath = '\\vmware-host\Shared Folders\Sources',
+$logpath = "c:\Scripts"
 )
+$Nodescriptdir = Join-Path $Scriptdir "Node"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
 $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
-New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
+if (!(Test-Path $logpath))
+    {
+    New-Item -ItemType Directory -Path $logpath -Force
+    }
+$Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
+Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 $ADDomain = (get-addomain).forest
 $maildom= "@"+$ADDomain

@@ -9,11 +9,26 @@
 param (  
 [string[]]$Databases,
 [string[]]$Distributiongroups,  
-[string]$Sourcepath = "\\vmware-host\shared folders\sources\Attachements",  
 [uint64]$MaxmessageSize = 9MB,  
 [string]$From,  
-[string]$Smtpserver = "mailhost"  
-)  
+[string]$Smtpserver = "mailhost",  
+$Prereq ="Prereq", 
+$Scriptdir = '\\vmware-host\Shared Folders\Scripts',
+$SourcePath = '\\vmware-host\Shared Folders\Sources',
+$logpath = "c:\Scripts"
+)
+$Nodescriptdir = Join-Path $Scriptdir "Node"
+$ScriptName = $MyInvocation.MyCommand.Name
+$Host.UI.RawUI.WindowTitle = "$ScriptName"
+$Builddir = $PSScriptRoot
+$Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
+if (!(Test-Path $logpath))
+    {
+    New-Item -ItemType Directory -Path $logpath -Force
+    }
+$Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
+Set-Content -Path $Logfile $MyInvocation.BoundParameters
+############  
 $body = "
 Please add some text files for 
 Random Creation of

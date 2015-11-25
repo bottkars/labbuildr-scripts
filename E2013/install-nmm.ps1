@@ -9,20 +9,28 @@
 #requires -version 3
 [CmdletBinding()]
 param(
-    $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
-    $SourcePath = "\\vmware-host\Shared Folders\Sources",
-    $logpath = "c:\Scripts",
 	[ValidateSet('nmm8221','nmm822','nmm8211','nmm8212','nmm8214','nmm8216','nmm8217','nmm8218','nmm822','nmm821','nmm300', 'nmm301', 'nmm2012', 'nmm3013', 'nmm82','nmm85','nmm85.BR1','nmm85.BR2','nmm85.BR3','nmm85.BR4','nmm90.DA','nmm9001')]
     $nmm_ver,
     $nmmusername = "NMMBackupUser",
     $nmmPassword = "Password123!",
-    $nmmdatabase = "DB1_$Env:COMPUTERNAME"
-)
+    $nmmdatabase = "DB1_$Env:COMPUTERNAME",  
+    $Prereq ="Prereq", 
+    $Scriptdir = '\\vmware-host\Shared Folders\Scripts',
+    $SourcePath = '\\vmware-host\Shared Folders\Sources',
+    $logpath = "c:\Scripts"
+    )
+$Nodescriptdir = Join-Path $Scriptdir "Node"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
 $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
-New-Item -ItemType file  "$Builddir\$ScriptName$Logtime.log"
+if (!(Test-Path $logpath))
+    {
+    New-Item -ItemType Directory -Path $logpath -Force
+    }
+$Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
+Set-Content -Path $Logfile $MyInvocation.BoundParameters
+############
 
 $Domain = $env:USERDNSDOMAIN
 Write-Verbose $Domain
