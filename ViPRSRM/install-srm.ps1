@@ -9,15 +9,25 @@
 #requires -version 3
 [CmdletBinding()]
 param(
+    $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
+    $SourcePath = "\\vmware-host\Shared Folders\Sources",
+    $logpath = "c:\Scripts",
     [ValidateSet('3.7.0.0','3.6.0.3')]
     $SRM_VER='3.7.0.0')
+$Nodescriptdir = "$Scriptdir\Node"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
 $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
-New-Item -ItemType file  "$Builddir\$ScriptName$Logtime.log"
-
-.$Builddir\test-sharedfolders.ps1
+if (!(Test-Path $logpath))
+    {
+    New-Item -ItemType Directory -Path $logpath -Force
+    }
+$Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
+Set-Content -Path $Logfile $MyInvocation.BoundParameters
+############
+.$Nodescriptdir\test-sharedfolders.ps1 -Folder $Sourcepath
+############
 $Setuppath = "\\vmware-host\shared folders\Sources\ViPR_SRM_$($SRM_VER)_Win64.exe"
 Write-Warning "Installing SRM $SRM_VER, this could take up to 10 Minutes"
 .$Builddir\test-setup -setup SRM -setuppath $Setuppath
