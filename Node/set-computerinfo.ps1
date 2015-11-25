@@ -28,7 +28,7 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 $nodename = $env:COMPUTERNAME
 if ((Get-WmiObject -Class Win32_ComputerSystem).Manufacturer -match "VMware")    
     {
-    $Computerinfo = ."$Nodescriptdir\get-vmxcomputerinfo.ps1"
+    $Computerinfo = ."'$Nodescriptdir\get-vmxcomputerinfo.ps1'"
     $Arglist = "Set-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters -Name 'srvcomment' -Value '$nodename running on $($Computerinfo.Hypervisor)'"
     Start-Process -Verb "RunAs" "$PSHOME\powershell.exe" -ArgumentList $Arglist
     Set-ADComputer -identity $nodename -Description "VMHost: $($Computerinfo.Hypervisor), Builddate: $($Computerinfo.Builddate)"
