@@ -9,11 +9,11 @@
 #requires -version 3
 [CmdletBinding()]
 param(
-$Scriptdir = "\\vmware-host\Shared Folders\Scripts",
+$Scriptdir = '\\vmware-host\Shared Folders\Scripts',
 $SourcePath = "\\vmware-host\Shared Folders\Sources",
 $logpath = "c:\Scripts"
 )
-$Nodescriptdir = "$Scriptdir\Node"
+$Nodescriptdir = Join-Path $Scriptdir "Node"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
@@ -28,7 +28,8 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 $nodename = $env:COMPUTERNAME
 if ((Get-WmiObject -Class Win32_ComputerSystem).Manufacturer -match "VMware")    
     {
-    $Computerinfo = . "'$Nodescriptdir\get-vmxcomputerinfo.ps1'"
+    Write-Verbose $Nodescriptdir
+    $Computerinfo = . "$Nodescriptdir\get-vmxcomputerinfo.ps1"
     $Arglist = "Set-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters -Name 'srvcomment' -Value '$nodename running on $($Computerinfo.Hypervisor)'"
     Start-Process -Verb "RunAs" "$PSHOME\powershell.exe" -ArgumentList $Arglist
     Set-ADComputer -identity $nodename -Description "VMHost: $($Computerinfo.Hypervisor), Builddate: $($Computerinfo.Builddate)"
