@@ -31,7 +31,9 @@ Write-Output "Setting user credentials to perform installation and configuration
 $Domain = $env:USERDOMAIN
 $PlainPassword = "Password123!"
 $DomainUser = "$Domain\Administrator"
-Import-Module 'C:\Program Files\Microsoft System Center 2012 R2\Virtual Machine Manager\bin\psModules\virtualmachinemanager'
+# Import-Module 'C:\Program Files\Microsoft System Center 2016\Virtual Machine Manager\Bin\psModules\virtualmachinemanager'
+# Import-Module 'C:\Program Files\Microsoft System Center 2012 R2\Virtual Machine Manager\bin\psModules\virtualmachinemanager'
+Import-Module  (Get-ChildItem 'C:\Program Files\Microsoft System Center *\Virtual Machine Manager\Bin\psModules\virtualmachinemanager').fullname
 Get-SCVMMServer $Env:COMPUTERNAME
 ####
 $SecurePassword = $PlainPassword | ConvertTo-SecureString -AsPlainText -Force
