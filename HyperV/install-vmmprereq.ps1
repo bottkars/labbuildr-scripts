@@ -12,7 +12,7 @@ param(
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
     $logpath = "c:\Scripts",
-    [ValidateSet('SC2012_R2_SCVMM','SCTP3_SCVMM')]$SCVMM_VER = "SC2012_R2_SCVMM",
+    [ValidateSet('SC2012_R2_SCVMM','SCTP3_SCVMM','SCTP4_SCVMM')]$SCVMM_VER = "SC2012_R2_SCVMM",
     $Prereq ="Prereq"
 )
 $Nodescriptdir = "$Scriptdir\NODE"
