@@ -9,8 +9,8 @@
 #requires -version 3
 [CmdletBinding()]
 param(    
-    [ValidateSet('1.2.6')]
-    $puppetagentver='1.2.6',
+    [ValidateSet('1.2.7','1.2.6','1.3.0')]
+    $puppetagentver='1.3.0',
     $Puppetmaster = 'PuppetMaster1',
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
