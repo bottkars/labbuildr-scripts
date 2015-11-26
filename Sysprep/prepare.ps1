@@ -2,17 +2,41 @@
     ConfirmImpact="Medium")]
 param
     (
-    [ValidateSet('de-De','en-Us')]$Locale = 'en-Us'
+    [ValidateSet('de-De','en-Us')]$Locale = 'en-Us',
+    [ValidateSet('Server2012R2','Server2016')]$Version = 'Server2016'
+
     )
 $Builddir = $PSScriptRoot
 $Scriptdir = "c:\scripts"
+Write-Host -ForegroundColor Magenta "Checking Machine Type"
+if ((Get-WmiObject -Class Win32_ComputerSystem).Manufacturer -match "VMware")    
+    {
+    Write-Host "Found VMware Virtual Machine, Checking for VMware Tools Installed"
+    $VMware_Tools_Ver = (get-itemproperty 'hklm:\software\microsoft\windows\currentversion\uninstall\*' |where-object{ $_.DisplayName -match "VMware Tools"}).Displayversion
+    If (!$VMware_Tools_Ver)
+        {
+        Write-Warning "Please Install VMware Tools!"
+        break
+        }
+    else
+        {
+        Write-Host -ForegroundColor Magenta "Found VMware Tools $VMware_Tools_Ver"
+        }
+    }
 write-host "Generating Answerfile with Locale $Locale"
-$Content = get-content "$Builddir\2016TP3_HV.xml"
+$Content = get-content "$Builddir\$Version.xml"
 foreach ($Pattern in ('InputLocale','SystemLocale','UserLocale','UILanguage'))
     {     
     $Content = $Content -replace  "^*<$Pattern>.*$"," <$Pattern>$Locale</$Pattern>"
     $Content = $Content -replace  "^*<UILanguageFallback>.*$","<UILanguageFallback>en-Us</UILanguageFallback>"       
     }
+
+if ($VMware_Tools_Ver)
+    {
+    write-host 
+    $Content = $Content | where {$_ -notmatch "commandline"}
+    }
+
 new-item -ItemType Directory $Scriptdir -force | out-null
 $Content | Set-Content -Path "$Scriptdir\answerfile.xml" -Force
 write-host "Checking for Net-Framework-Core"
@@ -37,6 +61,4 @@ Write-Host "Starting Sysprep"
             Write-Verbose "Press any Key to continue to sysprep"
             pause
             }
-
 Start-Process "c:\windows\system32\sysprep\sysprep.exe" -ArgumentList "/generalize /oobe /unattend:$Scriptdir\answerfile.xml"
-
