@@ -48,7 +48,7 @@ if ($role -eq 'gateway')
     try
         {
 
-        $Setuppath = (Get-ChildItem -Path $ScaleIORoot -Recurse -Filter "*-$role-$ScaleIOVer-x64.msi" -Exclude ".*" -ErrorAction Stop ).FullName
+        $Setuppath = (Get-ChildItem -Path $ScaleIORoot -Recurse -Filter "*$role*-x64.msi" -Exclude ".*" -ErrorAction Stop ).FullName
 
         }
     Catch
@@ -63,6 +63,7 @@ if ($role -eq 'gateway')
     $Setuppath = $Setuppath[0]
     $ScaleIOArgs = 'GATEWAY_ADMIN_PASSWORD=Password123! /i "'+$Setuppath+'"'
     Write-Verbose "ScaleIO Gateway Args = $ScaleIOArgs"
+
     Start-Process -FilePath "msiexec.exe" -ArgumentList $ScaleIOArgs -PassThru -Wait
     $Content = get-content -Path "C:\Program Files\EMC\scaleio\Gateway\webapps\ROOT\WEB-INF\classes\gatewayUser.properties"
     $Content = $Content -notmatch "mdm.ip.addresses="
