@@ -29,15 +29,15 @@ if (!(Test-Path $logpath))
     New-Item -ItemType Directory -Path $logpath -Force
     }
 $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
-If (!$DBInstance)
-    {
-    $DBInstance = "MSSQL$Domain"
-    }
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 .$Nodescriptdir\test-sharedfolders.ps1 -Folder $Sourcepath
 ############ adding Domin Service Accounts
 $Domain = $env:USERDOMAIN
+If (!$DBInstance)
+    {
+    $DBInstance = "MSSQL$Domain"
+    }
 net localgroup "Backup Operators" $Domain\SVC_SQLADM /Add
 net localgroup "Administrators" $DOMAIN\SVC_SQLADM /Add
 net localgroup "Administrators" $DOMAIN\SVC_SCVMM /Add
