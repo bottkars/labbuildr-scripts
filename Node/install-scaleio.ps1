@@ -33,7 +33,7 @@ $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 .$Nodescriptdir\test-sharedfolders.ps1 -Folder $Sourcepath
-$ScaleIORoot = "$SourcePath\Scaleio\"
+$ScaleIORoot = Join-Path $SourcePath "Scaleio"
 While ((Test-Path $ScaleIORoot) -Ne $true)
     {
     Write-Warning "Cannot find $ScaleIORoot
@@ -47,7 +47,7 @@ if ($role -eq 'gateway')
     {
     try
         {
-
+        $Setuppath = @()
         $Setuppath = (Get-ChildItem -Path $ScaleIORoot -Recurse -Filter "*$role*-x64.msi" -Exclude ".*" -ErrorAction Stop ).FullName
 
         }
@@ -60,6 +60,7 @@ if ($role -eq 'gateway')
         pause
         Break
         }
+    
     $Setuppath = $Setuppath[0]
     $ScaleIOArgs = 'GATEWAY_ADMIN_PASSWORD=Password123! /i "'+$Setuppath+'"'
     Write-Verbose "ScaleIO Gateway Args = $ScaleIOArgs"
