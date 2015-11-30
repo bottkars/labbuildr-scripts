@@ -48,8 +48,8 @@ if ($role -eq 'gateway')
     try
         {
         $Setuppath = @()
-        $Setuppath = (Get-ChildItem -Path $ScaleIORoot -Recurse -Filter "*$role*-x64.msi" -Exclude ".*" -ErrorAction Stop ).FullName
-
+        $Setuppath += (Get-ChildItem -Path $ScaleIORoot -Recurse -Filter "*$role*-x64.msi" -Exclude ".*" -ErrorAction Stop ).FullName
+        Write-Host $Setuppath
         }
     Catch
         {
@@ -57,21 +57,18 @@ if ($role -eq 'gateway')
         Make sure the Windows Package is downloaded and extracted to $ScaleIORoot
         or select different version
         press any key when done pr Ctrl-C to exit"
-        pause
         Break
         }
     
     $Setuppath = $Setuppath[0]
-    $ScaleIOArgs = 'GATEWAY_ADMIN_PASSWORD=Password123! /i "'+$Setuppath+'"'
+    $ScaleIOArgs = 'GATEWAY_ADMIN_PASSWORD=Password123! /i "'+$Setuppath+'" /quiet'
     Write-Verbose "ScaleIO Gateway Args = $ScaleIOArgs"
-
     Start-Process -FilePath "msiexec.exe" -ArgumentList $ScaleIOArgs -PassThru -Wait
     $Content = get-content -Path "C:\Program Files\EMC\scaleio\Gateway\webapps\ROOT\WEB-INF\classes\gatewayUser.properties"
     $Content = $Content -notmatch "mdm.ip.addresses="
     $Content += "mdm.ip.addresses=$mdmipa`;$mdmipb"
     $Content | set-content -Path "C:\Program Files\EMC\scaleio\Gateway\webapps\ROOT\WEB-INF\classes\gatewayUser.properties"
     Restart-Service 'EMC ScaleIO Gateway'
-    pause
     }
 else
     {
@@ -81,7 +78,6 @@ else
     Make sure the Windows Package is downloaded and extracted to $ScaleIORoot
     or select different version
     press any key when done pr Ctrl-C to exit"
-    pause
     }
 
     if ($role -ne "SDS")
