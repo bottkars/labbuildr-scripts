@@ -15,6 +15,7 @@ param(
     $Prereq ="Prereq",
 	[ValidateSet('SQL2014SP1slip','SQL2012','SQL2012SP1','SQL2012SP2','SQL2012SP1SLIP','SQL2014')]$SQLVER,
     $Diskparameter = "",
+    $DBInstance,
     [switch]$DefaultDBpath,
     [switch]$reboot 
 )
@@ -28,6 +29,10 @@ if (!(Test-Path $logpath))
     New-Item -ItemType Directory -Path $logpath -Force
     }
 $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
+If (!$DBInstance)
+    {
+    $DBInstance = "MSSQL$Domain"
+    }
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 .$Nodescriptdir\test-sharedfolders.ps1 -Folder $Sourcepath
@@ -76,7 +81,7 @@ if (!$DefaultDBpath.IsPresent)
     {
     $Diskparameter = "/SQLUSERDBDIR=m:\ /SQLUSERDBLOGDIR=n:\ /SQLTEMPDBDIR=o:\ /SQLTEMPDBLOGDIR=p:\"
     }
-$Arguments = "/q /ACTION=Install /FEATURES=SQL,SSMS $UpdateSource $Diskparameter /INSTANCENAME=MSSQL$Domain /SQLSVCACCOUNT=`"$Domain\svc_sqladm`" /SQLSVCPASSWORD=`"Password123!`" /SQLSYSADMINACCOUNTS=`"$Domain\svc_sqladm`" `"$Domain\Administrator`" `"$Domain\sql_admins`" /AGTSVCACCOUNT=`"NT AUTHORITY\Network Service`" /IACCEPTSQLSERVERLICENSETERMS"
+$Arguments = "/q /ACTION=Install /FEATURES=SQL,SSMS $UpdateSource $Diskparameter /INSTANCENAME=$DBInstance /SQLSVCACCOUNT=`"$Domain\svc_sqladm`" /SQLSVCPASSWORD=`"Password123!`" /SQLSYSADMINACCOUNTS=`"$Domain\svc_sqladm`" `"$Domain\Administrator`" `"$Domain\sql_admins`" /AGTSVCACCOUNT=`"NT AUTHORITY\Network Service`" /IACCEPTSQLSERVERLICENSETERMS"
 Write-Verbose $Arguments
 Write-Warning "Starting SQL Setup $SQLVER"
 $Time = Measure-Command {Start-Process $Setuppath -ArgumentList  $Arguments -Wait}
