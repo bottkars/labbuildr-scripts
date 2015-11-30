@@ -33,7 +33,7 @@ $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 .$Nodescriptdir\test-sharedfolders.ps1 -Folder $Sourcepath
-$ScaleIORoot = "\\vmware-host\shared folders\sources\Scaleio\"
+$ScaleIORoot = "$SourcePath\Scaleio\"
 While ((Test-Path $ScaleIORoot) -Ne $true)
     {
     Write-Warning "Cannot find $ScaleIORoot
@@ -45,19 +45,28 @@ While ((Test-Path $ScaleIORoot) -Ne $true)
 $ScaleIO_Major = ($ScaleIOVer.Split("-"))[0]
 if ($role -eq 'gateway')
     {
-    While (!($Setuppath = (Get-ChildItem -Path $ScaleIORoot -Recurse -Filter "*-$role-$ScaleIOVer-x64.msi" -Exclude ".*" ).FullName))
+    try
+        {
+
+        $Setuppath = (Get-ChildItem -Path $ScaleIORoot -Recurse -Filter "*-$role-$ScaleIOVer-x64.msi" -Exclude ".*" -ErrorAction Stop ).FullName
+
+        }
+    Catch
         {
         Write-Warning "Cannot find ScaleIO $ScaleIOVer in $ScaleIORoot
         Make sure the Windows Package is downloaded and extracted to $ScaleIORoot
         or select different version
         press any key when done pr Ctrl-C to exit"
         pause
+        Break
         }
     $Setuppath = $Setuppath[0]
     $ScaleIOArgs = 'GATEWAY_ADMIN_PASSWORD=Password123! /i "'+$Setuppath+'"'
+    Write-Verbose "ScaleIO Gateway Args = $ScaleIOArgs"
     Start-Process -FilePath "msiexec.exe" -ArgumentList $ScaleIOArgs -PassThru -Wait
     $Content = get-content -Path "C:\Program Files\EMC\scaleio\Gateway\webapps\ROOT\WEB-INF\classes\gatewayUser.properties"
-    $Content = $Content -replace '^mdm.ip.addresses=.+$',"mdm.ip.addresses=$mdmipa`;$mdmipb"
+    $Content = $Content -notmatch "mdm.ip.addresses="
+    $Content += "mdm.ip.addresses=$mdmipa`;$mdmipb"
     $Content | set-content -Path "C:\Program Files\EMC\scaleio\Gateway\webapps\ROOT\WEB-INF\classes\gatewayUser.properties"
     Restart-Service 'EMC ScaleIO Gateway'
     pause
