@@ -17,6 +17,7 @@ Param
     $IPv4Subnet = "192.168.2",
     $IPv6Prefix = "",
     [Validateset('IPv4','IPv6','IPv4IPv6')]$AddressFamily='IPv4',
+    $DBInstance,
     $Port = '1433'
 )
 $IPv6subnet = "$IPv6Prefix$IPv4Subnet"
@@ -30,11 +31,15 @@ $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
 New-Item -ItemType file  "$Builddir\$ScriptName$Logtime.log"
 $Domain = $env:USERDOMAIN
 ############
-
+If (!$DBInstance)
+    {
+    $DBInstance = "MSSQL$Domain"
+    }
+$DBInstance = $DBInstance.substring(0, [System.Math]::Min(16, $DBInstance.Length))
 $NodeLIST = @()
 $AAGnodes = Get-ADComputer -Filter * | where name -match $Nodeprefix
 foreach ($AAGnode in $AAGnodes){
-$NodeLIST += $AAGNode.Name+"\MSSQL"+$Domain
+$NodeLIST += "$($AAGNode.Name)$DBInstance"
 write-Host "Adding Node $AAGnode to AAG Nodelist"
 }
 Import-Module “sqlps” -DisableNameChecking

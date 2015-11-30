@@ -9,7 +9,8 @@
 #requires -version 3
 [CmdletBinding()]
 param (
-[Validateset('AAG')]$DBtype
+[Validateset('AAG')]$DBtype,
+$DBInstance
 )
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
@@ -36,6 +37,12 @@ $ViewersGroup = "Viewers"
 $url = "http://$env:COMPUTERNAME.$env:USERDNSDOMAIN"
 $site = "$url/sites/labbuildr"
 $dbname = "labbuildr_Content"
+If (!$DBInstance)
+    {
+    $DBInstance = "MSSQL$Domain"
+    }
+$DBInstance = $DBInstance.substring(0, [System.Math]::Min(16, $DBInstance.Length))
+
 switch ($DBtype)
     {
     'AAG'
@@ -54,7 +61,7 @@ $credential = New-Object System.Management.Automation.PSCredential($SQLUsername,
 Write-Warning  "Creating $ConfigDB and $AdminDB, this might take a while..."
 $FarmCredentials = New-Object System.Management.Automation.PSCredential $SQLUsername, (ConvertTo-SecureString $SQLPassword -AsPlainText -Force)
 Add-PsSnapin Microsoft.SharePoint.PowerShell -ErrorAction SilentlyContinue
-New-SPConfigurationDatabase -DatabaseServer "$SQLServer\mssqllabbuildr" -DatabaseName $ConfigDB -AdministrationContentDatabaseName $AdminDB -Passphrase (ConvertTo-SecureString $FarmPassphrase -AsPlainText -Force) -FarmCredentials $FarmCredentials -Verbose
+New-SPConfigurationDatabase -DatabaseServer "$SQLServer\$DBInstance" -DatabaseName $ConfigDB -AdministrationContentDatabaseName $AdminDB -Passphrase (ConvertTo-SecureString $FarmPassphrase -AsPlainText -Force) -FarmCredentials $FarmCredentials -Verbose
 Write-Warning "Installing Helpcollection"
 Install-SPHelpCollection -All
 Initialize-SPResourceSecurity

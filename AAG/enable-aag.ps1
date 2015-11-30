@@ -27,10 +27,16 @@ $Domain = $env:USERDOMAIN
 Grant-ClusterAccess -User "SVC_SQLADM@$Domain" -Full
 $NodeLIST = @()
 $AAGnodes = Get-ADComputer -Filter * | where name -match $Nodeprefix
+If (!$DBInstance)
+    {
+    $DBInstance = "MSSQL$Domain"
+    }
+$DBInstance = $DBInstance.substring(0, [System.Math]::Min(16, $DBInstance.Length))
+
 foreach ($AAGnode in $AAGnodes){
 #$NodeLIST += $AAGNode.Name+"\MSSQLAAG"
-$NodeLIST += $AAGNode.Name+"\MSSQL"+$Domain
 
+$NodeLIST += "$($AAGNode.Name)$DBInstance"
 write-Host "Adding Node $AAGnode to AAG Nodelist"
 }
 ## - Loading the SQL Server SMO Assembly"

@@ -37,7 +37,7 @@ If (!$DBInstance)
     {
     $DBInstance = "MSSQL$Domain"
     }
-
+$DBInstance = $DBInstance.substring(0, [System.Math]::Min(16, $DBInstance.Length))
 $Content = "[OPTIONS]
 UserName=$Domain user
 CompanyName=$Domain Eval

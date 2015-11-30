@@ -14,7 +14,8 @@ param(
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
     $logpath = "c:\Scripts",
-    $Prereq ="Prereq" 
+    $Prereq ="Prereq",
+    $DBInstance 
 )
 $Nodescriptdir = "$Scriptdir\Node"
 $ScriptName = $MyInvocation.MyCommand.Name
@@ -32,7 +33,14 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 
 
 $Domain = $($Env:USERDOMAIN)
-$INSTANCENAME="$($Env:COMPUTERNAME)\MSSQL$Domain"
+If (!$DBInstance)
+    {
+    $DBInstance = "MSSQL$Domain"
+    }
+$DBInstance = $DBInstance.substring(0, [System.Math]::Min(16, $DBInstance.Length))
+
+
+$DBInstance="$($Env:COMPUTERNAME)\$DBInstance"
 $Action_ACT = "$($Domain)\Administrator"
 $DAS_ACT = "$($Domain)\SVC_SQLADM"
 $Data_Reader = "$($Domain)\SVC_SQLADM"
@@ -60,7 +68,7 @@ $Setupcmd = "setup.exe"
 $Setuppath = "$SourcePath\$SCOM_VER\$Setupcmd"
 .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
 Write-Warning "Starting $scom_ver setup, this may take a while"
-Start-Process "$Setuppath" -ArgumentList "/install /components:$Components /ManagementGroupName:$MGMTGrp /SqlServerInstance:$INSTANCENAME /DatabaseName:OperationsManager /DWSqlServerInstance:$INSTANCENAME /DWDatabaseName:OperationsManagerDW /ActionAccountUser:$Action_ACT /ActionAccountPassword:$Password /DASAccountUser:$DAS_ACT /DASAccountPassword:$Password /DatareaderUser:$Data_Reader /DatareaderPassword:$Password /DataWriterUser:$Data_Writer /DataWriterPassword:$Password /EnableErrorReporting:Never /SendCEIPReports:0 /UseMicrosoftUpdate:0 /AcceptEndUserLicenseAgreement:1 /silent" -Wait
+Start-Process "$Setuppath" -ArgumentList "/install /components:$Components /ManagementGroupName:$MGMTGrp /SqlServerInstance:$DBInstance /DatabaseName:OperationsManager /DWSqlServerInstance:$DBInstance /DWDatabaseName:OperationsManagerDW /ActionAccountUser:$Action_ACT /ActionAccountPassword:$Password /DASAccountUser:$DAS_ACT /DASAccountPassword:$Password /DatareaderUser:$Data_Reader /DatareaderPassword:$Password /DataWriterUser:$Data_Writer /DataWriterPassword:$Password /EnableErrorReporting:Never /SendCEIPReports:0 /UseMicrosoftUpdate:0 /AcceptEndUserLicenseAgreement:1 /silent" -Wait
    
 Write-Warning "Checking for Updates"
 foreach ($Updatepattern in ("*AMD64-server.msp","*AMD64-ENU-Console.msp"))

@@ -12,7 +12,8 @@ param (
 $sp_version= "SP2013sp1fndtn",
 $SourcePath = "\\vmware-host\Shared Folders\Sources",
 $Setupcmd = "Setup.exe",
-[Validateset('AAG','MSDE')]$DBtype
+[Validateset('AAG','MSDE')]$DBtype,
+$DBInstance
 )
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"

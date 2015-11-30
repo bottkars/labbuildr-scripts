@@ -38,6 +38,8 @@ If (!$DBInstance)
     {
     $DBInstance = "MSSQL$Domain"
     }
+$DBInstance = $DBInstance.substring(0, [System.Math]::Min(16, $DBInstance.Length))
+
 net localgroup "Backup Operators" $Domain\SVC_SQLADM /Add
 net localgroup "Administrators" $DOMAIN\SVC_SQLADM /Add
 net localgroup "Administrators" $DOMAIN\SVC_SCVMM /Add
