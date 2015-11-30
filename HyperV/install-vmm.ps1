@@ -12,6 +12,7 @@ param(
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
     $logpath = "c:\Scripts",
+    $DBInstance,
     [ValidateSet('SC2012_R2_SCVMM','SCTP3_SCVMM','SCTP4_SCVMM')]$SCVMM_VER = "SC2012_R2_SCVMM"
 
 )
@@ -32,11 +33,16 @@ $Domain = $env:USERDOMAIN
 $Setupcmd = "setup.exe"
 $Setuppath = "$SourcePath\$SCVMM_VER\$Setupcmd"
 $Content = @()
+If (!$DBInstance)
+    {
+    $DBInstance = "MSSQL$Domain"
+    }
+
 $Content = "[OPTIONS]
 UserName=$Domain user
 CompanyName=$Domain Eval
 CreateNewSqlDatabase=1
-SqlInstanceName=MSSQL$Domain
+SqlInstanceName=$DBInstance
 SqlDatabaseName=VMMDB
 RemoteDatabaseImpersonation=0
 CreateNewLibraryShare=1
