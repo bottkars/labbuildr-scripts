@@ -3,8 +3,8 @@
 param
     (
     [ValidateSet('de-De','en-Us')]$Locale = 'en-Us',
-    [ValidateSet('Server2012R2','Server2016')]$Version = 'Server2016'
-
+    [ValidateSet('Server2012R2','Server2016')]$Version = 'Server2016',
+    $Productkey
     )
 $Builddir = $PSScriptRoot
 $Scriptdir = "c:\scripts"
@@ -30,12 +30,20 @@ foreach ($Pattern in ('InputLocale','SystemLocale','UserLocale','UILanguage'))
     $Content = $Content -replace  "^*<$Pattern>.*$"," <$Pattern>$Locale</$Pattern>"
     $Content = $Content -replace  "^*<UILanguageFallback>.*$","<UILanguageFallback>en-Us</UILanguageFallback>"       
     }
+if ($Productkey)
+    {
+    $Content = $Content -replace  "^*<Key>.*$"," <Key>$Productkey</Key>"
+    }
 
+# 2KNJJ-33Y9H-2GXGX-KMQWH-G6H67
 if ($VMware_Tools_Ver)
     {
     write-host 
     $Content = $Content | where {$_ -notmatch "commandline"}
     }
+
+
+
 
 new-item -ItemType Directory $Scriptdir -force | out-null
 $Content | Set-Content -Path "$Scriptdir\answerfile.xml" -Force
@@ -58,6 +66,7 @@ if ((Get-WindowsFeature net-framework-core).installstate -ne "installed")
 Write-Host "Starting Sysprep"
         if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
             {
+            Write-Host -ForegroundColor Gray $Content
             Write-Verbose "Press any Key to continue to sysprep"
             pause
             }
