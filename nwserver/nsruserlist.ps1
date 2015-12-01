@@ -33,10 +33,11 @@ foreach ($Client in (Get-ADComputer -Filter *).DNSHOSTname)
 {
 & 'C:\Program Files\EMC NetWorker\nsr\bin\nsraddadmin.exe'  -u "user=SYSTEM,host=$Client"
 & 'C:\Program Files\EMC NetWorker\nsr\bin\nsraddadmin.exe'  -u "user=Administrator,host=$Client"
+& 'C:\Program Files\EMC NetWorker\nsr\bin\nsraddadmin.exe'  -u "user=nwadmin,host=$Client"
 }
 
 
-foreach ($Client in (Get-ADComputer -Filter * | where name -match "E2013*").DNSHostname) { 
+foreach ($Client in (Get-ADComputer -Filter * | where name -match "E201*").DNSHostname) { 
 & 'C:\Program Files\EMC NetWorker\nsr\bin\nsraddadmin.exe'  -u "user=NMMBAckupUser,host=$Client"
 }
 
