@@ -9,11 +9,13 @@
 #requires -version 3
 [CmdletBinding()]
 param(
+    [ValidateSet('SC2012_R2','SCTP3','SCTP4')]
+    $SC_VERSION = "SC2012_R2",
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
     $logpath = "c:\Scripts",
-    [ValidateSet('SC2012_R2_SCVMM','SCTP3_SCVMM','SCTP4_SCVMM')]$SCVMM_VER = "SC2012_R2_SCVMM",
-    $Prereq ="Prereq"
+    $Prereq ="Prereq",
+    [string]$SysCtr = "sysctr"
 )
 $Nodescriptdir = "$Scriptdir\NODE"
 $EXScriptDir = "$Scriptdir\$ex_version"
@@ -29,6 +31,20 @@ $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ######################################################################
 ############ WAIK Setup
+switch ($SC_VERSION)
+    {
+    "SC2012_R2"
+        {
+        $WAIK = "WAIK10"
+        }
+    default
+        {
+        $WAIK = "WAIK8.1"
+        }
+    }
+
+
+
 $Setupcmd = "adksetup.exe"
 $Setuppath = "$SourcePath\$SCVMM_VER$Prereq\$Setupcmd"
 .$NodeScriptDir\test-setup.ps1 -setup $Setupcmd -setuppath $Setuppath

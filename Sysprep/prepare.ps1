@@ -33,6 +33,7 @@ foreach ($Pattern in ('InputLocale','SystemLocale','UserLocale','UILanguage'))
 if ($Productkey)
     {
     $Content = $Content -replace  "^*<Key>.*$"," <Key>$Productkey</Key>"
+    $Content = $Content -replace  "^*<Productkey>.*$"," <Productkey>$Productkey</Productkey>"
     }
 
 # 2KNJJ-33Y9H-2GXGX-KMQWH-G6H67
@@ -41,10 +42,6 @@ if ($VMware_Tools_Ver)
     write-host 
     $Content = $Content | where {$_ -notmatch "commandline"}
     }
-
-
-
-
 new-item -ItemType Directory $Scriptdir -force | out-null
 $Content | Set-Content -Path "$Scriptdir\answerfile.xml" -Force
 write-host "Checking for Net-Framework-Core"
