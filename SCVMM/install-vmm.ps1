@@ -32,8 +32,9 @@ $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ######################################################################
 $Domain = $env:USERDOMAIN
-$Setupcmd = "setup.exe"
-$Setuppath = "$SourcePath\$SC_VERSION\$Setupcmd"
+$SCVMM_Dir = Join-Path "$SourcePath" "$SysCtr\$SC_VERSION\SCVMM"
+$SCVMM_Update_DIr = Join-Path $Sourcepath "$SysCtr\$SC_VERSION\SCVMMUpdates"
+
 $Content = @()
 If (!$DBInstance)
     {
@@ -54,11 +55,10 @@ LibraryShareDescription=Virtual Machine Manager Library Files
 SQMOptIn = 0
 MUOptIn = 0"
 
-$SCVMM_Dir = Join-Path "$SourcePath" "$SysCtr\$SC_VERSION\SCOM"
-$SCVMM_Update_DIr = Join-Path $Sourcepath "$SysCtr\$SC_VERSION\SCOMUpdates"
-
-
 Set-Content  -Value $Content -Path "$logpath\VMServer.ini"
+
+$Setupcmd = "setup.exe"
+$Setuppath = "$SCVMM_Dir\$Setupcmd"
 .$Nodescriptdir\test-setup.ps1 -setup $Setupcmd -setuppath $Setuppath
 Write-Warning "Starting $SCVMM_VER setup, this may take a while"
 # start-process "$Setuppath" -ArgumentList "/server /i /SqlDBAdminDomain $Domain /SqlDBAdminName SVC_SQL /SqlDBAdminPassword Password123! /VmmServiceDomain $Domain /VmmServiceUserName SVC_SCVMM /VmmServiceUserPassword Password123! /IACCEPTSCEULA" -Wait 
@@ -67,7 +67,7 @@ start-process "$Setuppath" -ArgumentList "/server /i /f $logpath\VMServer.ini /S
 write-verbose "Checking for Updates"
 foreach ($Updatepattern in ("*vmmserver*.msp","*Admin*.msp"))
     {
-    $VMMUpdate = Get-ChildItem "$($SourcePath)\$($SCVMM_VER)updates"  -Filter $Updatepattern
+    $VMMUpdate = Get-ChildItem "$SCVMM_Update_DIr"  -Filter $Updatepattern
     if ($VMMUpdate)
         {
         $VMMUpdate = $VMMUpdate | Sort-Object -Property Name -Descending
