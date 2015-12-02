@@ -35,18 +35,18 @@ switch ($SC_VERSION)
     {
     "SC2012_R2"
         {
-        $WAIK = "WAIK10"
+        $WAIK = "WAIK_10"
         }
     default
         {
-        $WAIK = "WAIK8.1"
+        $WAIK = "WAIK_8.1"
         }
     }
 
 
 
 $Setupcmd = "adksetup.exe"
-$Setuppath = "$SourcePath\$SCVMM_VER$Prereq\$Setupcmd"
+$Setuppath = "$SourcePath\$WAIK\$Setupcmd"
 .$NodeScriptDir\test-setup.ps1 -setup $Setupcmd -setuppath $Setuppath
 Write-Warning "Starting ADKSETUP"
 Start-Process $Setuppath -ArgumentList "/ceip off /features OptionID.DeploymentTools OptionID.WindowsPreinstallationEnvironment /quiet"
