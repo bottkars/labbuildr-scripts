@@ -57,16 +57,17 @@ $Setupcmd = "SQLSysClrTypes.msi"
 $Setuppath = "$SourcePath\$Prereq\$Setupcmd"
 .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
 Write-Warning "Starting SQL Cleartype Setup"
-Start-Process -FilePath msiexec.exe -ArgumentList "/i $Setuppath /passive" -Wait
+$SetupArgs = '/i "'+$Setuppath+'" /quiet'
+Start-Process -FilePath "msiexec.exe" -ArgumentList $SetupArgs -PassThru -Wait
 
 
 $Setupcmd = "ReportViewer.msi"
 $Setuppath = "$SourcePath\$Prereq\$Setupcmd"
 .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
-Write-Warning "Starting Report Viewer Setup"
-Start-Process -FilePath msiexec.exe -ArgumentList "/i $Setuppath /passive" -Wait
+Write-Verbose "Starting Report Viewer Setup"
+$SetupArgs = '/i "'+$Setuppath+'" /quiet'
+Start-Process -FilePath "msiexec.exe" -ArgumentList $SetupArgs -PassThru -Wait
 
-Pause
 $Setupcmd = "setup.exe"
 # D:\Sources\SysCtr\SCTP4\SCOM
 $Setuppath = Join-Path $Scom_Dir $Setupcmd 
@@ -87,7 +88,6 @@ foreach ($Updatepattern in ("*AMD64-server.msp","*AMD64-ENU-Console.msp"))
         start-process $LatestSCOMUpdate.FullName -ArgumentList "/Passive" -Wait 
         }
     }
-pause
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {
     Pause

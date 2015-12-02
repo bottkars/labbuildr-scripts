@@ -56,7 +56,6 @@ Start-Sleep -Seconds 5
 Write-Host -NoNewline -ForegroundColor Yellow "."
 }
 
-
 $Setupcmd = "sqlncli.msi"
 $Setuppath = "$SourcePath\$SCVMM_VER$Prereq\$Setupcmd"
 .$NodeScriptDir\test-setup.ps1 -setup $Setupcmd -setuppath $Setuppath
@@ -73,4 +72,4 @@ Start-Process -FilePath "msiexec.exe" -ArgumentList $SetupArgs -PassThru -Wait
 $Setupcmd = "NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
 $Setuppath = "$SourcePath\$SCVMM_VER$Prereq\$Setupcmd"
 .$NodeScriptDir\test-setup.ps1 -setup $Setupcmd -setuppath $Setuppath
-Start-Process $Setuppath -ArgumentList "/passive /norestart" -Wait
+Start-Process $Setuppath -ArgumentList "/passive /norestart" -PassThru -Wait
