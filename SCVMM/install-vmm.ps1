@@ -9,12 +9,14 @@
 #requires -version 3
 [CmdletBinding()]
 param(
+    [ValidateSet('SC2012_R2','SCTP3','SCTP4')]
+    $SC_VERSION = "SC2012_R2",
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
     $logpath = "c:\Scripts",
-    $DBInstance,
-    [ValidateSet('SC2012_R2_SCVMM','SCTP3_SCVMM','SCTP4_SCVMM')]$SCVMM_VER = "SC2012_R2_SCVMM"
-
+    $Prereq ="Prereq",
+    [string]$SysCtr = "sysctr",
+    $DBInstance 
 )
 $Nodescriptdir = "$Scriptdir\NODE"
 $EXScriptDir = "$Scriptdir\$ex_version"
@@ -31,7 +33,7 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ######################################################################
 $Domain = $env:USERDOMAIN
 $Setupcmd = "setup.exe"
-$Setuppath = "$SourcePath\$SCVMM_VER\$Setupcmd"
+$Setuppath = "$SourcePath\$SC_VERSION\$Setupcmd"
 $Content = @()
 If (!$DBInstance)
     {
@@ -51,6 +53,11 @@ LibrarySharePath=C:\Virtual Machine Manager Library Files
 LibraryShareDescription=Virtual Machine Manager Library Files
 SQMOptIn = 0
 MUOptIn = 0"
+
+$SCVMM_Dir = Join-Path "$SourcePath" "$SysCtr\$SC_VERSION\SCOM"
+$SCVMM_Update_DIr = Join-Path $Sourcepath "$SysCtr\$SC_VERSION\SCOMUpdates"
+
+
 Set-Content  -Value $Content -Path "$logpath\VMServer.ini"
 .$Nodescriptdir\test-setup.ps1 -setup $Setupcmd -setuppath $Setuppath
 Write-Warning "Starting $SCVMM_VER setup, this may take a while"
