@@ -25,7 +25,7 @@ if (!(Test-Path $logpath))
 $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ######################################################################
-Set-Content $logpath\profile.ps1 -Value 'function Global:prompt {"PS [$Env:username]$(Split-Path $pwd -Leaf)>"}'
+Set-Content "$logpath\profile.ps1" -Value 'function Global:prompt {"PS [$Env:username]$(Split-Path $pwd -Leaf)>"}'
 function Create-Shortcut
 {
 	$wshell = New-Object -comObject WScript.Shell
