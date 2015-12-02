@@ -24,4 +24,4 @@ do {
         }
     }
 until ($pathok -match $true)
-write-warning "found $setuppath"
+Write-Host -ForegroundColor Magenta "found $setuppath"
