@@ -73,7 +73,7 @@ foreach ($Updatepattern in ("*vmmserver*.msp","*Admin*.msp"))
         }
     catch
         {
-        Write-Host "No Update Found"
+        Write-Host "No Update Found  for $Updatepattern"
         }
     if ($VMMUpdate)
         {
