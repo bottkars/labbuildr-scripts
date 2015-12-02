@@ -35,11 +35,11 @@ switch ($SC_VERSION)
     {
     "SC2012_R2"
         {
-        $WAIK = "WAIK_10"
+        $WAIK = "WAIK_8.1"
         }
     default
         {
-        $WAIK = "WAIK_8.1"
+        $WAIK = "WAIK_10"
         }
     }
 
