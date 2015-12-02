@@ -57,7 +57,10 @@ SQMOptIn = 0
 MUOptIn = 0"
 
 Set-Content  -Value $Content -Path "$logpath\VMServer.ini"
-
+if ($SC_VERSION -match "2012")
+    {
+    $fix_ACL = $True
+    }
 $Setupcmd = "setup.exe"
 $Setuppath = "$SCVMM_Dir\$Setupcmd"
 .$Nodescriptdir\test-setup.ps1 -setup $Setupcmd -setuppath $Setuppath
