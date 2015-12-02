@@ -14,7 +14,7 @@ $SecurePassword = $Password | ConvertTo-SecureString -AsPlainText -Force
 $Credential = New-Object –TypeName System.Management.Automation.PSCredential –ArgumentList $user, $SecurePassword
 try
     {
-    New-PSDrive –Name “Z” –PSProvider FileSystem –Root “\\$HostIP\$Scripts_share_name” –Persist -Credential $Credential -Scope Global -ErrorAction SilentlyContinue
+    New-PSDrive –Name “Z” –PSProvider FileSystem –Root “\\$HostIP\$Scripts_share_name” –Persist -Credential $Credential -Scope Global -ErrorAction Stop
     }
 catch
     {
@@ -24,7 +24,7 @@ catch
 
 try
     {
-    New-PSDrive –Name “X” –PSProvider FileSystem –Root “\\$HostIP\$Sources_share_name” –Persist -Credential $Credential -Scope Global -ErrorAction SilentlyContinue
+    New-PSDrive –Name “X” –PSProvider FileSystem –Root “\\$HostIP\$Sources_share_name” –Persist -Credential $Credential -Scope Global -ErrorAction Stop
     }
 catch
     {
