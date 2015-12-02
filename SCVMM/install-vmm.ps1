@@ -16,7 +16,8 @@ param(
     $logpath = "c:\Scripts",
     $Prereq ="Prereq",
     [string]$SysCtr = "sysctr",
-    $DBInstance 
+    $DBInstance,
+    [switch]$fix_ACL 
 )
 $Nodescriptdir = "$Scriptdir\NODE"
 $EXScriptDir = "$Scriptdir\$ex_version"
