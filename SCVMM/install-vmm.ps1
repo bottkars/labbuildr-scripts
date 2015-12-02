@@ -60,16 +60,15 @@ Set-Content  -Value $Content -Path "$logpath\VMServer.ini"
 $Setupcmd = "setup.exe"
 $Setuppath = "$SCVMM_Dir\$Setupcmd"
 .$Nodescriptdir\test-setup.ps1 -setup $Setupcmd -setuppath $Setuppath
-Write-Warning "Starting $SCVMM_VER setup, this may take a while"
+Write-Warning "Starting $SC_VERSION setup, this may take a while"
 # start-process "$Setuppath" -ArgumentList "/server /i /SqlDBAdminDomain $Domain /SqlDBAdminName SVC_SQL /SqlDBAdminPassword Password123! /VmmServiceDomain $Domain /VmmServiceUserName SVC_SCVMM /VmmServiceUserPassword Password123! /IACCEPTSCEULA" -Wait 
 start-process "$Setuppath" -ArgumentList "/server /i /f $logpath\VMServer.ini /SqlDBAdminDomain $Domain /SqlDBAdminName SVC_SQL /SqlDBAdminPassword Password123! /VmmServiceDomain $Domain /VmmServiceUserName SVC_SCVMM /VmmServiceUserPassword Password123! /IACCEPTSCEULA" -Wait 
-
 write-verbose "Checking for Updates"
 foreach ($Updatepattern in ("*vmmserver*.msp","*Admin*.msp"))
     {
     Try
         {
-        $VMMUpdate = Get-ChildItem "$SCVMM_Update_DIr"  -Filter $Updatepattern -ErrorAction SilentlyContinue
+        $VMMUpdate = Get-ChildItem "$SCVMM_Update_DIr"  -Filter $Updatepattern -ErrorAction Stop
         }
     catch
         {
