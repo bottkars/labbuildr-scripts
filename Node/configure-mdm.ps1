@@ -178,7 +178,7 @@ $Disks = @()
 $Disks += (Get-ChildItem -Path C:\scaleio_devices\ -Recurse -Filter *.bin ).FullName
 $Faultset_No = 1
 $Devicename = "PhysicalDisk1"
-foreach ($Nodenumber in (4..$nodes.count))
+foreach ($Nodenumber in (1..$nodes.count))
     {
     Write-Host $Nodenumber, $NodeIP[$Nodenumber-1]
     Write-Host -ForegroundColor Magenta "Adding Node $Nodenumber"
