@@ -16,8 +16,7 @@ $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
 $SourcePath = "\\vmware-host\Shared Folders\Sources",
 $logpath = "c:\Scripts",
 $ex_version= "E2016",
-$Prereq ="Prereq", 
-$Setupcmd = "Setup.exe"
+$Prereq ="Prereq" 
 )
 $Nodescriptdir = "$Scriptdir\NODE"
 $ScriptName = $MyInvocation.MyCommand.Name
@@ -31,12 +30,12 @@ if (!(Test-Path $logpath))
 $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
+$Exchange_Dir = Join-Path $Sourcepath "Exchange"
 
-
-.$Nodescriptdir\test-sharedfolders.ps1 -folder $Sourcepath
-
-$Setuppath = "$SourcePath\$ex_version$ex_cu\$Setupcmd"
-.$Nodescriptdir\test-setup -setup Exchange -setuppath $Setuppath
+.$Nodescriptdir\test-sharedfolders.ps1 -folder $SourcePath
+$Setupcmd = "Setup.exe"
+$Setuppath = "$Exchange_Dir\$ex_version\$EX_Version$ex_cu\$Setupcmd"
+.$Nodescriptdir\test-setup -setup $Ex_version -setuppath $Setuppath
 
 $DB1 = "DB1_"+$env:COMPUTERNAME
 
@@ -45,6 +44,5 @@ if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {
     Pause
     }
-# New-Item -ItemType File -Path "c:\scripts\exchange.pass"
 New-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce -Name $ScriptName -Value "$PSHOME\powershell.exe -Command `"New-Item -ItemType File -Path c:\scripts\exchange.pass`""
 Restart-Computer
