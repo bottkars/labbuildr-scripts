@@ -173,16 +173,22 @@ if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     Pause
     }
 
-    ## will be mgrated to ,disk,disk,disk ##
+## will be mgrated to ,disk,disk,disk  usin $Disks -join ","
 $Disks = @()
 $Disks += (Get-ChildItem -Path C:\scaleio_devices\ -Recurse -Filter *.bin ).FullName
-
+$Faultset_No = 1
 $Devicename = "PhysicalDisk1"
-
-scli --add_sds --sds_ip $PrimaryIP --device_path $Disks[0] --device_name $Devicename  --sds_name hvnode1 --protection_domain_name $ProtectionDomainName --storage_pool_name $StoragePoolName --fault_set_name "$($FaulSetName)1" --no_test --mdm_ip $mdm_ip
-scli --add_sds --sds_ip $SecondaryIP --device_path $Disks[0] --device_name $Devicename  --sds_name hvnode2 --protection_domain_name $ProtectionDomainName --storage_pool_name $StoragePoolName --fault_set_name "$($FaulSetName)2" --no_test --mdm_ip $mdm_ip
-scli --add_sds --sds_ip $TiebreakerIP --device_path $Disks[0] --device_name $Devicename  --sds_name hvnode3 --protection_domain_name $ProtectionDomainName --storage_pool_name $StoragePoolName --fault_set_name "$($FaulSetName)3" --no_test --mdm_ip $mdm_ip
-
+foreach ($Nodenumber in (4..$nodes.count))
+    {
+    Write-Host $Nodenumber, $NodeIP[$Nodenumber-1]
+    Write-Host -ForegroundColor Magenta "Adding Node $Nodenumber"
+    scli --add_sds --sds_ip $NodeIP[$Nodenumber-1] --device_path $Disks[0] --device_name $Devicename  --sds_name $Nodes[$Nodenumber-1].Name --protection_domain_name $ProtectionDomainName --storage_pool_name $StoragePoolName --fault_set_name "$($FaulSetName)$Faultset_No" --no_test --mdm_ip $mdm_ip
+    $Faultset_No ++
+    If ($Faultset_No -gt 3)
+        {
+        $Faultset_No = 1
+        }
+    }
 
 # 6. ######################################################################################################
 ##### Add Disks to SDS Nodes # im am looking for Unformatted Fixed Drive with Driveletter
@@ -200,9 +206,11 @@ If ($Disks.Count -gt 1)
     $Devicepath = $Disks[$Disk-1]
     Write-Verbose $Devicename
     Write-Verbose $Devicepath
-    scli --add_sds_device --sds_ip $PrimaryIP --device_path $Devicepath --device_name $Devicename --protection_domain_name $ProtectionDomainName --storage_pool_name $StoragePoolName --no_test --mdm_ip $mdm_ip
-    scli --add_sds_device --sds_ip $SecondaryIP --device_path $Devicepath --device_name $Devicename --protection_domain_name $ProtectionDomainName --storage_pool_name $StoragePoolName --no_test --mdm_ip $mdm_ip
-    scli --add_sds_device --sds_ip $TiebreakerIP --device_path $Devicepath --device_name $Devicename --protection_domain_name $ProtectionDomainName --storage_pool_name $StoragePoolName --no_test --mdm_ip $mdm_ip
+    foreach ($Nodenumber in (1..$nodes.count))
+        {
+        Write-Host $Nodenumber, $NodeIP[$Nodenumber-1]
+        scli --add_sds_device --sds_ip $NodeIP[$Nodenumber-1] --device_path $Devicepath --device_name $Devicename --protection_domain_name $ProtectionDomainName --storage_pool_name $StoragePoolName --no_test --mdm_ip $mdm_ip
+        }
     }
 }
 # 7. ###################################################################################################### 
@@ -254,41 +262,28 @@ if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
 scli --user --login --username admin --password $Password --mdm_ip $mdm_ip
 foreach ($Volumenumber in 1..$CSVnum)
 {
-
-
-$VolumeName = "Vol_$Volumenumber"
-scli --mdm_ip $mdm_ip --query_all_volumes
-
-
-do 
-    {
-    $newvol = scli --add_volume --protection_domain_name $ProtectionDomainName --storage_pool_name $StoragePoolName --size_gb $VolumeSize --thin_provisioned --volume_name $VolumeName --mdm_ip $mdm_ip
-    Write-Warning $LASTEXITCODE
-    Write-Output $newvol    
-    }
-until ($LASTEXITCODE -in ('0'))
-#until ($LASTEXITCODE -in ('0','7') -and $newvol -notmatch "Error: MDM failed command.  Status: System capacity is unbalanced")
-
-do 
-    {
-    scli --map_volume_to_sdc --volume_name $VolumeName --sdc_ip $PrimaryIP --allow_multi_map --mdm_ip $mdm_ip
-    }
-until ($LASTEXITCODE -in ('0'))
-do 
-    {
-    scli --map_volume_to_sdc --volume_name $VolumeName --sdc_ip $SecondaryIP --allow_multi_map --mdm_ip $mdm_ip
-    }
-until ($LASTEXITCODE -in ('0'))
-do 
-    {
-    scli --map_volume_to_sdc --volume_name $VolumeName --sdc_ip $TiebreakerIP --allow_multi_map --mdm_ip $mdm_ip
-    }
-until ($LASTEXITCODE -in ('0'))
+    $VolumeName = "Vol_$Volumenumber"
+    scli --mdm_ip $mdm_ip --query_all_volumes
+    do 
+        {
+        $newvol = scli --add_volume --protection_domain_name $ProtectionDomainName --storage_pool_name $StoragePoolName --size_gb $VolumeSize --thin_provisioned --volume_name $VolumeName --mdm_ip $mdm_ip
+        Write-Warning $LASTEXITCODE
+        Write-Output $newvol    
+        }
+    until ($LASTEXITCODE -in ('0'))
+    #until ($LASTEXITCODE -in ('0','7') -and $newvol -notmatch "Error: MDM failed command.  Status: System capacity is unbalanced")
+    foreach ($Nodenumber in (1..$nodes.count))
+        {
+        Write-Host $Nodenumber, $NodeIP[$Nodenumber-1]
+        do
+            {
+            scli --map_volume_to_sdc --volume_name $VolumeName --sdc_ip $NodeIP[$Nodenumber-1] --allow_multi_map --mdm_ip $mdm_ip
+            }
+        until ($LASTEXITCODE -in ('0'))
+        }
 
 # join array to string, split at id remove spaces and select last
 $serial = (($newvol -join '').Split('ID')).Replace(' ','')[-1]
-
-
 # 9. ######################################################################################################
 # initialize and import Cluster Disks
 ######## Disk
