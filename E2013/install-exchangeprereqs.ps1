@@ -27,21 +27,21 @@ if (!(Test-Path $logpath))
 $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
+$Prereq_dir = Join-Path $SourcePath $Prereq
 .$Nodescriptdir\test-sharedfolders.ps1 -folder $Sourcepath
 
-
 $Setupcmd = "UcmaRuntimeSetup.exe"
-$Setuppath = "$SourcePath\$ex_version$Prereq\$Setupcmd"
+$Setuppath = "$Prereq_dir\$Setupcmd"
 .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
 .$Setuppath /passive /norestart
 
 $Setupcmd = "FilterPack64bit.exe"
-$Setuppath = "$SourcePath\$ex_version$Prereq\$Setupcmd"
+$Setuppath = "$Prereq_dir\$Setupcmd"
 .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
 .$Setuppath /passive /norestart
 
 $Setupcmd = "filterpack2010sp1-kb2460041-x64-fullfile-en-us.exe"
-$Setuppath = "$SourcePath\$ex_version$Prereq\$Setupcmd"
+$Setuppath = "$Prereq_dir\$Setupcmd"
 .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
 .$Setuppath /passive /norestart
 

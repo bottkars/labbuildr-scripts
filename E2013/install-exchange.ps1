@@ -31,12 +31,10 @@ if (!(Test-Path $logpath))
 $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
-
-
+$Exchange_Dir = Join-Path $Sourcepath "Exchange"
 .$Nodescriptdir\test-sharedfolders.ps1 -folder $Sourcepath
-
-$Setuppath = "$SourcePath\$ex_version$ex_cu\$Setupcmd"
-.$Nodescriptdir\test-setup -setup Exchange -setuppath $Setuppath
+$Setuppath = "$Exchange_Dir\$ex_version\$EX_Version$ex_cu\$Setupcmd"
+.$Nodescriptdir\test-setup -setup $Ex_version -setuppath $Setuppath
 
 $DB1 = "DB1_"+$env:COMPUTERNAME
 
