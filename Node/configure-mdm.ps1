@@ -257,7 +257,8 @@ if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     Pause
     }
 scli --user --login --username admin --password $Password --mdm_ip $mdm_ip 
-{
+foreach ($Volumenumber in 1..$CSVnum)
+    {
     $VolumeName = "Vol_$Volumenumber"
     scli --mdm_ip $mdm_ip --query_all_volumes
     Write-Host -ForegroundColor Magenta "Create Volume $VolumeName"
@@ -277,25 +278,25 @@ scli --user --login --username admin --password $Password --mdm_ip $mdm_ip
         until ($LASTEXITCODE -in ('0'))
         }
 
-# join array to string, split at id remove spaces and select last
-$serial = (($newvol -join '').Split('ID')).Replace(' ','')[-1]
-# 9. ######################################################################################################
-# initialize and import Cluster Disks
-######## Disk
-Write-Output "Waiting for Disk to Appear"
-do
-    {
-    $Disk = Get-Disk  | where SerialNumber -match $serial
-    if (!$disk){write-host -NoNewline "."}
-    } until ($Disk) 
-$Disk | Initialize-Disk -PartitionStyle GPT
-$Partition = $Disk  | New-Partition -UseMaximumSize
-$WinVolName =  "Scaleio_CSV_"+$VolumeName+"_"+$Serial
-$WinVollabel = "Scaleio_CSV_"+$VolumeName
-$Partition | Format-Volume -NewFileSystemLabel $WinVollabel -Confirm:$false
-$Disk = Get-Disk  | where SerialNumber -match  $Serial 
-$Clusterdisk = $Disk  | Add-ClusterDisk
-$Clusterdisk.Name = $WinVolName
-Get-ClusterResource -Name $Clusterdisk.Name | Add-ClusterSharedVolume
+    # join array to string, split at id remove spaces and select last
+    $serial = (($newvol -join '').Split('ID')).Replace(' ','')[-1]
+    # 9. ######################################################################################################
+    # initialize and import Cluster Disks
+    ######## Disk
+    Write-Output "Waiting for Disk to Appear"
+    do
+        {
+        $Disk = Get-Disk  | where SerialNumber -match $serial
+        if (!$disk){write-host -NoNewline "."}
+        } until ($Disk) 
+    $Disk | Initialize-Disk -PartitionStyle GPT
+    $Partition = $Disk  | New-Partition -UseMaximumSize
+    $WinVolName =  "Scaleio_CSV_"+$VolumeName+"_"+$Serial
+    $WinVollabel = "Scaleio_CSV_"+$VolumeName
+    $Partition | Format-Volume -NewFileSystemLabel $WinVollabel -Confirm:$false
+    $Disk = Get-Disk  | where SerialNumber -match  $Serial 
+    $Clusterdisk = $Disk  | Add-ClusterDisk
+    $Clusterdisk.Name = $WinVolName
+    Get-ClusterResource -Name $Clusterdisk.Name | Add-ClusterSharedVolume
 }
 
