@@ -273,7 +273,8 @@ foreach ($Volumenumber in 1..$CSVnum)
         Write-Host "Mapping $VolumeName to node $Nodenumber, $($NodeIP[$Nodenumber-1])"
         do
             {
-            scli --map_volume_to_sdc --volume_name $VolumeName --sdc_ip $NodeIP[$Nodenumber-1] --allow_multi_map --mdm_ip $mdm_ip
+            $MapVol =scli --map_volume_to_sdc --volume_name $VolumeName --sdc_ip $NodeIP[$Nodenumber-1] --allow_multi_map --mdm_ip $mdm_ip | Out-Null
+            Write-Verbose $MapVol
             }
         until ($LASTEXITCODE -in ('0'))
         }
