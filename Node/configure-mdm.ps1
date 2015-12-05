@@ -16,11 +16,11 @@ param (
 )
 If ($reconfigure)
     { 
-    $Exitcheck = "('0','7'"
+    $Exitcheck = '0','7'
     }
 else
     {
-    "'0'"
+    '0'
     }
 
 #requires -version 3
@@ -82,18 +82,20 @@ Write-Host -ForegroundColor Gray $scli_add_Primary
 
 # 3. ######################################################################################################
 # add mdm, tb and switch cluster
-Write-Host -ForegroundColor Magenta "changing MDM Password to $password"
-do 
+if (!$reconfigure)
     {
-    $Scli_login = scli --login --username admin --password admin --mdm_ip $PrimaryIP | out-null
-    }
-until ($LASTEXITCODE -in ($ExitCheck))
-Write-Host -ForegroundColor Magenta "Changing Password to $password"
-do
+    Write-Host -ForegroundColor Magenta "changing MDM Password to $password"
+    do 
+        {
+        $Scli_login = scli --login --username admin --password admin --mdm_ip $PrimaryIP | out-null
+        }
+    until ($LASTEXITCODE -in ($ExitCheck))
+    Write-Host -ForegroundColor Magenta "Changing Password to $password"
+    do
     {
     $Scli_password = scli --set_password --old_password admin --new_password $Password --mdm_ip $mdm_ip | out-null
-}
-until ($LASTEXITCODE -in ($ExitCheck))
+    }
+    until ($LASTEXITCODE -in ($ExitCheck))
 Write-Host -ForegroundColor Gray $Scli_password
 
 if (!$singlemdm.IsPresent)
@@ -107,10 +109,10 @@ if (!$singlemdm.IsPresent)
 
     do 
         {
-        $scli_login = scli --user --login --username admin --password $Password --mdm_ip $mdm_ip | out-null 
+        $scli_login = scli --user --login --username admin --password $Password --mdm_ip  | out-null 
         }
     until ($LASTEXITCODE -in ($ExitCheck))
-    Write-host -ForegroundColor Grey $Scli_login
+    Write-host -ForegroundColor Gray $Scli_login
     do 
         {
         $scli_add_secondary = scli --add_secondary_mdm --mdm_ip $PrimaryIP --secondary_mdm_ip $SecondaryIP --mdm_ip $mdm_ip | Out-Null
@@ -137,7 +139,7 @@ else
     {
     Write-Warning "Running ScaleIO ind SingleMDM Mode"
     }
-
+}
 # 4. ######################################################################################################
 ##### configure protection Domain and Storage Pool
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
@@ -150,7 +152,7 @@ do
     $scli_login = scli --user --login --username admin --password $Password --mdm_ip $mdm_ip | out-null 
     }
 until ($LASTEXITCODE -in ($ExitCheck))
-Write-host -ForegroundColor Grey $Scli_login
+Write-host -ForegroundColor Gray $Scli_login
 Write-Host -ForegroundColor Magenta "Creating Prodection Domain $ProtectionDomainName"
 
 do {
@@ -164,13 +166,13 @@ do
     $scli_login = scli --user --login --username admin --password $Password --mdm_ip $mdm_ip | out-null 
     }
 until ($LASTEXITCODE -in ($ExitCheck))
-Write-host -ForegroundColor Grey $Scli_login
+Write-host -ForegroundColor Gray $Scli_login
 foreach ($set in (1..3))
     {
     Write-Host -ForegroundColor Magenta "Creating Fault Set $FaulSetName$set"
     do {
         
-        $add_faultset = scli --add_fault_set  --protection_domain_name $ProtectionDomainName --fault_set_name "$FaulSetName$Set" | out-null
+        $add_faultset = scli --add_fault_set  --protection_domain_name $ProtectionDomainName --fault_set_name "$FaulSetName$Set"--mdm_ip $mdm_ip | out-null
         Write-Verbose $LASTEXITCODE
         }
     until ($LASTEXITCODE -in ($ExitCheck))
@@ -223,7 +225,7 @@ do
     $add_sds = scli --add_sds --sds_ip $NodeIP[$Nodenumber-1] --device_path $Disks[0] --device_name $Devicename  --sds_name $Nodes[$Nodenumber-1].Name --protection_domain_name $ProtectionDomainName --storage_pool_name $StoragePoolName --fault_set_name "$($FaulSetName)$Faultset_No" --no_test --mdm_ip $mdm_ip | Out-Null
     }
     until ($LASTEXITCODE -in ($ExitCheck))
-    Write-host -ForegroundColor Grey $add_sds
+    Write-host -ForegroundColor Gray $add_sds
     $Faultset_No ++
     If ($Faultset_No -gt 3)
         {
@@ -243,7 +245,7 @@ do
     $scli_login = scli --user --login --username admin --password $Password --mdm_ip $mdm_ip | out-null 
     }
 until ($LASTEXITCODE -in ($ExitCheck))
-Write-host -ForegroundColor Grey $Scli_login
+Write-host -ForegroundColor Gray $Scli_login
 
 If ($Disks.Count -gt 1)
 {
@@ -313,7 +315,7 @@ do
     $scli_login = scli --user --login --username admin --password $Password --mdm_ip $mdm_ip | out-null 
     }
 until ($LASTEXITCODE -in ($ExitCheck))
-Write-host -ForegroundColor Grey $Scli_login
+Write-host -ForegroundColor Gray $Scli_login
  
 foreach ($Volumenumber in 1..$CSVnum)
     {
