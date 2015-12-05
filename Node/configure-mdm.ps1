@@ -65,9 +65,9 @@ if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     }
 do {
 Scli --add_primary_mdm --primary_mdm_ip $PrimaryIP --mdm_management_ip $PrimaryIP --accept_license
-Write-Output $LASTEXITCODE
+Write-Verbose $LASTEXITCODE
 }
-until ($LASTEXITCODE -in ('0','7'))
+until ($LASTEXITCODE -in ('0'))
  
 
 # 3. ######################################################################################################
@@ -77,12 +77,12 @@ do
     {
     scli --login --username admin --password admin --mdm_ip $PrimaryIP
     }
-until ($LASTEXITCODE -in ('0','7'))
+until ($LASTEXITCODE -in ('0'))
 do
     {
     scli --set_password --old_password admin --new_password $Password --mdm_ip $mdm_ip
 }
-until ($LASTEXITCODE -in ('0','7'))
+until ($LASTEXITCODE -in ('0'))
 
 
 if (!$singlemdm.IsPresent)
@@ -94,32 +94,34 @@ if (!$singlemdm.IsPresent)
     Pause
     }
 
-do 
-        {
-    scli --user --login --username admin --password $Password --mdm_ip $mdm_ip
-    }
-    until ($LASTEXITCODE -in ('0','7'))
     do 
         {
-    scli --add_secondary_mdm --mdm_ip $PrimaryIP --secondary_mdm_ip $SecondaryIP --mdm_ip $mdm_ip
-    Write-Verbose $LASTEXITCODE
-    }
-    until ($LASTEXITCODE -in ('0','7'))
-    do {
-    scli --add_tb --tb_ip $TiebreakerIP --mdm_ip $mdm_ip
-    Write-Verbose $LASTEXITCODE
-    }
-    until ($LASTEXITCODE -in ('0','7'))
-    do {
-    scli --switch_to_cluster_mode --mdm_ip $mdm_ip
-    Write-Verbose $LASTEXITCODE
-    }
-until ($LASTEXITCODE -in ('0','7'))
+        scli --user --login --username admin --password $Password --mdm_ip $mdm_ip
+        }
+    until ($LASTEXITCODE -in ('0'))
+    do 
+        {
+        scli --add_secondary_mdm --mdm_ip $PrimaryIP --secondary_mdm_ip $SecondaryIP --mdm_ip $mdm_ip
+        Write-Verbose $LASTEXITCODE
+        }
+    until ($LASTEXITCODE -in ('0'))
+    do 
+        {
+        scli --add_tb --tb_ip $TiebreakerIP --mdm_ip $mdm_ip
+        Write-Verbose $LASTEXITCODE
+        }
+    until ($LASTEXITCODE -in ('0'))
+    do 
+        {
+        scli --switch_to_cluster_mode --mdm_ip $mdm_ip
+        Write-Verbose $LASTEXITCODE
+        }
+until ($LASTEXITCODE -in ('0'))
     }
 
 else
     {
-    Write-Warning "Running SqleIO ind SingleMDM Mode"
+    Write-Warning "Running ScaleIO ind SingleMDM Mode"
     }
 
 # 4. ######################################################################################################
@@ -135,7 +137,7 @@ do {
     scli --add_protection_domain --protection_domain_name $ProtectionDomainName --mdm_ip $mdm_ip
     Write-Verbose $LASTEXITCODE
     }
-until ($LASTEXITCODE -in ('0','7'))
+until ($LASTEXITCODE -in ('0'))
 
 scli --user --login --username admin --password $Password --mdm_ip $mdm_ip
 foreach ($set in (1..3))
@@ -144,24 +146,24 @@ foreach ($set in (1..3))
         scli --add_fault_set  --protection_domain_name $ProtectionDomainName --fault_set_name "$FaulSetName$Set"
         Write-Verbose $LASTEXITCODE
         }
-    until ($LASTEXITCODE -in ('0','7'))
+    until ($LASTEXITCODE -in ('0'))
 }
 do {
     scli --add_storage_pool --storage_pool_name $StoragePoolName --protection_domain_name $ProtectionDomainName --mdm_ip $mdm_ip
     Write-Verbose $LASTEXITCODE
     }
-until ($LASTEXITCODE -in ('0','7'))
+until ($LASTEXITCODE -in ('0'))
 
 do {
     scli --modify_spare_policy --protection_domain_name $ProtectionDomainName --storage_pool_name $StoragePoolName --spare_percentage $Percentage --i_am_sure --mdm_ip $mdm_ip
     Write-Verbose $LASTEXITCODE
     }
-until ($LASTEXITCODE -in ('0','7'))
+until ($LASTEXITCODE -in ('0'))
 do {
 scli --rename_system --new_name "ScaleIO@$Location" --mdm_ip $mdm_ip
     Write-Verbose $LASTEXITCODE
     }
-until ($LASTEXITCODE -in ('0','7'))
+until ($LASTEXITCODE -in ('0'))
 
 
 # 5. ######################################################################################################
@@ -224,7 +226,7 @@ $nodes = get-clusternode
 foreach ($node in $nodes)
 
 {
-Write-verbose  "Adding $($Node.Name) to the ScaleIO grid"
+Write-Host -ForegroundColor Magenta  "Adding $($Node.Name) to the ScaleIO grid"
 
 
 Invoke-Command -ComputerName $node.name -ScriptBlock {param( $mdm_ip )
@@ -236,22 +238,17 @@ Invoke-Command -ComputerName $node.name -ScriptBlock {param( $mdm_ip )
 }
 
 scli --mdm_ip $mdm_ip --query_all_sdc
-    
-do {
-    scli --query_sdc --sdc_ip $PrimaryIP --mdm_ip $mdm_ip
-    Write-Verbose $LASTEXITCODE
+foreach ($Nodenumber in (1..$nodes.count))
+    {
+    Write-Host -ForegroundColor Magenta "Query $($NodeIP[$Nodenumber-1])"   
+    do 
+        {
+        $SDC_Query = scli --query_sdc --sdc_ip $NodeIP[$Nodenumber-1] --mdm_ip $mdm_ip | Out-Null
+        Write-Verbose $LASTEXITCODE
+        }
+    until ($LASTEXITCODE -in ('0'))
     }
-until ($LASTEXITCODE -in ('0'))
-do {
-    scli --query_sdc --sdc_ip $SecondaryIP --mdm_ip $mdm_ip
-    Write-Verbose $LASTEXITCODE
-    }
-until ($LASTEXITCODE -in ('0'))
-do {
-    scli --query_sdc --sdc_ip $TiebreakerIP --mdm_ip $mdm_ip
-    Write-Verbose $LASTEXITCODE
-    }
-until ($LASTEXITCODE -in ('0'))
+
 # 8. ######################################################################################################
 ### Create and map Volumes
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
@@ -259,22 +256,20 @@ if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     Write-Verbose "Now Volume Creation and Mapping will start. Volumes will be added to the Cluster"
     Pause
     }
-scli --user --login --username admin --password $Password --mdm_ip $mdm_ip
-foreach ($Volumenumber in 1..$CSVnum)
+scli --user --login --username admin --password $Password --mdm_ip $mdm_ip 
 {
     $VolumeName = "Vol_$Volumenumber"
     scli --mdm_ip $mdm_ip --query_all_volumes
+    Write-Host -ForegroundColor Magenta "Create Volume $VolumeName"
     do 
         {
-        $newvol = scli --add_volume --protection_domain_name $ProtectionDomainName --storage_pool_name $StoragePoolName --size_gb $VolumeSize --thin_provisioned --volume_name $VolumeName --mdm_ip $mdm_ip
-        Write-Warning $LASTEXITCODE
-        Write-Output $newvol    
+        $newvol = scli --add_volume --protection_domain_name $ProtectionDomainName --storage_pool_name $StoragePoolName --size_gb $VolumeSize --thin_provisioned --volume_name $VolumeName --mdm_ip $mdm_ip 
+        Write-Verbose $LASTEXITCODE
         }
     until ($LASTEXITCODE -in ('0'))
-    #until ($LASTEXITCODE -in ('0','7') -and $newvol -notmatch "Error: MDM failed command.  Status: System capacity is unbalanced")
     foreach ($Nodenumber in (1..$nodes.count))
         {
-        Write-Host $Nodenumber, $NodeIP[$Nodenumber-1]
+        Write-Host "Mapping $VolumeName to node $Nodenumber, $($NodeIP[$Nodenumber-1])"
         do
             {
             scli --map_volume_to_sdc --volume_name $VolumeName --sdc_ip $NodeIP[$Nodenumber-1] --allow_multi_map --mdm_ip $mdm_ip
