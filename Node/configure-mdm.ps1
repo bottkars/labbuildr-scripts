@@ -11,8 +11,17 @@ param (
 [parameter(mandatory = $false)][ValidateRange(1,10)]$CSVnum = 3,
 [parameter(mandatory = $false)]$password = "Password123!",
 [parameter(mandatory = $false)]$VolumeSize = "56",
-[parameter(mandatory = $false)][switch]$singlemdm
+[parameter(mandatory = $false)][switch]$singlemdm,
+[switch]$reconfigure
 )
+If ($reconfigure)
+    { 
+    $Exitcheck = "('0','7'"
+    }
+else
+    {
+    "'0'"
+    }
 
 #requires -version 3
 #requires -module FailoverClusters
@@ -68,7 +77,7 @@ do {
     $scli_add_Primary = scli --add_primary_mdm --primary_mdm_ip $PrimaryIP --mdm_management_ip $PrimaryIP --accept_license | out-null
     Write-Verbose $LASTEXITCODE
 }
-until ($LASTEXITCODE -in ('0'))
+until ($LASTEXITCODE -in ($ExitCheck))
 Write-Host -ForegroundColor Gray $scli_add_Primary 
 
 # 3. ######################################################################################################
@@ -78,13 +87,13 @@ do
     {
     $Scli_login = scli --login --username admin --password admin --mdm_ip $PrimaryIP | out-null
     }
-until ($LASTEXITCODE -in ('0'))
+until ($LASTEXITCODE -in ($ExitCheck))
 Write-Host -ForegroundColor Magenta "Changing Password to $password"
 do
     {
     $Scli_password = scli --set_password --old_password admin --new_password $Password --mdm_ip $mdm_ip | out-null
 }
-until ($LASTEXITCODE -in ('0'))
+until ($LASTEXITCODE -in ($ExitCheck))
 Write-Host -ForegroundColor Gray $Scli_password
 
 if (!$singlemdm.IsPresent)
@@ -100,14 +109,14 @@ if (!$singlemdm.IsPresent)
         {
         $scli_login = scli --user --login --username admin --password $Password --mdm_ip $mdm_ip | out-null 
         }
-    until ($LASTEXITCODE -in ('0'))
+    until ($LASTEXITCODE -in ($ExitCheck))
     Write-host -ForegroundColor Grey $Scli_login
     do 
         {
         $scli_add_secondary = scli --add_secondary_mdm --mdm_ip $PrimaryIP --secondary_mdm_ip $SecondaryIP --mdm_ip $mdm_ip | Out-Null
         Write-Verbose $LASTEXITCODE
         }
-    until ($LASTEXITCODE -in ('0'))
+    until ($LASTEXITCODE -in ($ExitCheck))
     Write-Host -ForegroundColor DarkGray $scli_add_secondary
     Write-Host -ForegroundColor Magenta "Adding TieBreaker"
     do 
@@ -115,13 +124,13 @@ if (!$singlemdm.IsPresent)
         scli --add_tb --tb_ip $TiebreakerIP --mdm_ip $mdm_ip | Out-Null
         Write-Verbose $LASTEXITCODE
         }
-    until ($LASTEXITCODE -in ('0'))
+    until ($LASTEXITCODE -in ($ExitCheck))
     do 
         {
         scli --switch_to_cluster_mode --mdm_ip $mdm_ip | Out-Null
         Write-Verbose $LASTEXITCODE
         }
-until ($LASTEXITCODE -in ('0'))
+until ($LASTEXITCODE -in ($ExitCheck))
     }
 
 else
@@ -140,7 +149,7 @@ do
     {
     $scli_login = scli --user --login --username admin --password $Password --mdm_ip $mdm_ip | out-null 
     }
-until ($LASTEXITCODE -in ('0'))
+until ($LASTEXITCODE -in ($ExitCheck))
 Write-host -ForegroundColor Grey $Scli_login
 Write-Host -ForegroundColor Magenta "Creating Prodection Domain $ProtectionDomainName"
 
@@ -148,13 +157,13 @@ do {
     scli --add_protection_domain --protection_domain_name $ProtectionDomainName --mdm_ip $mdm_ip | Out-Null
     Write-Verbose $LASTEXITCODE
     }
-until ($LASTEXITCODE -in ('0'))
+until ($LASTEXITCODE -in ($ExitCheck))
 
 do 
     {
     $scli_login = scli --user --login --username admin --password $Password --mdm_ip $mdm_ip | out-null 
     }
-until ($LASTEXITCODE -in ('0'))
+until ($LASTEXITCODE -in ($ExitCheck))
 Write-host -ForegroundColor Grey $Scli_login
 foreach ($set in (1..3))
     {
@@ -164,7 +173,7 @@ foreach ($set in (1..3))
         $add_faultset = scli --add_fault_set  --protection_domain_name $ProtectionDomainName --fault_set_name "$FaulSetName$Set" | out-null
         Write-Verbose $LASTEXITCODE
         }
-    until ($LASTEXITCODE -in ('0'))
+    until ($LASTEXITCODE -in ($ExitCheck))
     Write-Host -ForegroundColor Gray $add_faultset
 }
 Write-Host -ForegroundColor Magenta "Creating Prodection Pool $StoragePoolName"
@@ -173,7 +182,7 @@ do {
     $add_pool = scli --add_storage_pool --storage_pool_name $StoragePoolName --protection_domain_name $ProtectionDomainName --mdm_ip $mdm_ip | Out-Null
     Write-Verbose $LASTEXITCODE
     }
-until ($LASTEXITCODE -in ('0'))
+until ($LASTEXITCODE -in ($ExitCheck))
 Write-Host -ForegroundColor Gray $add_pool
 Write-Host -ForegroundColor Magenta "Setting Spare policy to $Percentage"
 
@@ -181,7 +190,7 @@ do {
     $Set_spare = scli --modify_spare_policy --protection_domain_name $ProtectionDomainName --storage_pool_name $StoragePoolName --spare_percentage $Percentage --i_am_sure --mdm_ip $mdm_ip | Out-Null
     Write-Verbose $LASTEXITCODE
     }
-until ($LASTEXITCODE -in ('0'))
+until ($LASTEXITCODE -in ($ExitCheck))
 Write-Host -ForegroundColor Gray $Set_spare
 Write-Host -ForegroundColor Magenta "Renaming System"
 
@@ -189,7 +198,7 @@ do {
     $Rename_System = scli --rename_system --new_name "ScaleIO@$Location" --mdm_ip $mdm_ip | Out-Null
     Write-Verbose $LASTEXITCODE
     }
-until ($LASTEXITCODE -in ('0'))
+until ($LASTEXITCODE -in ($ExitCheck))
 Write-Host -ForegroundColor Gray $Rename_System
 
 # 5. ######################################################################################################
@@ -213,7 +222,7 @@ do
     {    
     $add_sds = scli --add_sds --sds_ip $NodeIP[$Nodenumber-1] --device_path $Disks[0] --device_name $Devicename  --sds_name $Nodes[$Nodenumber-1].Name --protection_domain_name $ProtectionDomainName --storage_pool_name $StoragePoolName --fault_set_name "$($FaulSetName)$Faultset_No" --no_test --mdm_ip $mdm_ip | Out-Null
     }
-    until ($LASTEXITCODE -in ('0'))
+    until ($LASTEXITCODE -in ($ExitCheck))
     Write-host -ForegroundColor Grey $add_sds
     $Faultset_No ++
     If ($Faultset_No -gt 3)
@@ -233,7 +242,7 @@ do
     {
     $scli_login = scli --user --login --username admin --password $Password --mdm_ip $mdm_ip | out-null 
     }
-until ($LASTEXITCODE -in ('0'))
+until ($LASTEXITCODE -in ($ExitCheck))
 Write-host -ForegroundColor Grey $Scli_login
 
 If ($Disks.Count -gt 1)
@@ -251,7 +260,7 @@ If ($Disks.Count -gt 1)
             {
             $add_sds_device = scli --add_sds_device --sds_ip $NodeIP[$Nodenumber-1] --device_path $Devicepath --device_name $Devicename --protection_domain_name $ProtectionDomainName --storage_pool_name $StoragePoolName --no_test --mdm_ip $mdm_ip | Out-Null
             }
-        until ($LASTEXITCODE -in ('0'))
+        until ($LASTEXITCODE -in ($ExitCheck))
         Write-Host -ForegroundColor Gray $add_sds_device
         }
     }
@@ -288,7 +297,7 @@ foreach ($Nodenumber in (1..$nodes.count))
         Write-Verbose $LASTEXITCODE
         }
    
-    until ($LASTEXITCODE -in ('0'))
+    until ($LASTEXITCODE -in ($ExitCheck))
     $SDC_Query
     }
 
@@ -303,7 +312,7 @@ do
     {
     $scli_login = scli --user --login --username admin --password $Password --mdm_ip $mdm_ip | out-null 
     }
-until ($LASTEXITCODE -in ('0'))
+until ($LASTEXITCODE -in ($ExitCheck))
 Write-host -ForegroundColor Grey $Scli_login
  
 foreach ($Volumenumber in 1..$CSVnum)
@@ -316,7 +325,7 @@ foreach ($Volumenumber in 1..$CSVnum)
         $newvol = scli --add_volume --protection_domain_name $ProtectionDomainName --storage_pool_name $StoragePoolName --size_gb $VolumeSize --thin_provisioned --volume_name $VolumeName --mdm_ip $mdm_ip | Out-Null 
         Write-Verbose $LASTEXITCODE
         }
-    until ($LASTEXITCODE -in ('0'))
+    until ($LASTEXITCODE -in ($ExitCheck))
     foreach ($Nodenumber in (1..$nodes.count))
         {
         Write-Host "Mapping $VolumeName to node $Nodenumber, $($NodeIP[$Nodenumber-1])"
@@ -325,7 +334,7 @@ foreach ($Volumenumber in 1..$CSVnum)
             $MapVol =scli --map_volume_to_sdc --volume_name $VolumeName --sdc_ip $NodeIP[$Nodenumber-1] --allow_multi_map --mdm_ip $mdm_ip | Out-Null
             # Write-Verbose $MapVol
             }
-        until ($LASTEXITCODE -in ('0'))
+        until ($LASTEXITCODE -in ($ExitCheck))
         Write-Host -ForegroundColor Magenta $MapVol
         }
 
