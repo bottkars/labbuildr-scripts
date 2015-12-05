@@ -277,6 +277,7 @@ foreach ($Volumenumber in 1..$CSVnum)
             Write-Verbose $MapVol
             }
         until ($LASTEXITCODE -in ('0'))
+        Write-Host -ForegroundColor Magenta $MapVol
         }
 
     # join array to string, split at id remove spaces and select last
