@@ -20,6 +20,7 @@
             <OEMName>labbuildr image </OEMName>
             <ShowWindowsLive>false</ShowWindowsLive>
             <TimeZone>W. Europe Standard Time</TimeZone>
+            <ComputerName>*</ComputerName>
         </component>
     </settings>
     <settings pass="oobeSystem">
