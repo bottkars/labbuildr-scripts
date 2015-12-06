@@ -12,13 +12,15 @@ param(
     $nodeIP,
     $nodename,
     $IPv4Subnet = "192.168.2",
+    $IPv6Subnet,
     [ValidateSet('24')]$IPv4PrefixLength = '24',
     $IPv6Prefix = "",
     [ValidateSet('8','24','32','48','64')]$IPv6PrefixLength = '8',
     [Validateset('IPv4','IPv6','IPv4IPv6')]$AddressFamily,
     $AddonFeatures,
     [ipaddress]$DefaultGateway,
-    $Domain,
+    $Domain="labbuildr",
+    $domainsuffix = ".local",
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
     $logpath = "c:\Scripts"
@@ -129,6 +131,47 @@ if ($CDDrive)
     Write-Warning "Starting Tools Update from $($CDDrive.DriveLetter)" 
     Start-Process "$($CDDrive.DriveLetter):\setup.exe" -ArgumentList "/S /v `"/qn REBOOT=R ADDLOCAL=ALL" -Wait
     }
-Rename-Computer -NewName $nodename
-New-Item -ItemType File -Path c:\scripts\2.pass
-restart-computer
+# Rename-Computer -NewName $nodename
+# New-Item -ItemType File -Path c:\scripts\2.pass
+# restart-computer
+######Newtwork Sanity Check #######
+If ($AddressFamily -match "IPv6")
+    {
+    $subnet = "$IPv6Subnet$IPv4Subnet"
+    }
+else 
+    {
+    $subnet = "$IPv4Subnet"
+    }
+
+Do {
+    $Ping = Test-Connection "$Subnet.10" -ErrorAction SilentlyContinue
+    If (!$Ping)
+        {
+        Write-Warning "Can Not reach Domain Controller with $subnet.10
+                        This is most Likely a VMnet Configuration Issue
+                        please Fix Network Assignments ( vmnet ) and specify correct Addressfamily"
+        Pause
+        }
+    }
+Until ($Ping)    
+$Mydomain = "$Domain$domainsuffix"
+$PlainPassword = "Password123!" 
+$password = $PlainPassword | ConvertTo-SecureString -asPlainText -Force
+$username = "$domain\Administrator" 
+$credential = New-Object System.Management.Automation.PSCredential($username,$password)
+Do {
+    $Domain_OK = Add-Computer -DomainName $Mydomain -Credential $credential -PassThru -NewName $Nodename
+    If (!$Domain_OK.HasSucceeded)
+        {
+        Write-Warning "Can Not Join Domain $Domain, please verify and retry
+                    Most likely this Computer has not been removed from Domain or Domain needs to refresh
+                    Please Check Active Directory Users and Computers on the DC"
+        Pause
+        }
+    }
+Until ($Domain_OK.HasSucceeded)    
+# New-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce -Name "Computerinfo" -Value "$PSHOME\powershell.exe -command `".'$Nodescriptdir\set-computerinfo.ps1' -Scriptdir $Scriptdir`""
+."$Nodescriptdir\set-autologon.ps1" -domain $Domain -user "Administrator" -Password $PlainPassword
+Restart-Computer
+
