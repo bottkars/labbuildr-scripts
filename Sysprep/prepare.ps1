@@ -77,11 +77,8 @@ if ((Get-WindowsFeature net-framework-core).installstate -ne "installed")
         }
     Add-WindowsFeature net-framework-core -Source "$($CDRom):\sources\sxs"
     }
-Write-Host "Starting Sysprep"
-        if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
-            {
-            Write-Host -ForegroundColor Gray $Content
-            Write-Verbose "Press any Key to continue to sysprep"
-            pause
-            }
+Write-Host -ForegroundColor Red "We will start Sysprep for $Version, system will be reset !"
+Write-Verbose "Press any Key to continue to sysprep or ctrl-c to stop"
+pause
+
 Start-Process "c:\windows\system32\sysprep\sysprep.exe" -ArgumentList "/generalize /oobe /unattend:$Scriptdir\answerfile.xml"
