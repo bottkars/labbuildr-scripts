@@ -3,11 +3,28 @@
 param
     (
     [ValidateSet('de-De','en-Us')]$Locale = 'en-Us',
-    [ValidateSet('Server2012R2','Server2016')]$Version = 'Server2016',
+    #[ValidateSet('Server2012R2','Server2016')]$Version = 'Server2016',
     $Productkey
     )
 $Builddir = $PSScriptRoot
 $Scriptdir = "c:\scripts"
+Write-Host -ForegroundColor Magenta "Checking OS version"
+$OS_VER = (Get-ItemProperty -Path c:\windows\system32\hal.dll).VersionInfo.FileVersion
+Write-host -ForegroundColor Yellow "Running OS Version $OS_VER"
+$OS_Major = ([Environment]::OSVersion.Version).Major
+
+Switch ($OS_Major)
+    {
+        6
+        {
+        $Version = 'Server2012R2'
+        }
+        10
+        {
+        $Version = 'Server2016'
+        }
+    }
+
 Write-Host -ForegroundColor Magenta "Checking Machine Type"
 if ((Get-WmiObject -Class Win32_ComputerSystem).Manufacturer -match "VMware")    
     {
