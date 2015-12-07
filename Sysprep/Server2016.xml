@@ -44,10 +44,10 @@
             </AutoLogon>
             <OEMInformation>
                 <HelpCustomized>false</HelpCustomized>
-                <SupportURL>https://community.emc.com/blogs/bottk</SupportURL>
+                <SupportURL>https://github.com/bottkars/labbuildr/wiki</SupportURL>
                 <Manufacturer>@sddc_guy</Manufacturer>
                 <Model>labbuildr6</Model>
-                <SupportAppURL>https://github.com/bottkars</SupportAppURL>
+                <SupportAppURL>https://github.com/bottkars/labbuildr/wiki</SupportAppURL>
             </OEMInformation>
             <OOBE>
                 <HideEULAPage>true</HideEULAPage>
