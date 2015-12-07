@@ -15,9 +15,12 @@
         <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <OEMInformation>
                 <SupportURL>https://community.emc.com/blogs/bottk</SupportURL>
-                <Manufacturer>Hyperv_guy</Manufacturer>
-                <Model>Networker2go 2.0</Model>
+                <Manufacturer>@sdddc_guy</Manufacturer>
+                <Model>labbuildr6</Model>
             </OEMInformation>
+            <OEMName>labbuildr6</OEMName>
+            <TimeZone>W. Europe Standard Time</TimeZone>
+            <ComputerName>*</ComputerName>
         </component>
         <component name="Microsoft-Windows-IE-ESC" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <IEHardenAdmin>false</IEHardenAdmin>
@@ -55,9 +58,9 @@
             </AutoLogon>
             <OEMInformation>
                 <HelpCustomized>false</HelpCustomized>
-                <SupportURL>https://community.emc.com/blogs/bottk</SupportURL>
-                <Manufacturer>@Hyperv_guy</Manufacturer>
-                <Model>labbuildr</Model>
+                <SupportURL>https://github.com/bottkars/labbuildr/wiki</SupportURL>
+                <Manufacturer>@sddc_guy</Manufacturer>
+                <Model>labbuildr6</Model>
             </OEMInformation>
             <OOBE>
                 <HideEULAPage>true</HideEULAPage>
@@ -91,5 +94,5 @@
             <PersistAllDeviceInstalls>true</PersistAllDeviceInstalls>
         </component>
     </settings>
-    <cpi:offlineImage cpi:source="wim:f:/wimfiles/server2012r2update/install.wim#Windows Server 2012 R2 SERVERDATACENTER" xmlns:cpi="urn:schemas-microsoft-com:cpi" />
+    <cpi:offlineImage cpi:source="wim:e:/sysprep/wimfiles/server2012r2update/install.wim#Windows Server 2012 R2 SERVERDATACENTER" xmlns:cpi="urn:schemas-microsoft-com:cpi" />
 </unattend>
