@@ -9,7 +9,7 @@
 #requires -version 3
 [CmdletBinding()]
 param(
-    [ValidateSet('nw90.DA','nw9001',
+    [ValidateSet('nw90.DA','nw9001','nw9002',
     'nw8222','nw8221','nw822',
     'nw8218','nw8217','nw8216','nw8215','nw8214','nw8213','nw8212','nw8211','nw821',
     'nw8206','nw8205','nw8204','nw8203','nw8202','nw82',
@@ -46,7 +46,7 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 $Password = "Password123!"
 $dbusername = "postgres"
-
+$SourcePath = Join-Path $SourcePath "Networker"
 Write-Verbose "Setting Up SNMP"
 Add-WindowsFeature snmp-service  -IncludeAllSubFeature -IncludeManagementTools
 Set-Service SNMPTRAP -StartupType Automatic
