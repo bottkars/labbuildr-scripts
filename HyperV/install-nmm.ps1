@@ -28,10 +28,10 @@ $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ######################################################################
 ############
-$EXScriptDir = "$Scriptdir\$ex_version"
-$Nodescriptdir = "$Scriptdir\Node"
-$NWScriptDir = "$Scriptdir\nwserver"
+$Nodescriptdir = Join-Path $Scriptdir "Node"
+$NWScriptDir = Join-Path $Scriptdir "nwserver"
 $SourcePath = Join-Path $SourcePath "Networker"
+
 
 $Domain = $env:USERDOMAIN
 Write-Verbose $Domain
