@@ -21,6 +21,10 @@ $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
 $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
 New-Item -ItemType file  "$Builddir\$ScriptName$Logtime.log"
+############
+$Nodescriptdir = Join-Path $Scriptdir "Node"
+$NWScriptDir = Join-Path $Scriptdir "nwserver"
+$SourcePath = Join-Path $SourcePath "Networker"
 
 $Domain = $env:USERDOMAIN
 Write-Verbose $Domain

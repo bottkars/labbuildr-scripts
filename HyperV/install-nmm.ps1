@@ -16,8 +16,6 @@ param(
     $nmm_ver,
     [switch]$scvmm
 )
-$Nodescriptdir = "$Scriptdir\NODE"
-$EXScriptDir = "$Scriptdir\$ex_version"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
@@ -29,6 +27,12 @@ if (!(Test-Path $logpath))
 $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ######################################################################
+############
+$EXScriptDir = "$Scriptdir\$ex_version"
+$Nodescriptdir = "$Scriptdir\Node"
+$NWScriptDir = "$Scriptdir\nwserver"
+$SourcePath = Join-Path $SourcePath "Networker"
+
 $Domain = $env:USERDOMAIN
 Write-Verbose $Domain
 

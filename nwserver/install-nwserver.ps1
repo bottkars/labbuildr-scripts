@@ -30,8 +30,6 @@ param(
     $Prereq ="Prereq"
      
 )
-$Nodescriptdir = "$Scriptdir\Node"
-$NWScriptDir = "$Scriptdir\nwserver"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
@@ -43,10 +41,11 @@ if (!(Test-Path $logpath))
 $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
-############
+$Nodescriptdir = Join-Path $Scriptdir "Node"
+$NWScriptDir = Join-Path $Scriptdir "nwserver"
+$SourcePath = Join-Path $SourcePath "Networker"
 $Password = "Password123!"
 $dbusername = "postgres"
-$SourcePath = Join-Path $SourcePath "Networker"
 Write-Verbose "Setting Up SNMP"
 Add-WindowsFeature snmp-service  -IncludeAllSubFeature -IncludeManagementTools
 Set-Service SNMPTRAP -StartupType Automatic

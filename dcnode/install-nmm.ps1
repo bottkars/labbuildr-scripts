@@ -26,6 +26,11 @@ if (!(Test-Path $logpath))
 $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
+$Nodescriptdir = Join-Path $Scriptdir "Node"
+$NWScriptDir = Join-Path $Scriptdir "nwserver"
+$SourcePath = Join-Path $SourcePath "Networker"
+
+
 .$Builddir\test-sharedfolders.ps1 -folder $SourcePath
 $Setuppath = (Join-Path $SourcePath "$nmm_ver\win_x64\networkr\setup.exe") 
 .$Builddir\test-setup -setup NMM -setuppath $Setuppath
