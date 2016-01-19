@@ -43,8 +43,6 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 $Nodescriptdir = "$Scriptdir\Node"
 $NWScriptDir = "$Scriptdir\nwserver"
 $SourcePath = Join-Path $SourcePath "Networker"
-
-$SourcePath = Join-Path $SourcePath "Networker"
 .$NodeScriptDir\test-sharedfolders.ps1 -Folder $SourcePath
 $Setuppath = "$SourcePath\$NW_ver\win_x64\networkr\"
 .$NodeScriptDir\test-setup -setup NetworkerClient -setuppath $Setuppath
