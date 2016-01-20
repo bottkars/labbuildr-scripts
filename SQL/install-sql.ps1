@@ -16,6 +16,7 @@ param(
 	[ValidateSet('SQL2014SP1slip','SQL2012','SQL2012SP1','SQL2012SP2','SQL2012SP1SLIP','SQL2014')]$SQLVER,
     $Diskparameter = "",
     $DBInstance,
+    $ProductDir = "SQL",
     [switch]$DefaultDBpath,
     [switch]$reboot 
 )
@@ -39,45 +40,65 @@ If (!$DBInstance)
     $DBInstance = "MSSQL$Domain"
     }
 $DBInstance = $DBInstance.substring(0, [System.Math]::Min(16, $DBInstance.Length))
-
+$ProductDir = Join-Path $SourcePath $ProductDir
 net localgroup "Backup Operators" $Domain\SVC_SQLADM /Add
 net localgroup "Administrators" $DOMAIN\SVC_SQLADM /Add
 net localgroup "Administrators" $DOMAIN\SVC_SCVMM /Add
-
+$UpdateSource = ""
 Switch ($SQLVER)
     {
     'SQL2012SP1'
         {
-        $UpdateSource = "/UpdateSource=`"$SourcePath\$SQLVER`""
+        $SQL_BASEVER = "SQL2012"
+        $SQL_BASEDir = Join-Path $Product_Dir $SQL_BASEVER
+        $UpdateSource = "/UpdateSource=`"$SQL_BASEDir\$SQLVER`""
         $Setupcmd = "setup.exe"
-        $Setuppath = "$SourcePath\SQLFULL_x64_ENU\$Setupcmd"
+        $Setuppath = "$SQL_BASEDir\$SQL_BASEVER\SQLFULL_x64_ENU\$Setupcmd"
         .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
         }
     'SQL2012SP2'
         {
-        $UpdateSource = "/UpdateSource=`"$SourcePath\$SQLVER`""
+        $SQL_BASEVER = "SQL2012"
+        $SQL_BASEDir = Join-Path $Product_Dir $SQL_BASEVER
+        $UpdateSource = "/UpdateSource=`"$SQL_BASEDir\$SQLVER`""
         $Setupcmd = "setup.exe"
-        $Setuppath = "$SourcePath\SQLFULL_x64_ENU\$Setupcmd"
+        $Setuppath = "$SQL_BASEDir\$SQL_BASEVER\SQLFULL_x64_ENU\$Setupcmd"
         .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
         }
-    default
+    'SQL2012'
         {
+        $SQL_BASEVER = "SQL2012"
+        $SQL_BASEDir = Join-Path $Product_Dir $SQL_BASEVER
         $Setupcmd = "setup.exe"
-        $Setuppath = "$SourcePath\$SQLVER\$Setupcmd"
+        $Setuppath = "$SQL_BASEDir\SQLFULL_x64_ENU\$Setupcmd"
         .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
         }
-   <# 'SQL2012'
+    'SQL2012SP1Slip'
         {
+        $SQL_BASEVER = "SQL2012"
+        $SQL_BASEDir = Join-Path $Product_Dir $SQL_BASEVER
         $Setupcmd = "setup.exe"
-        $Setuppath = "$SourcePath\$SQLVER\$Setupcmd"
+        $Setuppath = "$SQL_BASEDir\$SQLVER\$Setupcmd"
         .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
         }
+
     'SQL2014'
         {
+        $SQL_BASEVER = $SQLVER
+        $SQL_BASEDir = Join-Path $Product_Dir $SQL_BASEVER
         $Setupcmd = "setup.exe"
-        $Setuppath = "$SourcePath\$SQLVER\$Setupcmd"
+        $Setuppath = "$SQL_BASEDir\$SQLVER\$Setupcmd"
         .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
-        }#>
+        }
+    'SQL2014SP1slip'
+        {
+        $SQL_BASEVER = "SQL2014"
+        $SQL_BASEDir = Join-Path $Product_Dir $SQL_BASEVER
+        $Setupcmd = "setup.exe"
+        $Setuppath = "$SQL_BASEDir\$SQLVER\$Setupcmd"
+        .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
+        }
+
     }
 if (!$DefaultDBpath.IsPresent)
     {
@@ -86,6 +107,10 @@ if (!$DefaultDBpath.IsPresent)
 $Arguments = "/q /ACTION=Install /FEATURES=SQL,SSMS $UpdateSource $Diskparameter /INSTANCENAME=$DBInstance /SQLSVCACCOUNT=`"$Domain\svc_sqladm`" /SQLSVCPASSWORD=`"Password123!`" /SQLSYSADMINACCOUNTS=`"$Domain\svc_sqladm`" `"$Domain\Administrator`" `"$Domain\sql_admins`" /AGTSVCACCOUNT=`"NT AUTHORITY\Network Service`" /IACCEPTSQLSERVERLICENSETERMS"
 Write-Verbose $Arguments
 Write-Warning "Starting SQL Setup $SQLVER"
+if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
+    {
+    Pause
+    }
 $Time = Measure-Command {Start-Process $Setuppath -ArgumentList  $Arguments -Wait}
 $Time | Set-Content "$logpath\sqlsetup$SQLVER.txt" -Force
 If ($LASTEXITCODE -lt 0)
