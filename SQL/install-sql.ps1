@@ -50,25 +50,25 @@ Switch ($SQLVER)
     'SQL2012SP1'
         {
         $SQL_BASEVER = "SQL2012"
-        $SQL_BASEDir = Join-Path $Product_Dir $SQL_BASEVER
+        $SQL_BASEDir = Join-Path $ProductDir $SQL_BASEVER
         $UpdateSource = "/UpdateSource=`"$SQL_BASEDir\$SQLVER`""
         $Setupcmd = "setup.exe"
-        $Setuppath = "$SQL_BASEDir\$SQL_BASEVER\SQLFULL_x64_ENU\$Setupcmd"
+        $Setuppath = "$SQL_BASEDir\SQLFULL_x64_ENU\$Setupcmd"
         .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
         }
     'SQL2012SP2'
         {
         $SQL_BASEVER = "SQL2012"
-        $SQL_BASEDir = Join-Path $Product_Dir $SQL_BASEVER
+        $SQL_BASEDir = Join-Path $ProductDir $SQL_BASEVER
         $UpdateSource = "/UpdateSource=`"$SQL_BASEDir\$SQLVER`""
         $Setupcmd = "setup.exe"
-        $Setuppath = "$SQL_BASEDir\$SQL_BASEVER\SQLFULL_x64_ENU\$Setupcmd"
+        $Setuppath = "$SQL_BASEDir\SQLFULL_x64_ENU\$Setupcmd"
         .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
         }
     'SQL2012'
         {
         $SQL_BASEVER = "SQL2012"
-        $SQL_BASEDir = Join-Path $Product_Dir $SQL_BASEVER
+        $SQL_BASEDir = Join-Path $ProductDir $SQL_BASEVER
         $Setupcmd = "setup.exe"
         $Setuppath = "$SQL_BASEDir\SQLFULL_x64_ENU\$Setupcmd"
         .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
@@ -76,7 +76,7 @@ Switch ($SQLVER)
     'SQL2012SP1Slip'
         {
         $SQL_BASEVER = "SQL2012"
-        $SQL_BASEDir = Join-Path $Product_Dir $SQL_BASEVER
+        $SQL_BASEDir = Join-Path $ProductDir $SQL_BASEVER
         $Setupcmd = "setup.exe"
         $Setuppath = "$SQL_BASEDir\$SQLVER\$Setupcmd"
         .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
@@ -85,7 +85,7 @@ Switch ($SQLVER)
     'SQL2014'
         {
         $SQL_BASEVER = $SQLVER
-        $SQL_BASEDir = Join-Path $Product_Dir $SQL_BASEVER
+        $SQL_BASEDir = Join-Path $ProductDir $SQL_BASEVER
         $Setupcmd = "setup.exe"
         $Setuppath = "$SQL_BASEDir\$SQLVER\$Setupcmd"
         .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
@@ -93,7 +93,7 @@ Switch ($SQLVER)
     'SQL2014SP1slip'
         {
         $SQL_BASEVER = "SQL2014"
-        $SQL_BASEDir = Join-Path $Product_Dir $SQL_BASEVER
+        $SQL_BASEDir = Join-Path $ProductDir $SQL_BASEVER
         $Setupcmd = "setup.exe"
         $Setuppath = "$SQL_BASEDir\$SQLVER\$Setupcmd"
         .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
