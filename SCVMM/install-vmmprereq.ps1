@@ -42,9 +42,6 @@ switch ($SC_VERSION)
         $WAIK = "WAIK_10"
         }
     }
-
-
-
 $Setupcmd = "adksetup.exe"
 $Setuppath = "$SourcePath\$WAIK\$Setupcmd"
 .$NodeScriptDir\test-setup.ps1 -setup $Setupcmd -setuppath $Setuppath
