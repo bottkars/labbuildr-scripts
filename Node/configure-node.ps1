@@ -111,7 +111,7 @@ Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server' 
 Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name UserAuthentication -Value 1
 Set-NetFirewallRule -DisplayGroup 'Remote Desktop' -Enabled True
 Write-Host "Running Feature Installer"
-Get-WindowsFeature $Features | Add-WindowsFeature
+Get-WindowsFeature $Features | Add-WindowsFeature –IncludeManagementTools
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {
     Pause
