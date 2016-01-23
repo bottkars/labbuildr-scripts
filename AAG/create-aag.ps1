@@ -39,7 +39,7 @@ $DBInstance = $DBInstance.substring(0, [System.Math]::Min(16, $DBInstance.Length
 $NodeLIST = @()
 $AAGnodes = Get-ADComputer -Filter * | where name -match $Nodeprefix
 foreach ($AAGnode in $AAGnodes){
-$NodeLIST += "$($AAGNode.Name)$DBInstance"
+$NodeLIST += "$($AAGNode.Name)\$DBInstance"
 write-Host "Adding Node $AAGnode to AAG Nodelist"
 }
 Import-Module “sqlps” -DisableNameChecking
