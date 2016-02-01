@@ -60,6 +60,7 @@ if ( $AddressFamily -match 'IPv4')
         Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name "*.ECSNode$N" -IPv4Address "$IPv4Subnet.24$M" -ZoneName $zone.Zonename
         Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name "ScaleIONode$N" -IPv4Address "$IPv4Subnet.19$N" -ZoneName $zone.Zonename
         Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name "CentOSNode$N" -IPv4Address "$IPv4Subnet.22$N" -ZoneName $zone.Zonename
+        Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name "MesosNode$N" -IPv4Address "$IPv4Subnet.22$M" -ZoneName $zone.Zonename
         }
     }
 if ( $AddressFamily -match 'IPv6')
