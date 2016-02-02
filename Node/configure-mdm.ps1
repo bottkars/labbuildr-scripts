@@ -63,6 +63,7 @@ $Devicename = "$Location"+"_Disk_$Driveletter"
 $VolumeName = "Volume_$Location"
 $ProtectionDomainName = "PD_$Location"
 $StoragePoolName = "SP_$Location"
+$SystemName = "ScaleIO@$Location"
 $FaulSetName = "Rack_"
 
 # 2. ######################################################################################################
@@ -203,7 +204,7 @@ Write-Host -ForegroundColor Gray $Set_spare
 Write-Host -ForegroundColor Magenta "Renaming System"
 
 do {
-    $Rename_System = scli --rename_system --new_name "ScaleIO@$Location" --mdm_ip $mdm_iP # | out-null
+    $Rename_System = scli --rename_system --new_name "$SystemName" --mdm_ip $mdm_iP # | out-null
     Write-Verbose $LASTEXITCODE
     }
 until ($LASTEXITCODE -in $ExitCheck)
