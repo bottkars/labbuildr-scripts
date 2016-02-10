@@ -49,7 +49,7 @@ if ($role -eq 'gateway')
     try
         {
         $Setuppath = @()
-        $Setuppath += (Get-ChildItem -Path $ScaleIORoot -Recurse -Filter "*$role*-x64.msi" -Exclude ".*" -ErrorAction Stop ).FullName
+        $Setuppath += (Get-ChildItem -Path $ScaleIORoot -Recurse -Filter "*$role-$ScaleIOVer*-x64.msi" -Exclude ".*" -ErrorAction Stop ).FullName
         Write-Host $Setuppath
         }
     Catch
