@@ -64,7 +64,7 @@ $VolumeName = "Volume_$Location"
 $ProtectionDomainName = "PD_$Location"
 $StoragePoolName = "SP_$Location"
 $SystemName = "ScaleIO@$Location"
-$FaulSetName = "Rack_"
+$FaultSetName = "Rack_"
 
 # 2. ######################################################################################################
 ####### create MDM
@@ -176,10 +176,10 @@ until ($LASTEXITCODE -in $ExitCheck)
 Write-host -ForegroundColor Gray $Scli_login
 foreach ($set in (1..3))
     {
-    Write-Host -ForegroundColor Magenta "Creating Fault Set $FaulSetName$set"
+    Write-Host -ForegroundColor Magenta "Creating Fault Set $FaultSetName$set"
     do {
         
-        $add_faultset = scli --add_fault_set  --protection_domain_name $ProtectionDomainName --fault_set_name "$FaulSetName$Set"--mdm_ip $mdm_iP # | out-null
+        $add_faultset = scli --add_fault_set  --protection_domain_name $ProtectionDomainName --fault_set_name "$FaultSetName$Set"--mdm_ip $mdm_iP # | out-null
         Write-Verbose $LASTEXITCODE
         }
     until ($LASTEXITCODE -in $ExitCheck)
@@ -229,7 +229,7 @@ foreach ($Nodenumber in (1..$nodes.count))
     Write-Host -ForegroundColor Magenta "Adding Node $Nodenumber with $NodeIP[$Nodenumber-1]"
 do 
     {    
-    $add_sds = scli --add_sds --sds_ip $NodeIP[$Nodenumber-1] --device_path $Disks[0] --device_name $Devicename  --sds_name $Nodes[$Nodenumber-1].Name --protection_domain_name $ProtectionDomainName --storage_pool_name $StoragePoolName --fault_set_name "$($FaulSetName)$Faultset_No" --no_test --mdm_ip $mdm_iP # | out-null
+    $add_sds = scli --add_sds --sds_ip $NodeIP[$Nodenumber-1] --device_path $Disks[0] --device_name $Devicename  --sds_name $Nodes[$Nodenumber-1].Name --protection_domain_name $ProtectionDomainName --storage_pool_name $StoragePoolName --fault_set_name "$($FaultSetName)$Faultset_No" --no_test --mdm_ip $mdm_iP # | out-null
     }
     until ($LASTEXITCODE -in $ExitCheck)
     Write-host -ForegroundColor Gray $add_sds
