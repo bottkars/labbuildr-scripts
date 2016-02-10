@@ -77,7 +77,7 @@ if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     }
 Write-Host -ForegroundColor Magenta "Adding Primary MDM"
 do {
-    $scli_add_Primary = scli --add_primary_mdm --primary_mdm_ip $PrimaryIP --mdm_management_ip $PrimaryIP --accept_license | out-null
+    $scli_add_Primary = scli --add_primary_mdm --primary_mdm_ip $PrimaryIP --mdm_management_ip $mdm_ip --accept_license | out-null
     Write-Verbose $LASTEXITCODE
 }
 until ($LASTEXITCODE -in $Success_Warning)
@@ -100,7 +100,7 @@ if (!$reconfigure)
     $Scli_login = scli --login --username admin --password $password --mdm_ip $mdm_iP 2> $sclierror
     Write-Verbose $LASTEXITCODE
     }
-    until ($LASTEXITCODE -in $Success_Warning)
+    until ($LASTEXITCODE -in $Exitcheck)
 Write-Host -ForegroundColor Gray $Scli_password
 
 if (!$singlemdm.IsPresent)
