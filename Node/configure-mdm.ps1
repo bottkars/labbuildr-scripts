@@ -12,6 +12,8 @@ param (
 [parameter(mandatory = $false)]$password = "Password123!",
 [parameter(mandatory = $false)]$VolumeSize = "56",
 [parameter(mandatory = $false)][switch]$singlemdm,
+[parameter(mandatory = $false)][ValidateRange(1,2)]$scaleio_major = 1,
+
 [switch]$reconfigure
 )
 $Success = ('0')
@@ -44,19 +46,19 @@ Invoke-Command -ComputerName $node.name -ScriptBlock {param( $Location )
     (Get-NetIPAddress -AddressState Preferred -InterfaceAlias "vEthernet (External)" -SkipAsSource $false -AddressFamily IPv4 ).IPAddress
     } -ArgumentList $Location
 }
-$PrimaryIP = $NodeIP[0]
-$SecondaryIP = $NodeIP[1]
-$TiebreakerIP = $NodeIP[2]
-Write-Verbose $PrimaryIP
-Write-Verbose $SecondaryIP
-Write-Verbose $TiebreakerIP
+$mdm_ipa = $NodeIP[0]
+$mdm_ipb = $NodeIP[1]
+$tb_ip = $NodeIP[2]
+Write-Verbose $mdm_ipa
+Write-Verbose $mdm_ipb
+Write-Verbose $tb_ip
 if ($singlemdm.IsPresent)
     {
-    $mdm_ip ="$PrimaryIP"
+    $mdm_ip ="$mdm_ipa"
     }
     else
     {
-    $mdm_ip ="$PrimaryIP,$SecondaryIP"
+    $mdm_ip ="$mdm_ipa,$mdm_ipb"
     }
 write-verbose " mdm will be at :$mdm_ip"
 $Devicename = "$Location"+"_Disk_$Driveletter"
@@ -77,20 +79,32 @@ if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     }
 Write-Host -ForegroundColor Magenta "Adding Primary MDM"
 do {
-    $scli_add_Primary = scli --add_primary_mdm --primary_mdm_ip $PrimaryIP --mdm_management_ip $mdm_ip --accept_license | out-null
+    switch ($scaleio_major)
+        {
+        1
+            {
+            $sclicmd = scli --add_primary_mdm --primary_mdm_ip $mdm_ipa --mdm_management_ip $mdm_ip --accept_license # | out-null
+            }
+        2
+            {
+            $sclicmd = scli  --create_mdm_cluster --master_mdm_ip $mdm_ipa  --master_mdm_management_ip $mdm_ipa  --approve_certificate --accept_license #| Out-Null
+            }
+        }
+            $sclicmd
+
     Write-Verbose $LASTEXITCODE
 }
 until ($LASTEXITCODE -in $Success_Warning)
-Write-Host -ForegroundColor Green $scli_add_Primary 
+Write-Host -ForegroundColor Green $sclicmd
 
 # 3. ######################################################################################################
 # add mdm, tb and switch cluster
 if (!$reconfigure)
     {
-    Write-Host -ForegroundColor Magenta "Attempting First Login to PrimaryMDM $PrimaryIP"
+    Write-Host -ForegroundColor Magenta "Attempting First Login to PrimaryMDM $mdm_ipa"
     do 
         {
-        $Scli_login = scli --login --username admin --password admin --mdm_ip $PrimaryIP 2> $sclierror
+        $Scli_login = scli --login --username admin --password admin --mdm_ip $mdm_ipa 2> $sclierror
         }
     until ($LASTEXITCODE -in $Success_Warning)
     Write-Host -ForegroundColor Magenta "Changing Password to $password"
@@ -108,10 +122,9 @@ if (!$singlemdm.IsPresent)
     if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
             {
     Write-Verbose "We are now adding the secondary M[eta] D[ata] M[anager] and T[ie [Breaker] abd form the Management Cluster"
-    Write-Verbose "Open your ScalIO management UI and Connect to $PrimaryIP with admin / $Password and then to Monitor the Progress"
+    Write-Verbose "Open your ScalIO management UI and Connect to $mdm_ipa with admin / $Password and then to Monitor the Progress"
     Pause
     }
-
     do 
         {
         $scli_login = scli --login --username admin --password $Password --mdm_ip $mdm_iP  #
@@ -122,25 +135,67 @@ if (!$singlemdm.IsPresent)
     Write-host -ForegroundColor Gray $Scli_login
     do 
         {
-        $scli_add_secondary = scli --add_secondary_mdm --mdm_ip $PrimaryIP --secondary_mdm_ip $SecondaryIP --mdm_ip $mdm_iP 2> $sclierror
+        switch ($scaleio_major)
+            {
+                1
+                {
+                $sclicmd = scli --add_secondary_mdm --mdm_ip $mdm_ipa --secondary_mdm_ip $mdm_ipb --mdm_ip $mdm_iP 2> $sclierror
+                }
+                2
+                {
+                $sclicmd = scli --add_standby_mdm --mdm_role manager --new_mdm_ip $mdm_ipb --mdm_ip $mdm_ipa 2> $sclierror
+                }
+            }
+
         Write-Verbose $LASTEXITCODE
         }
     until ($LASTEXITCODE -in $ExitCheck)
-    Write-Host -ForegroundColor DarkGray $scli_add_secondary
-    Write-Host -ForegroundColor Magenta "Adding TieBreaker"
+    Write-Host -ForegroundColor DarkGray $sclicmd
+    Write-Host -ForegroundColor Magenta " ==>adding tiebreaker $tb_ip"
     do 
         {
-        scli --add_tb --tb_ip $TiebreakerIP --mdm_ip $mdm_iP 2> $sclierror
+        switch ($scaleio_major)
+            {
+                1
+                {
+                $sclicmd = scli --add_tb --tb_ip $tb_ip --mdm_ip $mdm_iP 2> $sclierror 
+                }
+                2
+                {
+                $sclicmd = scli --add_standby_mdm --mdm_role tb  --new_mdm_ip $tb_ip --mdm_ip $mdm_ipa  #2> $sclierror
+                }
+            }
         Write-Verbose $LASTEXITCODE
         }
-    until ($LASTEXITCODE -in $ExitCheck)
+    until ($LASTEXITCODE -in $Success_Warning)
+    Write-Host -ForegroundColor Magenta " ==>switching to cluster mode"
     do 
         {
-        scli --switch_to_cluster_mode --mdm_ip $mdm_iP 2> $sclierror
+                switch ($scaleio_major)
+            {
+                1
+                {
+                scli --switch_to_cluster_mode --mdm_ip $mdm_iP 
+                }
+                2
+                {
+                scli --switch_cluster_mode --cluster_mode 3_node --add_slave_mdm_ip $mdm_ipb --add_tb_ip $tb_ip  --mdm_ip $mdm_ipa  2> $sclierror
+                }
+            }
         Write-Verbose $LASTEXITCODE
         }
-until ($LASTEXITCODE -in $ExitCheck)
+    until ($LASTEXITCODE -in $Exitcheck)
+    
+    
+    
     }
+
+
+
+
+
+
+
 
 else
     {

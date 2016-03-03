@@ -13,7 +13,7 @@ param(
     [ValidateSet('MDM','TB','SDS','SDC','gateway','LIA')]$role,
     [Parameter(Mandatory=$true)]$Disks,
     [Parameter(Mandatory=$true)]
-    [ValidateSet('1.30-426.0','1.31-258.2','1.31-1277.3','1.31-2333.2','1.32-277.0','1.32-402.1','1.32-403.2','1.32-2451.4','1.32-3455.5','1.32-4503.5')]
+    [ValidateSet('2.0-5014.0','1.30-426.0','1.31-258.2','1.31-1277.3','1.31-2333.2','1.32-277.0','1.32-402.1','1.32-403.2','1.32-2451.4','1.32-3455.5','1.32-4503.5')]
     [alias('siover')]$ScaleIOVer,
     [Parameter(Mandatory=$false)]$mdmipa,
     [Parameter(Mandatory=$false)]$mdmipb,
@@ -33,6 +33,7 @@ if (!(Test-Path $logpath))
 $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
+$scaleio_major = $ScaleIOVer[0]
 .$Nodescriptdir\test-sharedfolders.ps1 -Folder $Sourcepath
 $ScaleIORoot = Join-Path $SourcePath "Scaleio"
 While ((Test-Path $ScaleIORoot) -Ne $true)
@@ -43,7 +44,6 @@ While ((Test-Path $ScaleIORoot) -Ne $true)
     press any key when done pr Ctrl-C to exit"
     pause
     }
-$ScaleIO_Major = ($ScaleIOVer.Split("-"))[0]
 if ($role -eq 'gateway')
     {
     try
@@ -73,7 +73,16 @@ if ($role -eq 'gateway')
     }
 else
     {
-    While (!($ScaleIOPath = (Get-ChildItem -Path $ScaleIORoot -Recurse -Filter "*$Role-$ScaleIOVer.msi" -Exclude ".*").Directory.FullName))
+    If ($Role -match
+     "TB" -and $scaleio_major -eq 2)
+        { 
+        $Testrole = "MDM"
+        }
+    else
+        {
+        $Testrole = $Role
+        }
+    While (!($ScaleIOPath = (Get-ChildItem -Path $ScaleIORoot -Recurse -Filter "*$Testrole-$ScaleIOVer.msi" -Exclude ".*").Directory.FullName))
     {
     Write-Warning "Cannot find ScaleIO $ScaleIOVer in $ScaleIORoot
     Make sure the Windows Package is downloaded and extracted to $ScaleIORoot
@@ -83,16 +92,69 @@ else
 
     if ($role -ne "SDS")
         {
-        $Setuppath = Join-Path $ScaleIOPath "EMC-ScaleIO-$role-$ScaleIOVer.msi"
-        .$NodeScriptDir\test-setup.ps1 -setup "Saleio$role$ScaleIOVer" -setuppath $Setuppath
-        $ScaleIOArgs = '/i "'+$Setuppath+'" /quiet'
-        Start-Process -FilePath "msiexec.exe" -ArgumentList $ScaleIOArgs -PassThru -Wait
+        switch ($role)
+            {
+                "TB"
+                {
+                switch ($scaleio_major)
+                    {
+                    1
+                        {
+                        $Setuppath = Join-Path $ScaleIOPath "EMC-ScaleIO-$role-$ScaleIOVer.msi"
+                        $ScaleIOArgs = '/i "'+$Setuppath+'" /quiet'
+                        }
+                    2
+                        {
+                        Write-Verbose "got major $scaleio_major"
+                        $Setuppath = Join-Path $ScaleIOPath "EMC-ScaleIO-mdm-$ScaleIOVer.msi"
+                        $ScaleIOArgs = '/i "'+$Setuppath+'" MDM_ROLE_IS_MANAGER=0 /quiet'
+                        }
+                    }
+
+                }
+                "MDM"
+                {
+                switch ($scaleio_major)
+                    {
+                    1
+                        {
+                        $Setuppath = Join-Path $ScaleIOPath "EMC-ScaleIO-$role-$ScaleIOVer.msi"
+                        $ScaleIOArgs = '/i "'+$Setuppath+'" /quiet'
+                        }
+                    2
+                        {
+                        $Setuppath = Join-Path $ScaleIOPath "EMC-ScaleIO-$role-$ScaleIOVer.msi"
+                        $ScaleIOArgs = '/i "'+$Setuppath+'" MDM_ROLE_IS_MANAGER=1 /quiet'
+                        }
+                    }
+                }
+                default
+                {
+                $Setuppath = Join-Path $ScaleIOPath "EMC-ScaleIO-$role-$ScaleIOVer.msi"
+                $ScaleIOArgs = '/i "'+$Setuppath+'" /quiet'
+                }
+            
+            }
+            .$NodeScriptDir\test-setup.ps1 -setup "Saleio$role$ScaleIOVer" -setuppath $Setuppath
+            Start-Process -FilePath "msiexec.exe" -ArgumentList $ScaleIOArgs -PassThru -Wait
         }
     foreach ($role in("sds","sdc","lia"))
         {
+        switch ($role)
+            {
+            "sdc"
+                {
+                $ScaleIOArgs = '/i "'+$Setuppath+'" MDM_IP='+$mdmipa+','+$mdmipb+' /quiet'
+                }
+            default
+                {
+                $ScaleIOArgs = '/i "'+$Setuppath+'" /quiet'
+                }
+
+            }
         $Setuppath = Join-Path $ScaleIOPath "EMC-ScaleIO-$role-$ScaleIOVer.msi"
         .$NodeScriptDir\test-setup -setup "Saleio$role$ScaleIOVer" -setuppath $Setuppath
-        $ScaleIOArgs = '/i "'+$Setuppath+'" /quiet'
+
         Start-Process -FilePath "msiexec.exe" -ArgumentList $ScaleIOArgs -PassThru -Wait
         }
     ### configure lia
