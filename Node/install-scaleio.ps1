@@ -17,9 +17,11 @@ param(
     [alias('siover')]$ScaleIOVer,
     [Parameter(Mandatory=$false)]$mdmipa,
     [Parameter(Mandatory=$false)]$mdmipb,
+    $LiaPassword = "Password123!",
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
     $logpath = "c:\Scripts"
+
 )
 $Nodescriptdir = "$Scriptdir\Node"
 $ScriptName = $MyInvocation.MyCommand.Name
@@ -138,8 +140,9 @@ else
             .$NodeScriptDir\test-setup.ps1 -setup "Saleio$role$ScaleIOVer" -setuppath $Setuppath
             Start-Process -FilePath "msiexec.exe" -ArgumentList $ScaleIOArgs -PassThru -Wait
         }
-    foreach ($role in("sds","sdc","lia"))
+    foreach ($role in ("sds","sdc","lia"))
         {
+        $Setuppath = Join-Path $ScaleIOPath "EMC-ScaleIO-$role-$ScaleIOVer.msi"
         switch ($role)
             {
             "sdc"
@@ -148,18 +151,17 @@ else
                 }
             "lia"
                 {
-                switch ($scaleio_major)
-                    {
-                    1
-                        {
-                        $ScaleIOArgs = '/i "'+$Setuppath+'" /quiet'
-                        }
-                    2
-                        {
+                #switch ($scaleio_major)
+                    #{
+                    #1
+                        #{                        
+                        #$ScaleIOArgs = '/i "'+$Setuppath+'" /quiet'
+                        #}
+                   # 2
+                        #{
                         $ScaleIOArgs = '/i "'+$Setuppath+'" TOKEN=Password123! /quiet'
-                        }
-                    }
-
+                        #}
+                    #}
 
                 }
             default
@@ -168,9 +170,8 @@ else
                 }
 
             }
-        $Setuppath = Join-Path $ScaleIOPath "EMC-ScaleIO-$role-$ScaleIOVer.msi"
+        
         .$NodeScriptDir\test-setup -setup "Saleio$role$ScaleIOVer" -setuppath $Setuppath
-
         Start-Process -FilePath "msiexec.exe" -ArgumentList $ScaleIOArgs -PassThru -Wait
         }
     ### configure lia
