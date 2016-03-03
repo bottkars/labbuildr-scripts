@@ -74,7 +74,7 @@ if ($role -eq 'gateway')
 else
     {
     If ($Role -match
-     "TB" -and $scaleio_major -eq 2)
+     "TB" -and $scaleio_major -ge 2)
         { 
         $Testrole = "MDM"
         }
@@ -145,6 +145,22 @@ else
             "sdc"
                 {
                 $ScaleIOArgs = '/i "'+$Setuppath+'" MDM_IP='+$mdmipa+','+$mdmipb+' /quiet'
+                }
+            "lia"
+                {
+                switch ($scaleio_major)
+                    {
+                    1
+                        {
+                        $ScaleIOArgs = '/i "'+$Setuppath+'" /quiet'
+                        }
+                    2
+                        {
+                        $ScaleIOArgs = '/i "'+$Setuppath+'" TOKEN=Password123! /quiet'
+                        }
+                    }
+
+
                 }
             default
                 {
