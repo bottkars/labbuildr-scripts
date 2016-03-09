@@ -91,7 +91,7 @@ foreach ($localgroup in ( "Administrators", "Backup Operators","Remote Desktop U
 New-ItemProperty "HKLM:Software\Microsoft\ExchangeServer\v15\ActiveMonitoring\Parameters\" -Name "SpaceMonitorLowSpaceThresholdInMB" -Value 10 -PropertyType "DWord" 
 ####### Installing CDO
 $Setupcmd = "ExchangeMapiCdo.msi"
-$Setuppath = "$Prereq\ExchangeMapiCdo\$Setupcmd"
+$Setuppath = Join-Path $SourcePath "$Prereq\ExchangeMapiCdo\$Setupcmd"
 .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
 Start-Process $Setuppath -ArgumentList "/quiet /passive" -Wait
 ######################
