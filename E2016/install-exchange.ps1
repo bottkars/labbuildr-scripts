@@ -10,7 +10,8 @@
 [CmdletBinding()]
 param(
 [Parameter(Mandatory=$true)]
-[ValidateSet('Preview1','final')]$ex_cu,
+[ValidateSet('cu1','final')]
+$ex_cu,
 $ExDatabasesBase = "C:\ExchangeDatabases",
 $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
 $SourcePath = "\\vmware-host\Shared Folders\Sources",
