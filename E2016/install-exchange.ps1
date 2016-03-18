@@ -13,6 +13,7 @@ param(
 [ValidateSet('cu1','final')]
 $ex_cu,
 $ExDatabasesBase = "C:\ExchangeDatabases",
+[ValidateSet('exe','iso')]$install_from,
 $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
 $SourcePath = "\\vmware-host\Shared Folders\Sources",
 $logpath = "c:\Scripts",
@@ -32,11 +33,23 @@ $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 $Exchange_Dir = Join-Path $Sourcepath "Exchange"
-
 .$Nodescriptdir\test-sharedfolders.ps1 -folder $SourcePath
 $Setupcmd = "Setup.exe"
-$Setuppath = "$Exchange_Dir\$ex_version\$EX_Version$ex_cu\$Setupcmd"
-.$Nodescriptdir\test-setup -setup $Ex_version -setuppath $Setuppath
+if ($install_from -eq "exe")
+    {
+    $Setuppath = "$Exchange_Dir\$ex_version\$EX_Version$ex_cu\$Setupcmd"
+    .$Nodescriptdir\test-setup -setup $Ex_version -setuppath $Setuppath
+    }
+else
+    {
+    $Isopath = "$Exchange_Dir\$ex_version\ExchangeServer2016-$ex_cu.iso"
+    .$Nodescriptdir\test-setup -setup $Ex_version -setuppath $Isopath
+    $ismount = Mount-DiskImage -ImagePath "$Exchange_Dir\$ex_version\ExchangeServer2016-$ex_cu.iso" -PassThru
+    $Driveletter = (Get-Volume | where { $_.size -eq $ismount.Size}).driveletter
+    $Setuppath = "$($Driveletter):\$Setupcmd"
+    }
+
+
 
 $DB1 = "DB1_"+$env:COMPUTERNAME
 
