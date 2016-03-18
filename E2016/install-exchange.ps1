@@ -43,8 +43,12 @@ if ($install_from -eq "exe")
 else
     {
     $Isopath = "$Exchange_Dir\$ex_version\ExchangeServer2016-$ex_cu.iso"
+    Write-Verbose $Isopath
     .$Nodescriptdir\test-setup -setup $Ex_version -setuppath $Isopath
-    $ismount = Mount-DiskImage -ImagePath "$Exchange_Dir\$ex_version\ExchangeServer2016-$ex_cu.iso" -PassThru
+    Write-Host -ForegroundColor Gray "Copying Exchange ISO locally"
+    Copy-Item $Isopath -Destination "$env:USERPROFILE\Downloads"
+    $Temp_Iso = "$env:USERPROFILE\Downloads\ExchangeServer2016-$ex_cu.iso"
+    $ismount = Mount-DiskImage -ImagePath $Temp_Iso -PassThru
     $Driveletter = (Get-Volume | where { $_.size -eq $ismount.Size}).driveletter
     $Setuppath = "$($Driveletter):\$Setupcmd"
     }
