@@ -42,25 +42,26 @@ if ( $AddressFamily -match 'IPv4')
     Add-DnsServerPrimaryZone -NetworkID $reverse -ReplicationScope "Forest" -DynamicUpdate NonsecureAndSecure
     Add-DnsServerForwarder -IPAddress 8.8.8.8
     Write-Verbose "Setting Ressource Records for EMC VA´s"
-    Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name Vipr1 -IPv4Address "$IPv4Subnet.9" -ZoneName $zone.Zonename
-    Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name NVENode1 -IPv4Address "$IPv4Subnet.12" -ZoneName $zone.Zonename
-    Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name CoprHD_Release -IPv4Address "$IPv4Subnet.14" -ZoneName $zone.Zonename
-    Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name PuppetMaster1 -IPv4Address "$IPv4Subnet.15" -ZoneName $zone.Zonename
-    Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name PuppetENMaster1 -IPv4Address "$IPv4Subnet.16" -ZoneName $zone.Zonename
-    Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name CoprHD_Develop -IPv4Address "$IPv4Subnet.245" -ZoneName $zone.Zonename
+    Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name vipr1 -IPv4Address "$IPv4Subnet.9" -ZoneName $zone.Zonename
+    Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name nvenode1 -IPv4Address "$IPv4Subnet.12" -ZoneName $zone.Zonename
+    Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name coprhd_release -IPv4Address "$IPv4Subnet.14" -ZoneName $zone.Zonename
+    Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name puppetmaster1 -IPv4Address "$IPv4Subnet.15" -ZoneName $zone.Zonename
+    Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name pupetenmaster1 -IPv4Address "$IPv4Subnet.16" -ZoneName $zone.Zonename
+    Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name coprhd_develop -IPv4Address "$IPv4Subnet.245" -ZoneName $zone.Zonename
     foreach ( $N in 1..3)
         {
         $M = $n + 5
-        Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name "DDVeNode$N" -IPv4Address "$IPv4Subnet.2$N" -ZoneName $zone.Zonename
-        Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name "AveNode$N" -IPv4Address "$IPv4Subnet.3$N" -ZoneName $zone.Zonename
-        Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name "CoreOS$N" -IPv4Address "$IPv4Subnet.4$N" -ZoneName $zone.Zonename
-        Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name "CloudBoost$N" -IPv4Address "$IPv4Subnet.7$N" -ZoneName $zone.Zonename
-        Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name "CloudArray$N" -IPv4Address "$IPv4Subnet.10$N" -ZoneName $zone.Zonename
-        Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name "ECSNode$N" -IPv4Address "$IPv4Subnet.24$M" -ZoneName $zone.Zonename
-        Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name "*.ECSNode$N" -IPv4Address "$IPv4Subnet.24$M" -ZoneName $zone.Zonename
-        Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name "ScaleIONode$N" -IPv4Address "$IPv4Subnet.19$N" -ZoneName $zone.Zonename
-        Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name "CentOSNode$N" -IPv4Address "$IPv4Subnet.22$N" -ZoneName $zone.Zonename
-        Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name "MesosNode$N" -IPv4Address "$IPv4Subnet.22$M" -ZoneName $zone.Zonename
+        Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name "ddvenode$N" -IPv4Address "$IPv4Subnet.2$N" -ZoneName $zone.Zonename
+        Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name "avenode$N" -IPv4Address "$IPv4Subnet.3$N" -ZoneName $zone.Zonename
+        Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name "coreos$N" -IPv4Address "$IPv4Subnet.4$N" -ZoneName $zone.Zonename
+        Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name "cloudboost$N" -IPv4Address "$IPv4Subnet.7$N" -ZoneName $zone.Zonename
+        Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name "geonas$N" -IPv4Address "$IPv4Subnet.7$M" -ZoneName $zone.Zonename
+        Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name "cloudarray$N" -IPv4Address "$IPv4Subnet.10$N" -ZoneName $zone.Zonename
+        Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name "ecsnode$N" -IPv4Address "$IPv4Subnet.24$M" -ZoneName $zone.Zonename
+        Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name "*.ecsnode$N" -IPv4Address "$IPv4Subnet.24$M" -ZoneName $zone.Zonename
+        Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name "scaleionode$N" -IPv4Address "$IPv4Subnet.19$N" -ZoneName $zone.Zonename
+        Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name "centosnode$N" -IPv4Address "$IPv4Subnet.22$N" -ZoneName $zone.Zonename
+        Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name "mesosnode$N" -IPv4Address "$IPv4Subnet.22$M" -ZoneName $zone.Zonename
         }
     }
 if ( $AddressFamily -match 'IPv6')
