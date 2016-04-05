@@ -47,7 +47,7 @@ if ( $AddressFamily -match 'IPv4')
     Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name coprhd_release -IPv4Address "$IPv4Subnet.14" -ZoneName $zone.Zonename
     Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name puppetmaster1 -IPv4Address "$IPv4Subnet.15" -ZoneName $zone.Zonename
     Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name pupetenmaster1 -IPv4Address "$IPv4Subnet.16" -ZoneName $zone.Zonename
-    Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name geonasaster -IPv4Address "$IPv4Subnet.70" -ZoneName $zone.Zonename
+    Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name geonas_primary -IPv4Address "$IPv4Subnet.70" -ZoneName $zone.Zonename
 
     foreach ( $N in 1..3)
         {
@@ -56,7 +56,7 @@ if ( $AddressFamily -match 'IPv4')
         Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name "avenode$N" -IPv4Address "$IPv4Subnet.3$N" -ZoneName $zone.Zonename
         Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name "coreos$N" -IPv4Address "$IPv4Subnet.4$N" -ZoneName $zone.Zonename
         Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name "cloudboost$N" -IPv4Address "$IPv4Subnet.7$N" -ZoneName $zone.Zonename
-        Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name "geonascache$N" -IPv4Address "$IPv4Subnet.7$M" -ZoneName $zone.Zonename
+        Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name "geonas_cache$N" -IPv4Address "$IPv4Subnet.7$M" -ZoneName $zone.Zonename
         Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name "cloudarray$N" -IPv4Address "$IPv4Subnet.10$N" -ZoneName $zone.Zonename
         Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name "ecsnode$N" -IPv4Address "$IPv4Subnet.24$M" -ZoneName $zone.Zonename
         Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name "*.ecsnode$N" -IPv4Address "$IPv4Subnet.24$M" -ZoneName $zone.Zonename
