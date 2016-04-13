@@ -15,7 +15,7 @@ $IPv4Subnet = "192.168.2",
 [Validateset('IPv4','IPv6','IPv4IPv6')]$AddressFamily, 
 [ValidateSet('24')]$IPv4PrefixLength = '24',
 [ValidateSet('8','24','32','48','64')]$IPv6PrefixLength = '8',
-[switch]$Gateway
+$DefaultGateway
 )
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
@@ -41,6 +41,10 @@ if ( $AddressFamily -match 'IPv4')
     $reverse = $IPv4subnet+'.0/'+$IPv4PrefixLength
     Add-DnsServerPrimaryZone -NetworkID $reverse -ReplicationScope "Forest" -DynamicUpdate NonsecureAndSecure
     Add-DnsServerForwarder -IPAddress 8.8.8.8
+    if ($DefaultGateway)
+        {
+        Add-DnsServerForwarder -IPAddress $DefaultGateway
+        }
     Write-Verbose "Setting Ressource Records for EMC VA´s"
     Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name vipr1 -IPv4Address "$IPv4Subnet.9" -ZoneName $zone.Zonename
     Add-DnsServerResourceRecordA -AllowUpdateAny -CreatePtr -Name nvenode1 -IPv4Address "$IPv4Subnet.12" -ZoneName $zone.Zonename
