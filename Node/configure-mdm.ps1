@@ -13,6 +13,7 @@ param (
 [parameter(mandatory = $false)]$VolumeSize = "56",
 [parameter(mandatory = $false)][switch]$singlemdm,
 [parameter(mandatory = $false)][ValidateRange(1,2)]$scaleio_major = 1,
+[parameter(mandatory = $false)]$IPv4Subnet = "192.168.2",
 
 [switch]$reconfigure
 )
@@ -37,13 +38,15 @@ if (!(Get-Cluster . -ErrorAction SilentlyContinue) )
     break
     }
 
+
 $Location = $env:USERDOMAIN
+
 $nodes = Get-ClusterNode
 $Percentage = [math]::Round(100/$nodes.count)+1
 write-verbose "fetching remote IP Addresses..."
 $NodeIP = foreach ($node in $nodes){
 Invoke-Command -ComputerName $node.name -ScriptBlock {param( $Location )
-    (Get-NetIPAddress -AddressState Preferred -InterfaceAlias "vEthernet (External)" -SkipAsSource $false -AddressFamily IPv4 ).IPAddress
+    (Get-NetIPAddress -AddressState Preferred -IPAddress "$IPv4Subnet.*" -SkipAsSource $false -AddressFamily IPv4 ).IPAddress
     } -ArgumentList $Location
 }
 $mdm_ipa = $NodeIP[0]

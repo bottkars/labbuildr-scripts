@@ -34,3 +34,7 @@ Set-Item -Path WSMan:\localhost\Service\AllowUnencrypted True
 Set-Item -Path WSMan:\localhost\Service\Auth\Kerberos True
 .$Nodescriptdir\Add-DomainUserToLocalGroup.ps1 -computer $env:COMPUTERNAME -group Administrators -domain $env:USERDNSDOMAIN -user SVC_WINRM -ScriptDir $scriptdir
 .$Nodescriptdir\Add-DomainUserToLocalGroup.ps1 -computer $env:COMPUTERNAME -group "Remote Desktop Users" -domain $env:USERDNSDOMAIN -user SVC_WINRM -ScriptDir $Scriptdir
+.$Nodescriptdir\Add-DomainUserToLocalGroup.ps1 -computer $env:COMPUTERNAME -group "Remote Management Users" -domain $env:USERDNSDOMAIN -user SVC_WINRM -ScriptDir $Scriptdir
+.$Nodescriptdir\Add-DomainUserToLocalGroup.ps1 -computer $env:COMPUTERNAME -group "Remote Management Users" -domain $env:USERDNSDOMAIN -user Administrator -ScriptDir $Scriptdir
+.$Nodescriptdir\Add-DomainUserToLocalGroup.ps1 -computer $env:COMPUTERNAME -group "Remote Management Users" -domain $env:USERDNSDOMAIN -user "Domain Admins" -ScriptDir $Scriptdir
+
