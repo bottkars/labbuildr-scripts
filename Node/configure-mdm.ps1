@@ -45,9 +45,9 @@ $nodes = Get-ClusterNode
 $Percentage = [math]::Round(100/$nodes.count)+1
 write-verbose "fetching remote IP Addresses..."
 $NodeIP = foreach ($node in $nodes){
-Invoke-Command -ComputerName $node.name -ScriptBlock {param( $Location )
+Invoke-Command -ComputerName $node.name -ScriptBlock {param( $Location, $IPv4Subnet )
     (Get-NetIPAddress -AddressState Preferred -IPAddress "$IPv4Subnet.*" -SkipAsSource $false -AddressFamily IPv4 ).IPAddress
-    } -ArgumentList $Location
+    } -ArgumentList $Location, $IPv4Subnet
 }
 $mdm_ipa = $NodeIP[0]
 $mdm_ipb = $NodeIP[1]
