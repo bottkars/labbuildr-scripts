@@ -13,14 +13,15 @@ param(
     [ValidateSet('MDM','TB','SDS','SDC','gateway','LIA')]$role,
     [Parameter(Mandatory=$true)]$Disks,
     [Parameter(Mandatory=$true)]
-    [ValidateSet('2.0-5014.0','1.30-426.0','1.31-258.2','1.31-1277.3','1.31-2333.2','1.32-277.0','1.32-402.1','1.32-403.2','1.32-2451.4','1.32-3455.5','1.32-4503.5')]
+    [ValidateSet('2.0-6035.0','2.0-5014.0','1.30-426.0','1.31-258.2','1.31-1277.3','1.31-2333.2','1.32-277.0','1.32-402.1','1.32-403.2','1.32-2451.4','1.32-3455.5','1.32-4503.5')]
     [alias('siover')]$ScaleIOVer,
     [Parameter(Mandatory=$false)]$mdmipa,
     [Parameter(Mandatory=$false)]$mdmipb,
     $LiaPassword = "Password123!",
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
-    $logpath = "c:\Scripts"
+    $logpath = "c:\Scripts",
+    $SIO_Password = 'Password123!'
 
 )
 $Nodescriptdir = "$Scriptdir\Node"
@@ -64,7 +65,7 @@ if ($role -eq 'gateway')
         }
     
     $Setuppath = $Setuppath[0]
-    $ScaleIOArgs = 'GATEWAY_ADMIN_PASSWORD=Password123! /i "'+$Setuppath+'" /quiet'
+    $ScaleIOArgs = 'GATEWAY_ADMIN_PASSWORD="'+$SIO_Password+'" /i "'+$Setuppath+'" /quiet'
     Write-Verbose "ScaleIO Gateway Args = $ScaleIOArgs"
     Start-Process -FilePath "msiexec.exe" -ArgumentList $ScaleIOArgs -PassThru -Wait
     $Content = get-content -Path "C:\Program Files\EMC\scaleio\Gateway\webapps\ROOT\WEB-INF\classes\gatewayUser.properties"
@@ -159,7 +160,7 @@ else
                         #}
                    # 2
                         #{
-                        $ScaleIOArgs = '/i "'+$Setuppath+'" TOKEN=Password123! /quiet'
+                        $ScaleIOArgs = '/i "'+$Setuppath+'" TOKEN="'+$SIO_Password+'" /quiet'
                         #}
                     #}
 
@@ -176,7 +177,7 @@ else
         }
     ### configure lia
     $Content = @()
-    $Content += "lia_token=Password123!"
+    $Content += "lia_token=$SIO_Password"
     $Content += "lia_enable_configure_call_home=0"
     $Content += Get-Content 'C:\Program Files\EMC\scaleio\lia\cfg\conf.txt'| where {$_ -NotMatch "lia_token"}
     $Content | Set-Content -Path 'C:\Program Files\EMC\scaleio\lia\cfg\conf.txt'
