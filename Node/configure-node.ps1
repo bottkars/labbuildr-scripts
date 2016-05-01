@@ -170,8 +170,20 @@ Do {
         Pause
         }
     }
-Until ($Domain_OK.HasSucceeded)    
-# New-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce -Name "Computerinfo" -Value "$PSHOME\powershell.exe -command `".'$Nodescriptdir\set-computerinfo.ps1' -Scriptdir $Scriptdir`""
+Until ($Domain_OK.HasSucceeded)
+$vmwarehost = "vmware-host"
+Write-Host -ForegroundColor Magenta "Setting $vmwarehost as local intranet"
+$Zonemaps = ("HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap")
+ Foreach ($Zonemap in $Zonemaps)
+    {
+    Write-Host "Setting $Zonemap for $Host"
+    $Ranges = "$Zonemap\Ranges"
+    $Range1 = New-Item -Path $Ranges -Name "Range1" -Force
+    Set-ItemProperty $ZoneMap -Name "UNCAsIntranet" -Value "1" 
+    Set-ItemProperty $ZoneMap -Name "AutoDetect" -Value "1" 
+    $Range1 | New-ItemProperty -Name ":Range" -Value $vmwarehost
+    $Range1 | New-ItemProperty -Name "file" -PropertyType DWORD -Value  "1"
+   }
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Confirm:$false -Force
 New-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce -Name "Pass3" -Value "$PSHOME\powershell.exe -Command `"New-Item -ItemType File -Path c:\scripts\3.pass`""
 ."$Nodescriptdir\set-autologon.ps1" -domain $Domain -user "Administrator" -Password $PlainPassword
