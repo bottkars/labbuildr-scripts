@@ -72,6 +72,9 @@ if ($role -eq 'gateway')
     $Content = $Content -notmatch "mdm.ip.addresses="
     $Content += "mdm.ip.addresses=$mdmipa`;$mdmipb"
     $Content | set-content -Path "C:\Program Files\EMC\scaleio\Gateway\webapps\ROOT\WEB-INF\classes\gatewayUser.properties"
+    ### path for Password Bug
+    #Start-Process -FilePath  "C:\Program Files\EMC\scaleio\Gateway\bin\SioGWTool.bat"  -ArgumentList "--reset_password  --password Password123! --config_file 'C:\Program Files\EMC\scaleio\Gateway\webapps\ROOT\WEB-INF\classes\gatewayUser.properties'"
+    #Restart-Service EMCScaleIOGateway
     Restart-Service 'EMC ScaleIO Gateway'
     }
 else
