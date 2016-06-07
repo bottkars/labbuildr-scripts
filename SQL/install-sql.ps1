@@ -102,12 +102,13 @@ Switch ($SQLVER)
         }
      'SQL2016'
         {
-        # NETFX Setup
+        <# NETFX Setup
         $Setupcmd = "NDP461-KB3102436-x86-x64-AllOS-ENU.exe"
         $Setuppath = "$SourcePath\$Prereq\$Setupcmd"
         .$NodeScriptDir\test-setup.ps1 -setup $Setupcmd -setuppath $Setuppath
         Start-Process $Setuppath -ArgumentList "/passive /norestart" -PassThru -Wait
-
+        #>
+        .$NodeScriptDir\install-netframework.ps1 -net_ver 461
         $SQL_BASEVER = "SQL2016"
         $SQL_BASEDir = Join-Path $ProductDir $SQL_BASEVER
         $Setupcmd = "setup.exe"
