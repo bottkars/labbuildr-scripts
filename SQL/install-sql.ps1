@@ -13,7 +13,9 @@ param(
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
     $logpath = "c:\Scripts",
     $Prereq ="Prereq",
-	[ValidateSet('SQL2014SP1slip','SQL2012','SQL2012SP1','SQL2012SP2','SQL2012SP1SLIP','SQL2014')]$SQLVER,
+	[ValidateSet(
+    'SQL2014SP1slip','SQL2012','SQL2012SP1','SQL2012SP2','SQL2012SP1SLIP','SQL2014','SQL2016'
+    )]$SQLVER,
     $Diskparameter = "",
     $DBInstance,
     $ProductDir = "SQL",
@@ -98,6 +100,21 @@ Switch ($SQLVER)
         $Setuppath = "$SQL_BASEDir\$SQLVER\$Setupcmd"
         .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
         }
+     'SQL2016'
+        {
+        # NETFX Setup
+        $Setupcmd = "NDP461-KB3102436-x86-x64-AllOS-ENU.exe"
+        $Setuppath = "$SourcePath\$Prereq\$Setupcmd"
+        .$NodeScriptDir\test-setup.ps1 -setup $Setupcmd -setuppath $Setuppath
+        Start-Process $Setuppath -ArgumentList "/passive /norestart" -PassThru -Wait
+
+        $SQL_BASEVER = "SQL2016"
+        $SQL_BASEDir = Join-Path $ProductDir $SQL_BASEVER
+        $Setupcmd = "setup.exe"
+        $Setuppath = "$SQL_BASEDir\$SQLVER\$Setupcmd"
+        .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
+        }
+
 
     }
 if (!$DefaultDBpath.IsPresent)
