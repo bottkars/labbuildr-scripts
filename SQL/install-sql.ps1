@@ -111,7 +111,7 @@ Switch ($SQLVER)
         $SQL_BASEDir = Join-Path $ProductDir $SQL_BASEVER
         Write-Host -ForegroundColor Magenta " ==> Installing SQL Server Management Studio"
         $Setupcmd = 'SSMS-Setup-ENU.exe'
-        $Setuppath = "$SQL_BASEDir\$SQLVER\$Setupcmd"
+        $Setuppath = "$SQL_BASEDir\$Setupcmd"
         .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
         $Arguments = "/install /passive /norestart"
         Start-Process $Setuppath -ArgumentList  $Arguments -Wait
