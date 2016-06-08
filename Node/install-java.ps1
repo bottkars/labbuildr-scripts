@@ -42,7 +42,7 @@ switch ($java_ver)
 		Write-Host -ForegroundColor Yellow " ==> Java7 not found, please download from labbuildr repo"
         break
         }
-    $Java7 = Get-ChildItem -Path $Sourcedir -Filter 'jre-7*x64*'	    
+    $Java7 = Get-ChildItem -Path $SourcePath -Filter 'jre-7*x64*'	    
     $Java7 = $Java7 | Sort-Object -Property Name -Descending
     $SetupCMD = $Java7[0].Name
     }
@@ -66,8 +66,8 @@ switch ($java_ver)
 }
 
 $Setuppath = "$SourcePath\$Setupcmd"
-.$NodeScriptDir\test-setup.ps1 -setup $Setupcmd -setuppath $Setuppath
-Write-Host -ForegroundColor Magenta " ==> installing Java$java_Ver from $SetupCMD"
+.$NodeScriptDir\test-setup.ps1 -setup $Setupcmd -setuppath $SetupPath
+Write-Host -ForegroundColor Magenta " ==> installing Java $java_Ver from $SetupCMD"
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {
     Pause
