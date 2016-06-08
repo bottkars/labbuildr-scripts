@@ -72,4 +72,4 @@ if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {
     Pause
     }
-Start-Process $Setuppath -ArgumentList "/s SPONSORS=0 WEB_JAVA_SECURITY_LEVEL=M" -PassThru -Wait
+Start-Process $Setuppath -ArgumentList "INSTALL_SILENT=ENABLE REBOOT=DISABLE AUTOUPDATE=DISABLE SPONSORS=DISABLE WEB_JAVA_SECURITY_LEVEL=M" -PassThru -Wait
