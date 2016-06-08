@@ -61,7 +61,7 @@ switch ($java_ver)
         $Java8 = $Java8 | Sort-Object -Property Name -Descending
 	    $SetupCMD = $Java8[0].Name
         Write-Verbose "Got $SetupCMD"
-        $ArgumentList = 'INSTALL_SILENT=ENABLE REBOOT=DISABLE AUTOUPDATE=DISABLE SPONSORS=DISABLE WEB_JAVA_SECURITY_LEVEL=M'
+        $ArgumentList = 'INSTALL_SILENT=1 REBOOT=0 AUTO_UPDATE=0 SPONSORS=0 WEB_JAVA_SECURITY_LEVEL=M'
         }
     }
 
