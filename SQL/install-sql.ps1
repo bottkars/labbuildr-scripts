@@ -103,12 +103,6 @@ Switch ($SQLVER)
         }
      'SQL2016'
         {
-        <# NETFX Setup
-        $Setupcmd = "NDP461-KB3102436-x86-x64-AllOS-ENU.exe"
-        $Setuppath = "$SourcePath\$Prereq\$Setupcmd"
-        .$NodeScriptDir\test-setup.ps1 -setup $Setupcmd -setuppath $Setuppath
-        Start-Process $Setuppath -ArgumentList "/passive /norestart" -PassThru -Wait
-        #>
         Write-Host -ForegroundColor Magenta " ==> Installing NetFramework"
         .$NodeScriptDir\install-netframework.ps1 -net_ver 461
         Write-Host -ForegroundColor Magenta " ==> Installing Java"

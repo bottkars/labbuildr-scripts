@@ -53,7 +53,6 @@ switch ($java_ver)
     if (!($Java8 = Get-ChildItem -Path $Sourcedir -Filter 'jre-8*x64*'))
         {
 	    Write-Host -ForegroundColor Gray " ==> Java8 not found, please use get-labjava8"
-        Write-Verbose "Asking for latest Java8"
         break
         }
     else
