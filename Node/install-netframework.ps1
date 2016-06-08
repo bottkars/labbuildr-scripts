@@ -53,9 +53,9 @@ switch ($Net_Ver)
 
 .$Nodescriptdir\test-sharedfolders.ps1 -folder $Sourcepath
 # NETFX 4.52 Setup
-$Setuppath = "$SourcePath\$Prereq\$Setupcmd"
+$Setuppath = "$SourcePath\$prereq\$Setupcmd"
 .$NodeScriptDir\test-setup.ps1 -setup $Setupcmd -setuppath $Setuppath
-Write-Host -ForegroundColor Magenta " ==> installing .Net Framework $Net_Ver"
+Write-Host -ForegroundColor Magenta " ==> installing .Net Framework $Net_Ver from $Setuppath"
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {
     Pause
