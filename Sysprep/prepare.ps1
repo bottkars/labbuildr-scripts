@@ -12,6 +12,11 @@ Write-Host -ForegroundColor Magenta "Checking OS version"
 $OS_VER = (Get-ItemProperty -Path c:\windows\system32\hal.dll).VersionInfo.FileVersion
 Write-host -ForegroundColor Yellow "Running OS Version $OS_VER"
 $OS_Major = ([Environment]::OSVersion.Version).Major
+Write-Host -ForegroundColor Magenta "==> Starting Image Optimization Phase 1"
+Start-Process "c:\windows\system32\Dism.exe" -ArgumentList "/online /Cleanup-Image /StartComponentCleanup /ResetBase" -Wait
+Write-Host -ForegroundColor Magenta "==> Cleaning Image Phase 2"
+Start-Process "c:\windows\system32\Dism.exe" -ArgumentList "/online /Cleanup-Image /SPSuperseded" -Wait
+
 
 Switch ($OS_Major)
     {
