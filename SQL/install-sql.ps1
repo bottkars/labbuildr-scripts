@@ -47,6 +47,7 @@ net localgroup "Backup Operators" $Domain\SVC_SQLADM /Add
 net localgroup "Administrators" $DOMAIN\SVC_SQLADM /Add
 net localgroup "Administrators" $DOMAIN\SVC_SCVMM /Add
 $UpdateSource = ""
+$Features = 'SQL,SSMS'
 Switch ($SQLVER)
     {
     'SQL2012SP1'
@@ -108,21 +109,27 @@ Switch ($SQLVER)
         .$NodeScriptDir\test-setup.ps1 -setup $Setupcmd -setuppath $Setuppath
         Start-Process $Setuppath -ArgumentList "/passive /norestart" -PassThru -Wait
         #>
+        Write-Host -ForegroundColor Magenta " ==> Installing NetFramework"
         .$NodeScriptDir\install-netframework.ps1 -net_ver 461
+        Write-Host -ForegroundColor Magenta " ==> Installing Java"
+        .$NodeScriptDir\install-java.ps1 -java_ver 8
         $SQL_BASEVER = "SQL2016"
         $SQL_BASEDir = Join-Path $ProductDir $SQL_BASEVER
         $Setupcmd = "setup.exe"
         $Setuppath = "$SQL_BASEDir\$SQLVER\$Setupcmd"
         .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
+        $Features = 'SQL,Tools,Polybase'
+        $Java_required  = $true
         }
-
 
     }
 if (!$DefaultDBpath.IsPresent)
     {
     $Diskparameter = "/SQLUSERDBDIR=m:\ /SQLUSERDBLOGDIR=n:\ /SQLTEMPDBDIR=o:\ /SQLTEMPDBLOGDIR=p:\"
     }
-$Arguments = "/q /ACTION=Install /FEATURES=SQL,SSMS $UpdateSource $Diskparameter /INSTANCENAME=$DBInstance /SQLSVCACCOUNT=`"$Domain\svc_sqladm`" /SQLSVCPASSWORD=`"Password123!`" /SQLSYSADMINACCOUNTS=`"$Domain\svc_sqladm`" `"$Domain\Administrator`" `"$Domain\sql_admins`" /AGTSVCACCOUNT=`"NT AUTHORITY\Network Service`" /IACCEPTSQLSERVERLICENSETERMS"
+#$Arguments = "/q /ACTION=Install /FEATURES=SQL,SSMS $UpdateSource $Diskparameter /INSTANCENAME=$DBInstance /SQLSVCACCOUNT=`"$Domain\svc_sqladm`" /SQLSVCPASSWORD=`"Password123!`" /SQLSYSADMINACCOUNTS=`"$Domain\svc_sqladm`" `"$Domain\Administrator`" `"$Domain\sql_admins`" /AGTSVCACCOUNT=`"NT AUTHORITY\Network Service`" /IACCEPTSQLSERVERLICENSETERMS"
+$Arguments = "/q /ACTION=Install /FEATURES=$Features $UpdateSource $Diskparameter /INSTANCENAME=$DBInstance /SQLSVCACCOUNT=`"$Domain\svc_sqladm`" /SQLSVCPASSWORD=`"Password123!`" /SQLSYSADMINACCOUNTS=`"$Domain\svc_sqladm`" `"$Domain\Administrator`" `"$Domain\sql_admins`" /AGTSVCACCOUNT=`"NT AUTHORITY\Network Service`" /IACCEPTSQLSERVERLICENSETERMS"
+
 Write-Verbose $Arguments
 Write-Warning "Starting SQL Setup $SQLVER"
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
