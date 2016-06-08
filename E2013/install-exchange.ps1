@@ -34,7 +34,7 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 $Exchange_Dir = Join-Path $Sourcepath "Exchange"
 .$Nodescriptdir\test-sharedfolders.ps1 -folder $Sourcepath
-$Setuppath = "$Exchange_Dir\$ex_version\$EX_Version$ex_cu\$Setupcmd"
+$Setuppath = "$Exchange_Dir\$ex_version\$EX_Version$($e15_cu)\$Setupcmd"
 .$Nodescriptdir\test-setup -setup $Ex_version -setuppath $Setuppath
 
 $DB1 = "DB1_"+$env:COMPUTERNAME
