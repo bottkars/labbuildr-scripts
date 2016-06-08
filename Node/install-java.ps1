@@ -45,6 +45,7 @@ switch ($java_ver)
     $Java7 = Get-ChildItem -Path $SourcePath -Filter 'jre-7*x64*'	    
     $Java7 = $Java7 | Sort-Object -Property Name -Descending
     $SetupCMD = $Java7[0].Name
+        $ArgumentList = '/s SPONSORS=DISABLE WEB_JAVA_SECURITY_LEVEL=M'
     }
 
     '8'
@@ -60,6 +61,7 @@ switch ($java_ver)
         $Java8 = $Java8 | Sort-Object -Property Name -Descending
 	    $SetupCMD = $Java8[0].Name
         Write-Verbose "Got $SetupCMD"
+        $ArgumentList = 'INSTALL_SILENT=ENABLE REBOOT=DISABLE AUTOUPDATE=DISABLE SPONSORS=DISABLE WEB_JAVA_SECURITY_LEVEL=M'
         }
     }
 
@@ -72,4 +74,4 @@ if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {
     Pause
     }
-Start-Process $Setuppath -ArgumentList "INSTALL_SILENT=ENABLE REBOOT=DISABLE AUTOUPDATE=DISABLE SPONSORS=DISABLE WEB_JAVA_SECURITY_LEVEL=M" -PassThru -Wait
+Start-Process $Setuppath -ArgumentList $ArgumentList -PassThru -Wait
