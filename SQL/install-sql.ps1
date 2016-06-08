@@ -109,7 +109,7 @@ Switch ($SQLVER)
         .$NodeScriptDir\install-java.ps1 -java_ver 8
         $SQL_BASEVER = "SQL2016"
         $SQL_BASEDir = Join-Path $ProductDir $SQL_BASEVER
-        Write-Host -ForegroundColor Magenta " ==> SQL Server Management Studio"
+        Write-Host -ForegroundColor Magenta " ==> Installing SQL Server Management Studio"
         $Setupcmd = 'SSMS-Setup-ENU.exe'
         $Setuppath = "$SQL_BASEDir\$SQLVER\$Setupcmd"
         .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
@@ -131,7 +131,7 @@ if (!$DefaultDBpath.IsPresent)
 $Arguments = "/q /ACTION=Install /FEATURES=$Features $UpdateSource $Diskparameter /INSTANCENAME=$DBInstance /SQLSVCACCOUNT=`"$Domain\svc_sqladm`" /SQLSVCPASSWORD=`"Password123!`" /SQLSYSADMINACCOUNTS=`"$Domain\svc_sqladm`" `"$Domain\Administrator`" `"$Domain\sql_admins`" /AGTSVCACCOUNT=`"NT AUTHORITY\Network Service`" /IACCEPTSQLSERVERLICENSETERMS"
 
 Write-Verbose $Arguments
-Write-Warning "Starting SQL Setup $SQLVER"
+Write-Host -ForegroundColor Magenta " ==> Installing SQL Server"
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {
     Pause
