@@ -93,7 +93,7 @@ if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
 Rename-Computer -NewName $DCName
 Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server' -Name fDenyTSConnections -Value 0
 Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name UserAuthentication -Value 1
-Set-NetFirewallRule -DisplayGroup 'Remote Desktop' -Enabled True
+Set-NetFirewallRule -DisplayGroup 'Remote*Desktop' -Enabled True
 Install-WindowsFeature –Name AD-Domain-Services,RSAT-ADDS –IncludeManagementTools
 
 if ($setwsman)
