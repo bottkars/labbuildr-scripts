@@ -109,7 +109,7 @@ if ( $AddressFamily -notmatch 'IPv4')
 
 Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server' -Name fDenyTSConnections -Value 0
 Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name UserAuthentication -Value 1
-Set-NetFirewallRule -DisplayGroup 'Remote Desktop' -Enabled True
+Set-NetFirewallRule -DisplayGroup 'Remote*Desktop' -Enabled True
 Write-Host "Running Feature Installer"
 Get-WindowsFeature $Features | Add-WindowsFeature –IncludeManagementTools
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
