@@ -9,10 +9,10 @@
 #requires -version 3
 [CmdletBinding()]
 param(
-    [Parameter(ParameterSetName = "1", Mandatory = $false)]
+    [Parameter(ParameterSetName = "1", Mandatory = $true)]
     [ValidateSet(
-    '451','452','46','461'
-    )][string]$Net_Ver="452",
+    '7','8'
+    )][string]$java_Ver,
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
     $logpath = "c:\Scripts",
@@ -30,32 +30,45 @@ if (!(Test-Path $logpath))
 $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
-switch ($Net_Ver)
+.$Nodescriptdir\test-sharedfolders.ps1 -folder $Sourcepath
+
+switch ($java_ver)
+{
+    '7'
     {
-        '451'
-        {        
-        $Setupcmd = "NDP451-KB2858728-x86-x64-AllOS-ENU.exe"
+    Write-Verbose "Checking for Java 7"
+    if (!($Java7 = Get-ChildItem -Path $SourcePath -Filter 'jre-7*x64*'))
+	    {
+		Write-Host -ForegroundColor Yellow " ==> Java7 not found, please download from labbuildr repo"
+        break
         }
-        '452'
-        {        
-        $Setupcmd = "NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
-        }
-        '46'
-        {        
-        $Setupcmd = "NDP46-KB3045557-x86-x64-AllOS-ENU.exe"
-        }
-        '461'
+    $Java7 = Get-ChildItem -Path $Sourcedir -Filter 'jre-7*x64*'	    
+    $Java7 = $Java7 | Sort-Object -Property Name -Descending
+    $SetupCMD = $Java7[0].Name
+    }
+
+    '8'
+    {
+    Write-Verbose "Checking for Java 8"
+    if (!($Java8 = Get-ChildItem -Path $Sourcedir -Filter 'jre-8*x64*'))
         {
-        $Setupcmd = "NDP461-KB3102436-x86-x64-AllOS-ENU.exe"
+	    Write-Host -ForegroundColor Gray " ==> Java8 not found, please use get-labjava8"
+        Write-Verbose "Asking for latest Java8"
+        break
+        }
+    else
+        {
+        $Java8 = $Java8 | Sort-Object -Property Name -Descending
+	    $SetupCMD = $Java8[0].Name
+        Write-Verbose "Got $SetupCMD"
         }
     }
 
+}
 
-.$Nodescriptdir\test-sharedfolders.ps1 -folder $Sourcepath
-# NETFX 4.52 Setup
-$Setuppath = "$SourcePath\$Prereq\$Setupcmd"
+$Setuppath = "$SourcePath\$Setupcmd"
 .$NodeScriptDir\test-setup.ps1 -setup $Setupcmd -setuppath $Setuppath
-Write-Host -ForegroundColor Magenta " ==> installing .Net Framework $Net_Ver"
+Write-Host -ForegroundColor Magenta " ==> installing Java$java_Ver from $SetupCMD"
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {
     Pause
