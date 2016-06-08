@@ -109,7 +109,13 @@ Switch ($SQLVER)
         .$NodeScriptDir\install-java.ps1 -java_ver 8
         $SQL_BASEVER = "SQL2016"
         $SQL_BASEDir = Join-Path $ProductDir $SQL_BASEVER
-        $Setupcmd = "setup.exe"
+        Write-Host -ForegroundColor Magenta " ==> SQL Server Management Studio"
+        $Setupcmd = 'SSMS-Setup-ENU.exe'
+        $Setuppath = "$SQL_BASEDir\$SQLVER\$Setupcmd"
+        .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
+        $Arguments = "/install /passive /norestart"
+        Start-Process $Setuppath -ArgumentList  $Arguments -Wait
+        $Setupcmd = "setup.exe"        
         $Setuppath = "$SQL_BASEDir\$SQLVER\$Setupcmd"
         .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
         $Features = 'SQL,Tools,Polybase'
