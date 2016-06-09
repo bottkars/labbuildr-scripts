@@ -27,14 +27,37 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 #.$Nodescriptdir\test-sharedfolders.ps1
 ##### Configure WINRM
+$lclanguage = (Get-WmiObject Win32_OperatingSystem).oslanguage
+        switch ($lclanguage) `
+        {
+
+            1031 
+            {
+            Write-Host -ForegroundColor Magenta  "==> we have a German Computer, adjusting Groupnames"
+            $localgroups = ( "Administratoren", "Sicherungs-Operatoren","Remotedesktopbenutzer")
+            $Administrators = "Administratoren"
+            $RemoteDesktopUsers = "Remotedesktopbenutzer"
+            $RemoteManagementUsers = "Remoteverwaltungsbenutzer"
+            $DomainAdmins = "Domain Administratoren"
+
+            }
+
+            default 
+            {
+            $Administrators = "Administrators"
+            $RemoteDesktopUsers = "Remote Desktop Users"
+            $RemoteManagementUsers = "Remote Management Users"
+            $DomainAdmins = "Domain Admins"
+            }
+        }
 Enable-PSRemoting -Confirm:$false -Force
 Set-Item -Path WSMan:\localhost\Service\Auth\Basic -Value True
 Set-Item -Path WSMan:\localhost\Service\AllowRemoteAccess True
 Set-Item -Path WSMan:\localhost\Service\AllowUnencrypted True
 Set-Item -Path WSMan:\localhost\Service\Auth\Kerberos True
-.$Nodescriptdir\Add-DomainUserToLocalGroup.ps1 -computer $env:COMPUTERNAME -group Administrators -domain $env:USERDNSDOMAIN -user SVC_WINRM -ScriptDir $scriptdir
-.$Nodescriptdir\Add-DomainUserToLocalGroup.ps1 -computer $env:COMPUTERNAME -group "Remote Desktop Users" -domain $env:USERDNSDOMAIN -user SVC_WINRM -ScriptDir $Scriptdir
-.$Nodescriptdir\Add-DomainUserToLocalGroup.ps1 -computer $env:COMPUTERNAME -group "Remote Management Users" -domain $env:USERDNSDOMAIN -user SVC_WINRM -ScriptDir $Scriptdir
-.$Nodescriptdir\Add-DomainUserToLocalGroup.ps1 -computer $env:COMPUTERNAME -group "Remote Management Users" -domain $env:USERDNSDOMAIN -user Administrator -ScriptDir $Scriptdir
-.$Nodescriptdir\Add-DomainUserToLocalGroup.ps1 -computer $env:COMPUTERNAME -group "Remote Management Users" -domain $env:USERDNSDOMAIN -user "Domain Admins" -ScriptDir $Scriptdir
+.$Nodescriptdir\Add-DomainUserToLocalGroup.ps1 -computer $env:COMPUTERNAME -group $Administrators -domain $env:USERDNSDOMAIN -user SVC_WINRM -ScriptDir $scriptdir
+.$Nodescriptdir\Add-DomainUserToLocalGroup.ps1 -computer $env:COMPUTERNAME -group $RemoteDesktopUsers -domain $env:USERDNSDOMAIN -user SVC_WINRM -ScriptDir $Scriptdir
+.$Nodescriptdir\Add-DomainUserToLocalGroup.ps1 -computer $env:COMPUTERNAME -group $RemoteManagementUsers  -domain $env:USERDNSDOMAIN -user SVC_WINRM -ScriptDir $Scriptdir
+.$Nodescriptdir\Add-DomainUserToLocalGroup.ps1 -computer $env:COMPUTERNAME -group $RemoteManagementUsers -domain $env:USERDNSDOMAIN -user Administrator -ScriptDir $Scriptdir
+.$Nodescriptdir\Add-DomainUserToLocalGroup.ps1 -computer $env:COMPUTERNAME -group $RemoteManagementUsers -domain $env:USERDNSDOMAIN -user "Domain Admins" -ScriptDir $Scriptdir
 
