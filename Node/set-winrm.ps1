@@ -34,11 +34,10 @@ $lclanguage = (Get-WmiObject Win32_OperatingSystem).oslanguage
             1031 
             {
             Write-Host -ForegroundColor Magenta  "==> we have a German Computer, adjusting Groupnames"
-            $localgroups = ( "Administratoren", "Sicherungs-Operatoren","Remotedesktopbenutzer")
             $Administrators = "Administratoren"
             $RemoteDesktopUsers = "Remotedesktopbenutzer"
             $RemoteManagementUsers = "Remoteverwaltungsbenutzer"
-            $DomainAdmins = "Domain Administratoren"
+            $DomainAdmins = "Domänen-Admins"
 
             }
 

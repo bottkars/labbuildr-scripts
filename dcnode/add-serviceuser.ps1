@@ -23,9 +23,21 @@ if (!(Test-Path $logpath))
 $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
+$lclanguage = (Get-WmiObject Win32_OperatingSystem).oslanguage
+        switch ($lclanguage) `
+        {
+            1031 
+            {
+            $csv_file = "adminuser_ger.csv"
+            }
+            default 
+            {
+            $csv_file = "adminuser.csv"
+            }
+        }
 $dnsroot = '@' + (Get-ADDomain).DNSRoot
 $accountPassword = (ConvertTo-SecureString "Password123!" -AsPlainText -force)
-Import-Csv $Builddir\adminuser.csv | foreach-object {
+Import-Csv $Builddir\$csv_file| foreach-object {
    
     if ($_.OU -ne "") { $OU = "OU=" + $_.OU + ',' + (Get-ADDomain).DistinguishedName }
     if (!(Get-ADOrganizationalUnit -Filter * | where name -match $_.OU -ErrorAction SilentlyContinue )){New-ADOrganizationalUnit -Name $_.OU; Write-Host $OU }
