@@ -81,10 +81,6 @@ $lclanguage = (Get-WmiObject Win32_OperatingSystem).oslanguage
             $localgroups = ( "Administrators", "Backup Operators","Remote Desktop Users")
             }
         }
-
-
-
-
 Try
     {
     Write-verbose "Testing AD Group"
