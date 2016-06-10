@@ -13,12 +13,9 @@ $OS_VER = (Get-ItemProperty -Path c:\windows\system32\hal.dll).VersionInfo.FileV
 Write-host -ForegroundColor Yellow "Running OS Version $OS_VER"
 $OS_Major = ([Environment]::OSVersion.Version).Major
 $OS_Build = ([Environment]::OSVersion.Version).Build
-Write-Host -ForegroundColor Magenta "==> Starting Image Optimization Phase 1"
-Start-Process "c:\windows\system32\Dism.exe" -ArgumentList "/online /Cleanup-Image /StartComponentCleanup /ResetBase" -Wait
-Write-Host -ForegroundColor Magenta "==> Cleaning Image Phase 2"
-Start-Process "c:\windows\system32\Dism.exe" -ArgumentList "/online /Cleanup-Image /SPSuperseded" -Wait
 
-
+$DISM_Param1 = "/online /Cleanup-Image /StartComponentCleanup /ResetBase"
+$DISM_Param2 = "/online /Cleanup-Image /SPSuperseded"
 Switch ($OS_Major)
     {
     6
@@ -27,6 +24,7 @@ Switch ($OS_Major)
             {
             9200
                 {
+                $DISM_Param1 = "/online /Cleanup-Image /StartComponentCleanup"
                 $Version = 'Server2012'
                 }
             9600
@@ -40,6 +38,11 @@ Switch ($OS_Major)
         $Version = 'Server2016'
         }
     }
+Write-Host -ForegroundColor Magenta "==> Starting Image Optimization Phase 1"
+Start-Process "c:\windows\system32\Dism.exe" -ArgumentList $DISM_Param1 -Wait
+Write-Host -ForegroundColor Magenta "==> Cleaning Image Phase 2"
+Start-Process "c:\windows\system32\Dism.exe" -ArgumentList $DISM_Param2 -Wait
+
 
 Write-Host -ForegroundColor Magenta "Checking Machine Type"
 if ((Get-WmiObject -Class Win32_ComputerSystem).Manufacturer -match "VMware")    
