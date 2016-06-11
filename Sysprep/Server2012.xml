@@ -73,10 +73,6 @@
                     <PlainText>false</PlainText>
                 </AdministratorPassword>
             </UserAccounts>
-            <DesktopOptimization>
-                <GoToDesktopOnSignIn>true</GoToDesktopOnSignIn>
-                <ShowWindowsStoreAppsOnTaskbar>false</ShowWindowsStoreAppsOnTaskbar>
-            </DesktopOptimization>
         </component>
     </settings>
     <settings pass="generalize">

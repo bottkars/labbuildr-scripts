@@ -42,12 +42,11 @@ $Smtpserver = $env:COMPUTERNAME+$Dot+$ADDomain
 $BackupAdmin = "NMMBackupUser"
 $Body = "Welcome to Exchange at $Domain
 Enjoy the new Features
-Try Neworker and/or Avamar with the new Environment !
+Try Networker and/or Avamar with the new Environment !
 ... for Questions drop an email to Karsten.Bott@emc.com
-Follow me on twritter @Hyperv_Guy
-Make sure to Rate in my Blog !
-https://community.emc.com/blogs/bottk/2015/03/30/labbuildrbeta
-"
+Follow me on twitter @sddc_Guy
+Make sure to Star my Wiki !
+https://github.com/bottkars/labbuildr/wiki"
 $AttachDir =  "$SourcePath\Attachments"
 $PlainPassword = "Password123!"
 $DomainUser = "$Domain\Administrator"
@@ -79,13 +78,14 @@ get-ExchangeServer  | add-adpermission -user $BackupAdmin -accessrights Extended
 if (Get-DatabaseAvailabilityGroup)
     {
     $DAGDatabase = Get-MailboxDatabase | where ReplicationType -eq Remote
-    $Database = $DAGDatabase.Name}
-    $Users = Import-CSV $Builddir\user.csv 
-    if (Test-Path "$SourcePath\customuser*.csv")
-        {
-        $Users += Import-CSV "$SourcePath\customuser*.csv"
-        }
-    $Users | ForEach {
+    $Database = $DAGDatabase.Name
+    }
+$Users = Import-CSV $Builddir\user.csv 
+if (Test-Path "$SourcePath\customuser*.csv")
+    {
+    $Users += Import-CSV "$SourcePath\customuser*.csv"
+    }
+$Users | ForEach {
 $givenname=$_.givenname
 $surname=$_.surname
 $Displayname = $givenname+$Space+$surname
