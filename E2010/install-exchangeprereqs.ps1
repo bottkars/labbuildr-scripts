@@ -29,11 +29,11 @@ $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 $Prereq_dir = Join-Path $SourcePath $Prereq
+$Prereq_dir = Join-Path $Prereq_dir $ex_lang
 
 .$Nodescriptdir\test-sharedfolders.ps1 -folder $Sourcepath
 
 $Setupcmd = "UcmaRuntimeSetup.exe"
-$Setuppath = Join-Path $Setuppath $ex_lang
 $Setuppath = "$Prereq_dir\$Setupcmd"
 .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
 .$Setuppath /passive /norestart
