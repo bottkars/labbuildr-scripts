@@ -16,9 +16,10 @@ param(
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
     $logpath = "c:\Scripts",
-    $ex_version= "E2013",
+    $ex_version= "E2010",
     $Prereq ="Prereq", 
-    $Setupcmd = "Setup.exe"
+    $Setupcmd = "Setup.com",
+    $ex_lang = "de_DE"
 )
 $Nodescriptdir = "$Scriptdir\NODE"
 $ScriptName = $MyInvocation.MyCommand.Name
@@ -34,12 +35,12 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 $Exchange_Dir = Join-Path $Sourcepath "Exchange"
 .$Nodescriptdir\test-sharedfolders.ps1 -folder $Sourcepath
-$Setuppath = "$Exchange_Dir\$ex_version\$EX_Version$($e15_cu)\$Setupcmd"
+$Setuppath = "$Exchange_Dir\$($ex_version)_$($ex_lang)\$EX_Version$($e14_sp)\$Setupcmd"
 .$Nodescriptdir\test-setup -setup $Ex_version -setuppath $Setuppath
 
 $DB1 = "DB1_"+$env:COMPUTERNAME
 
-Start-Process $Setuppath -ArgumentList "/mode:Install /role:Mailbox /OrganizationName:`"$Env:USERDOMAIN`" /IAcceptExchangeServerLicenseTerms /MdbName:$DB1 /DbFilePath:$ExDatabasesBase\DB1\DB1.DB\DB1.EDB /LogFolderPath:$ExDatabasesBase\DB1\DB1.LOG" -Wait
+Start-Process $Setuppath -ArgumentList "/mode:Install /role:MB,HT,CA,MT /OrganizationName:`"$Env:USERDOMAIN`" /MdbName:$DB1 /DbFilePath:$ExDatabasesBase\DB1\DB1.DB\DB1.EDB /LogFolderPath:$ExDatabasesBase\DB1\DB1.LOG" -Wait -NoNewWindow
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {
     Pause
