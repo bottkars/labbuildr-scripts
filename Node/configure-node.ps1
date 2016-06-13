@@ -55,6 +55,12 @@ else
 $eth0 = Get-NetAdapter -Name "Ethernet" -ErrorAction SilentlyContinue
 }
 #>
+$OS_Build = ([Environment]::OSVersion.Version).Build
+if ($OS_Build -le 9200)
+    {
+    Import-Module ServerManager
+    }
+
 $nics = @()
 $Nics = Get-NetAdapter | Sort-Object -Property Name
 if ($nics.Count -gt 1)
