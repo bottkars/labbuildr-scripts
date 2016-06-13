@@ -9,7 +9,8 @@
 #requires -version 3
 [CmdletBinding()]
 param(
-$ex_version= "E2013",
+$ex_version= "E2010",
+$ex_lang = "de_De",
 $Prereq ="Prereq", 
 $Setupcmd = "Setup.exe",
 $Scriptdir = '\\vmware-host\Shared Folders\Scripts',
@@ -126,10 +127,10 @@ foreach ($localgroup in $localgroups)
     }
 
 ##### setting managed availablty diskspace counter
-New-ItemProperty "HKLM:Software\Microsoft\ExchangeServer\v15\ActiveMonitoring\Parameters\" -Name "SpaceMonitorLowSpaceThresholdInMB" -Value 10 -PropertyType "DWord" 
+#New-ItemProperty "HKLM:Software\Microsoft\ExchangeServer\v14\ActiveMonitoring\Parameters\" -Name "SpaceMonitorLowSpaceThresholdInMB" -Value 10 -PropertyType "DWord" 
 ####### Installing CDO
 $Setupcmd = "ExchangeMapiCdo.msi"
-$Setuppath = Join-Path $SourcePath "$Prereq\ExchangeMapiCdo\$Setupcmd"
+$Setuppath = Join-Path $SourcePath "$Prereq\$ex_lang\ExchangeMapiCdo\$Setupcmd"
 .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
 Start-Process $Setuppath -ArgumentList "/quiet /passive" -Wait
 ######################
@@ -137,7 +138,7 @@ cd c:\windows\system32\inetsrv
 c:\windows\system32\inetsrv\appcmd.exe set config "Default Web Site/Powershell" -section:system.webServer/security/authentication/windowsAuthentication /useKernelMode:"False"  /commit:apphost
 
 write-output "setting exchange powershell to full language"
-$ExchangePath = ‘HKLM:\SOFTWARE\Microsoft\ExchangeServer\v15\Setup’
+$ExchangePath = ‘HKLM:\SOFTWARE\Microsoft\ExchangeServer\v14\Setup’
 $webconfig = Join-Path (Get-ItemProperty $ExchangePath).MsiInstallPath ClientAccess\PowerShell-Proxy\web.config
 (get-content $webconfig) | foreach-object {$_ -replace '<add key="PSLanguageMode" value="RestrictedLanguage"/>','<add key="PSLanguageMode" value="FullLanguage"/>'} | set-content $webconfig
 Restart-WebAppPool -name MSExchangePowerShellAppPool

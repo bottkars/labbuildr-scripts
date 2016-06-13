@@ -6,7 +6,7 @@
 .LINK
    https://community.emc.com/blogs/bottk/2015/03/30/labbuildrbeta
 #>
-#requires -version 3
+#requires -version 2
 [CmdletBinding()]
 param(
 $Subnet = "192.168.2",
@@ -15,7 +15,7 @@ $IPV6Prefix,
 $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
 $SourcePath = "\\vmware-host\Shared Folders\Sources",
 $logpath = "c:\Scripts",
-$ex_version= "E2013",
+$ex_version= "E2010",
 $Prereq ="Prereq" 
 )
 $Nodescriptdir = "$Scriptdir\NODE"
@@ -80,7 +80,7 @@ if (Get-DatabaseAvailabilityGroup)
     $DAGDatabase = Get-MailboxDatabase | where ReplicationType -eq Remote
     $Database = $DAGDatabase.Name
     }
-$Users = Import-CSV $Builddir\user.csv 
+$Users = Import-CSV "$Scriptdir\$ex_version\user.csv" 
 if (Test-Path "$SourcePath\customuser*.csv")
     {
     $Users += Import-CSV "$SourcePath\customuser*.csv"
@@ -111,7 +111,7 @@ accountpassword=(ConvertTo-SecureString "Welcome1" -AsPlainText -Force);
         Send-MailMessage -From $SenderSMTP -Subject $Subject -Attachments $attachment.FullName -To $UPN -Body $Body -DeliveryNotificationOption None -SmtpServer $Smtpserver -Credential $Credential -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
     }
 #######
-##Public Folder Structure
+<##Public Folder Structure
 $NewPFMailbox = New-Mailbox -PublicFolder -Name "PFMailbox_$Domain" -database $Database 
 If ($NewPFMailbox)
     {
@@ -138,6 +138,7 @@ If ($NewPFMailbox)
         Send-MailMessage -From $SenderSMTP -Subject "Welcome To Public Folders" -To $Folder$maildom -Body "This is Public Folder $Folder" -DeliveryNotificationOption None -SmtpServer $Smtpserver -Credential $Credential -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
         }
     }
+#>
 ipmo dnsserver
 Write-Host -ForegroundColor Yellow "Setting Up C-record for mailhost"
 If ($AddressFamily -match 'IPv4')

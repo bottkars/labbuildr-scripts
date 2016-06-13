@@ -12,6 +12,9 @@ param(
     [Parameter(Mandatory=$true)]
     [ValidateSet('sp3')]
     [alias('ex_sp')]$e14_sp,
+    [Parameter(Mandatory=$false)]
+    [ValidateSet('ur13')]
+    [alias('ex_ur')]$e14_ur,
     $ExDatabasesBase = "C:\ExchangeDatabases",
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
@@ -45,5 +48,14 @@ if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {
     Pause
     }
+
+## getting cu file
+if ($e14_ur)
+    {
+    $UR_Path = "$Exchange_Dir\$($ex_version)_$($ex_lang)\$EX_Version$($e14_ur)"
+    $ur_cmd = Get-ChildItem -Path $UR_Path -Filter "*.msp"
+    Start-Process $ur_cmd -ArgumentList "/passive" -Wait -NoNewWindow
+    }
+
 New-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce -Name $ScriptName -Value "$PSHOME\powershell.exe -Command `"New-Item -ItemType File -Path c:\scripts\exchange.pass`""
 Restart-Computer
