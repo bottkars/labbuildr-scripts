@@ -93,52 +93,15 @@ $SamAccountName = $Givenname.Substring(0,1)+$surname
 $UPN = $SamAccountName+$maildom
 $emailaddress = "$givenname$Dot$surname$maildom"
 $name = "$givenname $surname"
-$user = @{
-givenname=$givenname;
-surname=$surname;
-name=$name;
-displayname=$Displayname;
-samaccountname=$SamAccountName;
-userprincipalname=$UPN;
-emailaddress=$emailaddress;
-homedirectory=" ";
-accountpassword=(ConvertTo-SecureString "Welcome1" -AsPlainText -Force);
-}
+$accountpassword=(ConvertTo-SecureString "Welcome1" -AsPlainText -Force)
 
-        $user
-        New-ADUser @user -Enabled $True
-        Enable-Mailbox $user.samaccountname -database $Database
+        New-Mailbox -Name $Displayname -Alias $SamAccountName -UserPrincipalName $UPN -SamAccountName $SamAccountName -FirstName $givenname -Initials '' -LastName $surname -Password $accountpassword -ResetPasswordOnNextLogon $false
+
+        #New-ADUser @user -Enabled $True
+        E#nable-Mailbox $user.samaccountname -database $Database
         Send-MailMessage -From $SenderSMTP -Subject $Subject -Attachments $attachment.FullName -To $UPN -Body $Body -DeliveryNotificationOption None -SmtpServer $Smtpserver -Credential $Credential -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
     }
-#######
-<##Public Folder Structure
-$NewPFMailbox = New-Mailbox -PublicFolder -Name "PFMailbox_$Domain" -database $Database 
-If ($NewPFMailbox)
-    {
-    # will be superseeded by try catch, errorhandling for singlenode 
-    $Newfolder = New-PublicFolder -Name "PF$Domain"
-    Enable-MailPublicFolder $Newfolder
-    # fixing the DSN 5.7.1. Create Item Change since Cu4
-    Add-PublicFolderClientPermission $Newfolder -User ANONYMOUS -AccessRights createitems
-    $PFSMTP = (Get-MailPublicFolder -Identity $Newfolder).EMAILAddresses[0].AddressString
-    $attachments = Get-ChildItem -Path $AttachDir -Recurse -file
-    $count = $attachments.count
-    $incr = 1
-    foreach ($file in $attachments) {
-        Write-Progress -Activity "Sending $File to Public Folder $Newfolder " -Status $file -PercentComplete (100/$count*$incr)
-        Send-MailMessage -From $SenderSMTP -Subject $file.name -To $PFSMTP -Attachments $file.FullName -DeliveryNotificationOption None -SmtpServer $Smtpserver -Credential $Credential -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
-        $incr++
-        }
-    Import-CSV $Builddir\folders.csv | ForEach {
-        $Folder=$_.Folder
-        $Path=$_.Path -replace "BRSLAB", "PF$Domain" 
-        $Path 
-        New-PublicFolder -Name $Folder -Path $Path
-        Enable-MailPublicFolder "$Path\$Folder"
-        Send-MailMessage -From $SenderSMTP -Subject "Welcome To Public Folders" -To $Folder$maildom -Body "This is Public Folder $Folder" -DeliveryNotificationOption None -SmtpServer $Smtpserver -Credential $Credential -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
-        }
-    }
-#>
+<#
 ipmo dnsserver
 Write-Host -ForegroundColor Yellow "Setting Up C-record for mailhost"
 If ($AddressFamily -match 'IPv4')
@@ -154,7 +117,7 @@ If ($AddressFamily -match 'IPv6')
     $zone = get-dnsserverzone (Get-ADDomain).dnsroot -ComputerName $dnsserver
     Add-DnsServerResourceRecordCName -HostNameAlias "$env:COMPUTERNAME.$ADDomain" -Name mailhost -ZoneName $zone.ZoneName -ComputerName $dnsserver
     }
-
+#>
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {
     Pause
