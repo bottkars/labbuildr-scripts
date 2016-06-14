@@ -57,7 +57,7 @@ Set-TransportConfig -MaxSendSize 50MB
 Enable-Mailbox -Identity $BackupAdmin
 if (Test-Path $AttachDir)
     {
-    $Attachment = Get-ChildItem -Path $AttachDir -Recurse -file -Filter *
+    [array]$Attachment = Get-ChildItem -Path $AttachDir -Recurse -Filter *.pdf
     }
 $RoleGroup = "EMC NMM Exchange Admin Roles"
 $Roles = ("Database Copies", "Databases", "Disaster Recovery", "Mailbox Import Export", "Mail Recipient Creation", "Mail Recipients", "View-Only Configuration", "View-Only Recipients")
@@ -96,7 +96,7 @@ $name = "$givenname $surname"
 $accountpassword=(ConvertTo-SecureString "Welcome1" -AsPlainText -Force)
 
         New-Mailbox -Name $Displayname -Alias $SamAccountName -UserPrincipalName $UPN -SamAccountName $SamAccountName -FirstName $givenname -Initials '' -LastName $surname -Password $accountpassword -ResetPasswordOnNextLogon $false
-        Send-MailMessage -From $SenderSMTP -Subject $Subject -Attachments $attachment.FullName -To $UPN -Body $Body -DeliveryNotificationOption None -SmtpServer $Smtpserver -Credential $Credential -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
+        Send-MailMessage -From $SenderSMTP -Subject $Subject -Attachments $attachment[0].FullName -To $UPN -Body $Body -DeliveryNotificationOption None -SmtpServer $Smtpserver -Credential $Credential -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
     }
 <#
 ipmo dnsserver
