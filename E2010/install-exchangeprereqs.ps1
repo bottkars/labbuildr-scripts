@@ -17,7 +17,6 @@ param(
     $Scriptdir = '\\vmware-host\Shared Folders\Scripts',
     $SourcePath = '\\vmware-host\Shared Folders\Sources',
     $logpath = "c:\Scripts"
-
 )
 $Nodescriptdir = Join-Path $Scriptdir "Node"
 $ScriptName = $MyInvocation.MyCommand.Name

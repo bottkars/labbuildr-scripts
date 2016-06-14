@@ -9,15 +9,19 @@
 #requires -version 3
 [CmdletBinding()]
 param(
-$ex_version= "E2010",
-$ex_lang = "de_De",
-$e14_ur = "ur13",
-$e14_sp = "sp3",
-$Prereq ="Prereq", 
-$Setupcmd = "Setup.exe",
-$Scriptdir = '\\vmware-host\Shared Folders\Scripts',
-$SourcePath = '\\vmware-host\Shared Folders\Sources',
-$logpath = "c:\Scripts"
+    $ex_version= "E2010",
+    [Parameter(Mandatory = $false)]
+    [ValidateSet('de_DE','en_US')]
+    [alias('e14_lang')]$ex_lang = 'de_DE',
+    [Parameter(Mandatory=$false)]
+    [ValidateSet('ur1','ur2','ur3','ur4','ur5','ur6','ur7','ur8v2','ur9','ur10','ur11','ur12','ur13')]
+    [alias('ex_ur')]$e14_ur,
+    $e14_sp = "sp3",
+    $Prereq ="Prereq", 
+    $Setupcmd = "Setup.exe",
+    $Scriptdir = '\\vmware-host\Shared Folders\Scripts',
+    $SourcePath = '\\vmware-host\Shared Folders\Sources',
+    $logpath = "c:\Scripts"
 )
 $Nodescriptdir = Join-Path $Scriptdir "Node"
 $ScriptName = $MyInvocation.MyCommand.Name
