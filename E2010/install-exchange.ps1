@@ -40,7 +40,7 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 $Exchange_Dir = Join-Path $Sourcepath "Exchange"
 .$Nodescriptdir\test-sharedfolders.ps1 -folder $Sourcepath
-$Setuppath = "$Exchange_Dir\$($ex_version)_$($ex_lang)\$EX_Version$($e14_sp)\$Setupcmd"
+$Setuppath = "$Exchange_Dir\$($ex_version)\$EX_Version$($e14_sp)\$Setupcmd"
 .$Nodescriptdir\test-setup -setup $Ex_version -setuppath $Setuppath
 
 $DB1 = "DB1_"+$env:COMPUTERNAME
@@ -54,10 +54,9 @@ if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
 ## getting cu file
 if ($e14_ur)
     {
-    $UR_Path = "$Exchange_Dir\$($ex_version)_$($ex_lang)\$($e14_ur)"
-    $ur_cmd = (Get-ChildItem -Path $UR_Path -Filter "*.msp").FullName
-    #.$ur_cmd /passive
-    #$ur_cmd = "\\vmware-host\Shared Folders\Sources\Exchange\E2010_de_DE\ur13\Exchange2010-KB3141339-x64-de.msp"
+    $Llng = $ex_lang.Substring(0,2)
+    $UR_Path = "$Exchange_Dir\$($ex_version)\$($e14_ur)"
+    $ur_cmd = (Get-ChildItem -Path $UR_Path -Filter "*$($lang).msp").FullName
     $argument = "/update "+ '"' + $ur_cmd +'"' + " /passive"
     Start-Process -FilePath msiexec.exe -ArgumentList $argument -Wait -NoNewWindow
     }

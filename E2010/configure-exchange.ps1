@@ -12,6 +12,7 @@ param(
 $ex_version= "E2010",
 $ex_lang = "de_De",
 $e14_ur = "ur13",
+$e14_sp = "sp3",
 $Prereq ="Prereq", 
 $Setupcmd = "Setup.exe",
 $Scriptdir = '\\vmware-host\Shared Folders\Scripts',
