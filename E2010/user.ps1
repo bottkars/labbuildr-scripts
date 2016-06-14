@@ -96,9 +96,6 @@ $name = "$givenname $surname"
 $accountpassword=(ConvertTo-SecureString "Welcome1" -AsPlainText -Force)
 
         New-Mailbox -Name $Displayname -Alias $SamAccountName -UserPrincipalName $UPN -SamAccountName $SamAccountName -FirstName $givenname -Initials '' -LastName $surname -Password $accountpassword -ResetPasswordOnNextLogon $false
-
-        #New-ADUser @user -Enabled $True
-        E#nable-Mailbox $user.samaccountname -database $Database
         Send-MailMessage -From $SenderSMTP -Subject $Subject -Attachments $attachment.FullName -To $UPN -Body $Body -DeliveryNotificationOption None -SmtpServer $Smtpserver -Credential $Credential -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
     }
 <#
