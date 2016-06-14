@@ -9,9 +9,9 @@
 #requires -version 3
 [CmdletBinding()]
 param (
-$DAGIP = ([System.Net.IPAddress])::None,
+$DAGIP = "192.168.2.120",
 [ValidateSet('IPv4','IPv6','IPv4IPv6')][string]$AddressFamily = 'IPv4',
- $ex_version= "E2013",
+ $ex_version= "E2010",
 $ExDatabasesBase = "C:\ExchangeDatabases",
 $ExVolumesBase = "C:\ExchangeVolumes",
 $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
@@ -46,17 +46,17 @@ $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri ht
 Import-PSSession $Session
 
 $WitnessServer = (Get-DomainController).name
-$ADAdminGroup = Get-ADGroup -Filter * | where name -eq Administrators
+$ADAdminGroup = Get-ADGroup -Filter * | where name -in ('Administrators','Administratoren')
 $ADTrustedEXGroup = Get-ADGroup -Filter * | where name -eq "Exchange Trusted Subsystem"
 Add-ADGroupMember -Identity $ADAdminGroup -Members $ADTrustedEXGroup  -Credential $Credential
 
 Write-Host "Creating the DAG" -foregroundColor Yellow
 
 New-DatabaseAvailabilityGroup -name $DAGName -WitnessServer $WitnessServer -WitnessDirectory $WitnessDirectory -DatabaseAvailabilityGroupIPAddress $DAGIP
-Set-DatabaseAvailabilityGroup $Dagname -AutoDagDatabasesRootFolderPath $ExDatabasesBase
-Set-DatabaseAvailabilityGroup $Dagname -AutoDagVolumesRootFolderPath $ExVolumesBase
-Set-DatabaseAvailabilityGroup $Dagname -AutoDagVolumesRootFolderPath $ExVolumesBase
-Set-DatabaseAvailabilityGroup $Dagname -AutoDagDatabaseCopiesPerVolume 1
+#Set-DatabaseAvailabilityGroup $Dagname -AutoDagDatabasesRootFolderPath $ExDatabasesBase
+#Set-DatabaseAvailabilityGroup $Dagname -AutoDagVolumesRootFolderPath $ExVolumesBase
+#Set-DatabaseAvailabilityGroup $Dagname -AutoDagVolumesRootFolderPath $ExVolumesBase
+#Set-DatabaseAvailabilityGroup $Dagname -AutoDagDatabaseCopiesPerVolume 1
 Write-Host "Adding DAG Member" $Server -ForeGroundColor Yellow
 
 $MailboxServers = Get-MailboxServer "$($EX_Version)*"| Select -expandProperty Name
