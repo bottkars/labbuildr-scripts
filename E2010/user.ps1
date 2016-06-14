@@ -57,7 +57,7 @@ Set-TransportConfig -MaxSendSize 50MB
 Enable-Mailbox -Identity $BackupAdmin
 if (Test-Path $AttachDir)
     {
-    $Attachment = Get-ChildItem -Path $AttachDir -Recurse -file -Filter *networker-ms*
+    $Attachment = Get-ChildItem -Path $AttachDir -Recurse -file -Filter *
     }
 $RoleGroup = "EMC NMM Exchange Admin Roles"
 $Roles = ("Database Copies", "Databases", "Disaster Recovery", "Mailbox Import Export", "Mail Recipient Creation", "Mail Recipients", "View-Only Configuration", "View-Only Recipients")
