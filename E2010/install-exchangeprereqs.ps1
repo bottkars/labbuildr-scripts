@@ -36,12 +36,15 @@ $Prereq_dir = Join-Path $Prereq_dir $ex_lang
 $Setupcmd = "UcmaRuntimeSetup.exe"
 $Setuppath = "$Prereq_dir\$Setupcmd"
 .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
-.$Setuppath /passive /norestart
+$argumentList = "/passive /norestart"
+Start-Process -FilePath $Setuppath -ArgumentList $argumentList -Wait -NoNewWindow
 
 $Setupcmd = "FilterPack64bit.exe"
 $Setuppath = "$Prereq_dir\$Setupcmd"
 .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
-.$Setuppath /passive /norestart
+$argumentList = "/passive /norestart"
+Start-Process -FilePath $Setuppath -ArgumentList $argumentList -Wait -NoNewWindow
+
 if ($ex_lang -eq "de_DE")
     {
     $Setupcmd = "filterpack2010sp1-kb2460041-x64-fullfile-de-de.exe"
@@ -52,7 +55,8 @@ else
     }
 $Setuppath = "$Prereq_dir\$Setupcmd"
 .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
-.$Setuppath /passive /norestart
+$argumentList = "/passive /norestart"
+Start-Process -FilePath $Setuppath -ArgumentList $argumentList -Wait -NoNewWindow
 
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {
