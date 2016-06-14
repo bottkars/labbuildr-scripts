@@ -15,14 +15,16 @@ param(
     [Parameter(Mandatory=$false)]
     [ValidateSet('ur13')]
     [alias('ex_ur')]$e14_ur,
+    [Parameter(Mandatory = $false)]
+    [ValidateSet('de_DE','en_US')]
+    [alias('e14_lang')]$ex_lang = 'de_DE',
     $ExDatabasesBase = "C:\ExchangeDatabases",
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
     $logpath = "c:\Scripts",
     $ex_version= "E2010",
     $Prereq ="Prereq", 
-    $Setupcmd = "Setup.com",
-    $ex_lang = "de_DE"
+    $Setupcmd = "Setup.com"
 )
 $Nodescriptdir = "$Scriptdir\NODE"
 $ScriptName = $MyInvocation.MyCommand.Name

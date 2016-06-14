@@ -32,12 +32,17 @@ $Prereq_dir = Join-Path $SourcePath $Prereq
 $Setupcmd = "UcmaRuntimeSetup.exe"
 $Setuppath = "$Prereq_dir\$Setupcmd"
 .$Nodescriptdir\test-setup -setup $Setupcmd -setuppath $Setuppath
-Start-Process $Setuppath -ArgumentList "/q /norestart" -Wait
+$argumentList = "/passive /norestart"
+Start-Process -FilePath $Setuppath -ArgumentList $argumentList -Wait -NoNewWindow
+
+
 
 $Setupcmd = "NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
 $Setuppath = "$Prereq_dir\$Setupcmd"
 .$Nodescriptdir\test-setup -setup $Setupcmd -setuppath $Setuppath
-Start-Process $Setuppath -ArgumentList "/q /norestart" -Wait
+$argumentList = "/passive /norestart"
+Start-Process -FilePath $Setuppath -ArgumentList $argumentList -Wait -NoNewWindow
+
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {
     Pause
