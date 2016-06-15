@@ -57,17 +57,17 @@ New-DatabaseAvailabilityGroup -name $DAGName -WitnessServer $WitnessServer -Witn
 #Set-DatabaseAvailabilityGroup $Dagname -AutoDagVolumesRootFolderPath $ExVolumesBase
 #Set-DatabaseAvailabilityGroup $Dagname -AutoDagVolumesRootFolderPath $ExVolumesBase
 #Set-DatabaseAvailabilityGroup $Dagname -AutoDagDatabaseCopiesPerVolume 1
-Write-Host "Adding DAG Member" $Server -ForeGroundColor Yellow
 
 $MailboxServers = Get-MailboxServer "$($EX_Version)*"| Select -expandProperty Name
 foreach($Server in $MailboxServers){
+    Write-Host "Adding DAG Member" $Server -ForeGroundColor Yellow
     Add-DatabaseAvailabilityGroupServer -id $DAGName -MailboxServer $Server
 }
 write-host "DAG $Dagname created"
 if ($DAGIP -ne ([System.Net.IPAddress])::None) { 
 write-host "Changing PTR Record" 
 ########## changing cluster to register PTR record 
-$res = Get-ClusterResource "Cluster Name" 
+$res = Get-ClusterResource | where ResourceType -Match "Network Name"
 Set-ClusterParameter -Name PublishPTRRecords -Value 1 -InputObject $res
 Stop-ClusterResource -Name $res
 Start-ClusterResource -Name $res
@@ -82,7 +82,8 @@ Write-Host "Creating Mailbox Database $DB " -foregroundcolor yellow
 New-MailboxDatabase -Name $DB -EDBFilePath "$ExDatabasesBase\$DB\$DB.DB\$DB.EDB" -LogFolderPath "$ExDatabasesBase\$DB\$DB.Log" -Server $env:COMPUTERNAME
 Mount-Database -id $DB
 Write-Host "Setting Offline Address Book" -foregroundcolor Yellow
-Set-MailboxDatabase $DB -offlineAddressBook "Default Offline Address Book"
+$Offlineaddressbook = Get-OfflineAddressBook
+Set-MailboxDatabase $DB -offlineAddressBook $Offlineaddressbook.Name
 
 ############### create copies
 	
