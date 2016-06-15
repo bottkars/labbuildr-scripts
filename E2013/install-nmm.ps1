@@ -9,10 +9,12 @@
 #requires -version 3
 [CmdletBinding()]
 param(
-    [ValidateSet('nmm90.DA','nmm9001','nmm9002','nmm9003','nmm9004','nmm9005','nmm9006',
+    [ValidateSet(
+    'nmm90.DA','nmm9001','nmm9002','nmm9003','nmm9004','nmm9005','nmm9006','nmm9007',
     'nmm8231','nmm8232',  
     'nmm8221','nmm8222','nmm8223','nmm8224','nmm8225',
-    'nmm8218','nmm8217','nmm8216','nmm8214','nmm8212','nmm821')]
+    'nmm8218','nmm8217','nmm8216','nmm8214','nmm8212','nmm821'
+    )]
     $nmm_ver,
     $nmmusername = "NMMBackupUser",
     $nmmPassword = "Password123!",
