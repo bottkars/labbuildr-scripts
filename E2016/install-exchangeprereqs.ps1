@@ -36,12 +36,12 @@ $argumentList = "/passive /norestart"
 Start-Process -FilePath $Setuppath -ArgumentList $argumentList -Wait -NoNewWindow
 
 
-
-$Setupcmd = "NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
-$Setuppath = "$Prereq_dir\$Setupcmd"
-.$Nodescriptdir\test-setup -setup $Setupcmd -setuppath $Setuppath
-$argumentList = "/passive /norestart"
-Start-Process -FilePath $Setuppath -ArgumentList $argumentList -Wait -NoNewWindow
+.$Nodescriptdir\install-netframework.ps1 -Net_Ver 452
+# $Setupcmd = "NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
+# $Setuppath = "$Prereq_dir\$Setupcmd"
+#.$Nodescriptdir\test-setup -setup $Setupcmd -setuppath $Setuppath
+#$argumentList = "/passive /norestart"
+#Start-Process -FilePath $Setuppath -ArgumentList $argumentList -Wait -NoNewWindow
 
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {
