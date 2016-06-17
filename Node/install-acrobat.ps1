@@ -35,17 +35,18 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 $Acrobat_Path = Join-Path $SourcePath $Product_Dir
 
 $Acro_Setup = (Get-ChildItem -path $Acrobat_path -filter acro*$lang.msi -file).FullName
-$Acro_PATCH = (Get-ChildItem -path $Acrobat_path -filter acro*.msp -file).FullName
+[array]$Acro_PATCH = (Get-ChildItem -path $Acrobat_path -filter acro*.msp -file).FullName
 
 if ($Acro_Setup)
     {
     $argumentList = "/i `"$Acro_Setup`" /qb"
-    Write-Host -ForegroundColor Magenta "Starting Acrobat Reader  $Acro_Setup DC Setup"
+    Write-Host -ForegroundColor Magenta "Starting Acrobat Reader DC Setup"
     Start-Process -FilePath "msiexec.exe" -ArgumentList $argumentList  -Wait -PassThru
     if ($Acro_PATCH)
         {
+        $Acro_PATCH = $Acro_PATCH | Sort-Object -Descending
         $argumentList = "/p `"$Acro_PATCH`" /qb"
-        Write-Host -ForegroundColor Magenta "Starting Acrobat Reader $Acro_PATCH DC Patch"
+        Write-Host -ForegroundColor Magenta "Starting Acrobat Reader DC Patch"
         Start-Process -FilePath "msiexec.exe" -ArgumentList $argumentList  -Wait -PassThru
         }
     }
