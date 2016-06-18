@@ -94,7 +94,6 @@ $UPN = $SamAccountName+$maildom
 $emailaddress = "$givenname$Dot$surname$maildom"
 $name = "$givenname $surname"
 $accountpassword=(ConvertTo-SecureString "Welcome1" -AsPlainText -Force)
-
         New-Mailbox -Name $Displayname -Alias $SamAccountName -UserPrincipalName $UPN -SamAccountName $SamAccountName -FirstName $givenname -Initials '' -LastName $surname -Password $accountpassword -ResetPasswordOnNextLogon $false
         Send-MailMessage -From $SenderSMTP -Subject $Subject -Attachments $attachment[0].FullName -To $UPN -Body $Body -DeliveryNotificationOption None -SmtpServer $Smtpserver -Credential $Credential -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
     }

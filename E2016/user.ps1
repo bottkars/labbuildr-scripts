@@ -58,7 +58,7 @@ Set-TransportConfig -MaxSendSize 50MB
 Enable-Mailbox -Identity $BackupAdmin
 if (Test-Path $AttachDir)
     {
-    $Attachment = Get-ChildItem -Path $AttachDir -Recurse -file -Filter *networker-ms*
+    [array]$Attachment = Get-ChildItem -Path $AttachDir -Recurse -Filter *.pdf
     }
 $RoleGroup = "EMC NMM Exchange Admin Roles"
 $Roles = ("Database Copies", "Databases", "Disaster Recovery", "Mailbox Import Export", "Mail Recipient Creation", "Mail Recipients", "View-Only Configuration", "View-Only Recipients")
@@ -108,7 +108,7 @@ accountpassword=(ConvertTo-SecureString "Welcome1" -AsPlainText -Force);
         $user
         New-ADUser @user -Enabled $True
         Enable-Mailbox $user.samaccountname -database $Database
-        Send-MailMessage -From $SenderSMTP -Subject $Subject -Attachments $attachment.FullName -To $UPN -Body $Body -DeliveryNotificationOption None -SmtpServer $Smtpserver -Credential $Credential -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
+        Send-MailMessage -From $SenderSMTP -Subject $Subject -Attachments $attachment[0].FullName -To $UPN -Body $Body -DeliveryNotificationOption None -SmtpServer $Smtpserver -Credential $Credential -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
     }
 #######
 ##Public Folder Structure
