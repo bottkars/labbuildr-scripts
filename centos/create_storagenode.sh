@@ -1,6 +1,6 @@
 #!/bin/bash
 # storagenode creation script v1.0
-
+## do not delete whitespace in fdisk function
 echo "n
 p
 1
