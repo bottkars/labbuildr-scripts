@@ -37,7 +37,16 @@ $Setuppath = "$SourcePath\ViPRSRM\ViPR_SRM_$($SRM_VER)_Win64.exe"
 Write-Warning "Installing SRM $SRM_VER, this could take up to 10 Minutes"
 .$Nodescriptdir\test-setup.ps1 -setup SRM -setuppath $Setuppath
 Write-Warning "Installing SRM $SRM_VER"
-Start-Process -FilePath $Setuppath -ArgumentList "/S" -PassThru -Wait
+
+if ($SRM_VER -ge "4.0.0.0")
+    {
+    $Arguments = "/S /ACCPTEULA=Yes" 
+    }
+else
+    {
+    $Arguments = "/S" 
+    }
+Start-Process -FilePath $Setuppath -ArgumentList $Arguments -PassThru -Wait
 Start-Process "http://$($Env:COMPUTERNAME):58080/APG/"
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {
