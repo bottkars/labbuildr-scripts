@@ -12,8 +12,12 @@ param(
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
     $logpath = "c:\Scripts",
-    [ValidateSet('3.7.1.0','3.7.0.0','3.6.0.3')]
-    $SRM_VER='3.7.1.0'
+    [ValidateSet(
+    '4.0.0.0',
+    '3.7.1.0','3.7.0.0',
+    '3.6.0.3'
+    )]
+    $SRM_VER='4.0.0.0'
     )
 $Nodescriptdir = "$Scriptdir\Node"
 $ScriptName = $MyInvocation.MyCommand.Name
