@@ -38,9 +38,10 @@ mkfs.ext3 /dev/${DEVICE}1
 mkdir /mnt/aftd1
 echo "Mounting device /dev/${DEVICE}1 to /mnt/aftd1"
 mount /dev/${DEVICE}1 /mnt/aftd1
-
+echo "Creating fstab enty for /mnt/aftd1"
 echo "/dev/${DEVICE}1 /mnt/aftd1                            ext3    defaults        0 0" >> /etc/fstab
 
+echo "trying to unpack /mnt/hgfs/Sources/Networker/${NWVERSION}_linux_x86_64.tar.gz"
 tar xzfv /mnt/hgfs/Sources/Networker/${NWVERSION}_linux_x86_64.tar.gz -C /tmp/
 yum localinstall --nogpgcheck -y /tmp/linux_x86_64/lgtoclnt-*.x86_64.rpm
 yum localinstall --nogpgcheck -y /tmp/linux_x86_64/lgtonode-*.x86_64.rpm
