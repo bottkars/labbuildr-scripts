@@ -17,7 +17,8 @@ param(
     $Prereq ="Prereq",
     [string]$SysCtr = "sysctr",
     $DBInstance,
-    [switch]$fix_ACL 
+    [switch]$fix_ACL,
+    [switch]$hotfix_only 
 )
 $Nodescriptdir = "$Scriptdir\NODE"
 $EXScriptDir = "$Scriptdir\$ex_version"
@@ -36,38 +37,41 @@ $Domain = $env:USERDOMAIN
 $SCVMM_Dir = Join-Path "$SourcePath" "$SysCtr\$SC_VERSION\SCVMM"
 $SCVMM_Update_DIr = Join-Path $Sourcepath "$SysCtr\$SC_VERSION\SCVMMUpdates"
 
-$Content = @()
-If (!$DBInstance)
+if (!$hotfix_only.IsPresent)
     {
-    $DBInstance = "MSSQL$Domain"
-    }
-$DBInstance = $DBInstance.substring(0, [System.Math]::Min(16, $DBInstance.Length))
-$Content = "[OPTIONS]
-UserName=$Domain user
-CompanyName=$Domain Eval
-CreateNewSqlDatabase=1
-SqlInstanceName=$DBInstance
-SqlDatabaseName=VMMDB
-RemoteDatabaseImpersonation=0
-CreateNewLibraryShare=1
-LibraryShareName=MSSCVMMLibrary
-LibrarySharePath=C:\Virtual Machine Manager Library Files
-LibraryShareDescription=Virtual Machine Manager Library Files
-SQMOptIn = 0
-MUOptIn = 0"
+    $Content = @()
+    If (!$DBInstance)
+        {
+        $DBInstance = "MSSQL$Domain"
+        }
+    $DBInstance = $DBInstance.substring(0, [System.Math]::Min(16, $DBInstance.Length))
+    $Content = "[OPTIONS]
+    UserName=$Domain user
+    CompanyName=$Domain Eval
+    CreateNewSqlDatabase=1
+    SqlInstanceName=$DBInstance
+    SqlDatabaseName=VMMDB
+    RemoteDatabaseImpersonation=0
+    CreateNewLibraryShare=1
+    LibraryShareName=MSSCVMMLibrary
+    LibrarySharePath=C:\Virtual Machine Manager Library Files
+    LibraryShareDescription=Virtual Machine Manager Library Files
+    SQMOptIn = 0
+    MUOptIn = 0"
 
-Set-Content  -Value $Content -Path "$logpath\VMServer.ini"
-if ($SC_VERSION -match "2012")
-    {
-    $fix_ACL = $True
+    Set-Content  -Value $Content -Path "$logpath\VMServer.ini"
+    if ($SC_VERSION -match "2012")
+        {
+        $fix_ACL = $True
+        }
+    $Setupcmd = "setup.exe"
+    $Setuppath = "$SCVMM_Dir\$Setupcmd"
+    .$Nodescriptdir\test-setup.ps1 -setup $Setupcmd -setuppath $Setuppath
+    Write-Warning "Starting $SC_VERSION setup, this may take a while"
+    # start-process "$Setuppath" -ArgumentList "/server /i /SqlDBAdminDomain $Domain /SqlDBAdminName SVC_SQL /SqlDBAdminPassword Password123! /VmmServiceDomain $Domain /VmmServiceUserName SVC_SCVMM /VmmServiceUserPassword Password123! /IACCEPTSCEULA" -Wait 
+    start-process "$Setuppath" -ArgumentList "/server /i /f $logpath\VMServer.ini /SqlDBAdminDomain $Domain /SqlDBAdminName SVC_SQL /SqlDBAdminPassword Password123! /VmmServiceDomain $Domain /VmmServiceUserName SVC_SCVMM /VmmServiceUserPassword Password123! /IACCEPTSCEULA" -Wait -NoNewWindow
+    write-verbose "Checking for Updates"
     }
-$Setupcmd = "setup.exe"
-$Setuppath = "$SCVMM_Dir\$Setupcmd"
-.$Nodescriptdir\test-setup.ps1 -setup $Setupcmd -setuppath $Setuppath
-Write-Warning "Starting $SC_VERSION setup, this may take a while"
-# start-process "$Setuppath" -ArgumentList "/server /i /SqlDBAdminDomain $Domain /SqlDBAdminName SVC_SQL /SqlDBAdminPassword Password123! /VmmServiceDomain $Domain /VmmServiceUserName SVC_SCVMM /VmmServiceUserPassword Password123! /IACCEPTSCEULA" -Wait 
-start-process "$Setuppath" -ArgumentList "/server /i /f $logpath\VMServer.ini /SqlDBAdminDomain $Domain /SqlDBAdminName SVC_SQL /SqlDBAdminPassword Password123! /VmmServiceDomain $Domain /VmmServiceUserName SVC_SCVMM /VmmServiceUserPassword Password123! /IACCEPTSCEULA" -Wait -NoNewWindow
-write-verbose "Checking for Updates"
 foreach ($Updatepattern in ("*vmmserver*.msp","*Admin*.msp"))
     {
     Try
@@ -84,7 +88,8 @@ foreach ($Updatepattern in ("*vmmserver*.msp","*Admin*.msp"))
 	    $LatestVMMUpdate = $VMMUpdate[0]
         .$Nodescriptdir\test-setup.ps1 -setup $LatestVMMUpdate.BaseName -setuppath $LatestVMMUpdate.FullName
         Write-Warning "Starting VMM Patch setup, this may take a while"
-        start-process $LatestVMMUpdate.FullName -ArgumentList "/Passive" -Wait -NoNewWindow
+        $argumentList = "/update `"$($LatestVMMUpdate.FullName)`" /q"
+        start-process  -FilePath "msiexec.exe"  -ArgumentList $argumentList -Wait -NoNewWindow
         }
     }
 $SCVMM_Path = (get-item 'C:\Program Files\Microsoft System*\Virtual Machine Manager\bin\AddInPipeline\').FullName
