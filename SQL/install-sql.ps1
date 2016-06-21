@@ -136,7 +136,7 @@ if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {
     Pause
     }
-$Time = Measure-Command {Start-Process $Setuppath -ArgumentList  $Arguments -Wait}
+$Time = Measure-Command {Start-Process $Setuppath -ArgumentList  $Arguments -Wait -NoNewWindow}
 $Time | Set-Content "$logpath\sqlsetup$SQLVER.txt" -Force
 If ($LASTEXITCODE -lt 0)
     {

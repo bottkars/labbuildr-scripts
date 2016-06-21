@@ -66,7 +66,7 @@ $Setuppath = "$SCVMM_Dir\$Setupcmd"
 .$Nodescriptdir\test-setup.ps1 -setup $Setupcmd -setuppath $Setuppath
 Write-Warning "Starting $SC_VERSION setup, this may take a while"
 # start-process "$Setuppath" -ArgumentList "/server /i /SqlDBAdminDomain $Domain /SqlDBAdminName SVC_SQL /SqlDBAdminPassword Password123! /VmmServiceDomain $Domain /VmmServiceUserName SVC_SCVMM /VmmServiceUserPassword Password123! /IACCEPTSCEULA" -Wait 
-start-process "$Setuppath" -ArgumentList "/server /i /f $logpath\VMServer.ini /SqlDBAdminDomain $Domain /SqlDBAdminName SVC_SQL /SqlDBAdminPassword Password123! /VmmServiceDomain $Domain /VmmServiceUserName SVC_SCVMM /VmmServiceUserPassword Password123! /IACCEPTSCEULA" -Wait 
+start-process "$Setuppath" -ArgumentList "/server /i /f $logpath\VMServer.ini /SqlDBAdminDomain $Domain /SqlDBAdminName SVC_SQL /SqlDBAdminPassword Password123! /VmmServiceDomain $Domain /VmmServiceUserName SVC_SCVMM /VmmServiceUserPassword Password123! /IACCEPTSCEULA" -Wait -NoNewWindow
 write-verbose "Checking for Updates"
 foreach ($Updatepattern in ("*vmmserver*.msp","*Admin*.msp"))
     {
@@ -84,7 +84,7 @@ foreach ($Updatepattern in ("*vmmserver*.msp","*Admin*.msp"))
 	    $LatestVMMUpdate = $VMMUpdate[0]
         .$Nodescriptdir\test-setup.ps1 -setup $LatestVMMUpdate.BaseName -setuppath $LatestVMMUpdate.FullName
         Write-Warning "Starting VMM Patch setup, this may take a while"
-        start-process $LatestVMMUpdate.FullName -ArgumentList "/Passive" -Wait 
+        start-process $LatestVMMUpdate.FullName -ArgumentList "/Passive" -Wait -NoNewWindow
         }
     }
 $SCVMM_Path = (get-item 'C:\Program Files\Microsoft System*\Virtual Machine Manager\bin\AddInPipeline\').FullName
