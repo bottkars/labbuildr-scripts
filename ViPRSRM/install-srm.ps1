@@ -40,7 +40,7 @@ Write-Warning "Installing SRM $SRM_VER"
 
 if ($SRM_VER -ge "4.0.0.0")
     {
-    $Arguments = "/S /ACCEPTEULA=Yes" 
+    $Arguments = "/S /ACCEPTEULA=Yes /INSTALL-Type=Default" 
     }
 else
     {
