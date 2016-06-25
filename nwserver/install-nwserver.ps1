@@ -10,6 +10,7 @@
 [CmdletBinding()]
 param(
     [ValidateSet(
+    'nw9010',
     'nw90.DA','nw9001','nw9002','nw9003','nw9004','nw9005','nw9006','nw9007',
     'nw8232','nw8231',
     'nw8226','nw8225','nw8224','nw8223','nw8222','nw8221','nw822',

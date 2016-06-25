@@ -10,6 +10,7 @@
 [CmdletBinding()]
 param(
     [ValidateSet(
+    'nmm9010',
     'nmm90.DA','nmm9001','nmm9002','nmm9003','nmm9004','nmm9005','nmm9006','nmm9007',
     'nmm8231','nmm8232',  
     'nmm8221','nmm8222','nmm8223','nmm8224','nmm8225',
