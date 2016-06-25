@@ -80,19 +80,19 @@ if ($NW_ver -lt 'nw85')
     }
 else
     {
-    Write-Warning "Installing Networker $nw_ver"
-    Write-Warning "evaluating setup version"
+    Write-Host -ForegroundColor Gray " ==>Installing Networker $nw_ver"
+    Write-Host -ForegroundColor Gray " ==>evaluating setup version"
     if ($setup = Get-ChildItem "$SourcePath\$NW_ver\win_x64\networkr\networker-*")
         {
-        write-warning "creating postgres user"
+        Write-Host -ForegroundColor Gray " ==>creating postgres user"
         $cn = [ADSI]"WinNT://$env:COMPUTERNAME"
         $user = $cn.Create("User",$dbusername)
         $user.SetPassword($Password)
         $user.setinfo()
         $user.description = "postgres networker user"
         $user.SetInfo()
-        Write-Warning "Starting Install"
-        Start-Process -Wait -FilePath "$($Setup.fullname)" -ArgumentList "/s /v InstallLevel=300 ConfigureFirewall=1 StartServices=1 OptionGetNMC=1 DbUsername=$dbusername DbPassword=$Password AdminPassword=$Password KSFPassword=$Password TSFPassword=$Password"
+        Write-Host -ForegroundColor Gray " ==>Starting Install"
+        Start-Process -Wait -NoNewWindow -PassThru -FilePath "$($Setup.fullname)" -ArgumentList "/s /v InstallLevel=300 ConfigureFirewall=1 StartServices=1 OptionGetNMC=1 DbUsername=$dbusername DbPassword=$Password AdminPassword=$Password KSFPassword=$Password TSFPassword=$Password"
         }
     else
         {
