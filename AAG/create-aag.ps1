@@ -157,37 +157,36 @@ foreach ($secondary in $secondaries)
 #ADD LISTENER ‘MyAg2ListenerIvP6’ ( WITH IP ( ('2001:db88:f0:f00f::cf3c'),('2001:4898:e0:f213::4ce2') ) , PORT = 60173 ); 
 ## Creating the Listener
 
-if ($sqlversion -lt 13)
-    {
-    switch ($AddressFamily)
-	    {
-	    "IPv4"
-            {
-            $ListenerIP = "((N'$IPv4Subnet.169', N'255.255.255.0'))"
-            }
-        "IPv6"
-            {
-            $ListenerIP = "((N'$IPv6Prefix$IPv4Subnet.169'))"
-            }
-	    "IPv4IPv6"
-            {
-            $ListenerIP = "((N'$IPv4Subnet.169', N'255.255.255.0'),(N'$IPv6Prefix$IPv4Subnet.169'))"
-            }
-        }
-    $Listener = $AgName+'lstn'                
-    $BCMD = "
-    USE [master]
-    GO
-    ALTER AVAILABILITY GROUP [$AgName]
-    ADD LISTENER N'$Listener' (
-    WITH IP $ListenerIP, PORT=$Port)"
 
-    if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
+switch ($AddressFamily)
+	{
+	"IPv4"
         {
-        Write-Output $BCMD
+        $ListenerIP = "((N'$IPv4Subnet.169', N'255.255.255.0'))"
         }
-    Invoke-Sqlcmd -Query $BCMD -ServerInstance $primary.Name
-}
+    "IPv6"
+        {
+        $ListenerIP = "((N'$IPv6Prefix$IPv4Subnet.169'))"
+        }
+	"IPv4IPv6"
+        {
+        $ListenerIP = "((N'$IPv4Subnet.169', N'255.255.255.0'),(N'$IPv6Prefix$IPv4Subnet.169'))"
+        }
+    }
+$Listener = $AgName+'lstn'                
+$BCMD = "
+USE [master]
+GO
+ALTER AVAILABILITY GROUP [$AgName]
+ADD LISTENER N'$Listener' (
+WITH IP $ListenerIP, PORT=$Port)"
+
+if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
+    {
+    Write-Output $BCMD
+    }
+Invoke-Sqlcmd -Query $BCMD -ServerInstance $primary.Name
+
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {
     Pause
