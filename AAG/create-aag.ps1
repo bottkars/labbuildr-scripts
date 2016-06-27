@@ -18,7 +18,8 @@ Param
     $IPv6Prefix = "",
     [Validateset('IPv4','IPv6','IPv4IPv6')]$AddressFamily='IPv4',
     $DBInstance,
-    $Port = '1433'
+    $Port = '1433',
+    $sql_ver = "SQL2016"
 )
 $IPv6subnet = "$IPv6Prefix$IPv4Subnet"
 $IPv6Address = "$IPv6Prefix$nodeIP"
@@ -42,6 +43,18 @@ foreach ($AAGnode in $AAGnodes){
 $NodeLIST += "$($AAGNode.Name)\$DBInstance"
 write-Host "Adding Node $AAGnode to AAG Nodelist"
 }
+if ($sql_ver -match "2016")
+    {
+    $sqlversion = "13"
+    }
+if ($sql_ver -match "2014")
+    {
+    $sqlversion = "12"
+    }
+if ($sql_ver -match "2012")
+    {
+    $sqlversion = "11"
+    }
 Import-Module “sqlps” -DisableNameChecking
 # Initialize some collections
 $serverObjects = @()
@@ -79,7 +92,7 @@ foreach ($server in $Nodelist)
             -FailoverMode "Manual" `
             -ConnectionModeInSecondaryRole "AllowAllConnections" `
             -AsTemplate `
-            -Version 11) 
+            -Version $sqlversion) 
 }
 
 
@@ -144,36 +157,37 @@ foreach ($secondary in $secondaries)
 #ADD LISTENER ‘MyAg2ListenerIvP6’ ( WITH IP ( ('2001:db88:f0:f00f::cf3c'),('2001:4898:e0:f213::4ce2') ) , PORT = 60173 ); 
 ## Creating the Listener
 
-
-switch ($AddressFamily)
-	{
-	"IPv4"
-        {
-        $ListenerIP = "((N'$IPv4Subnet.169', N'255.255.255.0'))"
-        }
-    "IPv6"
-        {
-        $ListenerIP = "((N'$IPv6Prefix$IPv4Subnet.169'))"
-        }
-	"IPv4IPv6"
-        {
-        $ListenerIP = "((N'$IPv4Subnet.169', N'255.255.255.0'),(N'$IPv6Prefix$IPv4Subnet.169'))"
-        }
-    }
-$Listener = $AgName+'lstn'                
-$BCMD = "
-USE [master]
-GO
-ALTER AVAILABILITY GROUP [$AgName]
-ADD LISTENER N'$Listener' (
-WITH IP $ListenerIP, PORT=$Port)"
-
-if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
+if ($sqlversion -lt 13)
     {
-    Write-Output $BCMD
-    }
-Invoke-Sqlcmd -Query $BCMD -ServerInstance $primary.Name
+    switch ($AddressFamily)
+	    {
+	    "IPv4"
+            {
+            $ListenerIP = "((N'$IPv4Subnet.169', N'255.255.255.0'))"
+            }
+        "IPv6"
+            {
+            $ListenerIP = "((N'$IPv6Prefix$IPv4Subnet.169'))"
+            }
+	    "IPv4IPv6"
+            {
+            $ListenerIP = "((N'$IPv4Subnet.169', N'255.255.255.0'),(N'$IPv6Prefix$IPv4Subnet.169'))"
+            }
+        }
+    $Listener = $AgName+'lstn'                
+    $BCMD = "
+    USE [master]
+    GO
+    ALTER AVAILABILITY GROUP [$AgName]
+    ADD LISTENER N'$Listener' (
+    WITH IP $ListenerIP, PORT=$Port)"
 
+    if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
+        {
+        Write-Output $BCMD
+        }
+    Invoke-Sqlcmd -Query $BCMD -ServerInstance $primary.Name
+}
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {
     Pause

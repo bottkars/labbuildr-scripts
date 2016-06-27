@@ -14,8 +14,8 @@ param(
     $logpath = "c:\Scripts",
     $Prereq ="Prereq",
 	[ValidateSet(
-    'SQL2014SP1slip','SQL2012','SQL2012SP1','SQL2012SP2','SQL2012SP1SLIP','SQL2014','SQL2016'
-    )]$SQLVER,
+    'SQL2014SP1slip','SQL2012','SQL2012SP1','SQL2012SP2','SQL2012SP1SLIP','SQL2014','SQL2016','SQL2016_ISO'
+   )]$SQLVER,
     $Diskparameter = "",
     $DBInstance,
     $ProductDir = "SQL",
@@ -48,6 +48,7 @@ net localgroup "Administrators" $DOMAIN\SVC_SQLADM /Add
 net localgroup "Administrators" $DOMAIN\SVC_SCVMM /Add
 $UpdateSource = ""
 $Features = 'SQL,SSMS'
+
 Switch ($SQLVER)
     {
     'SQL2012SP1'
@@ -121,7 +122,33 @@ Switch ($SQLVER)
         $Features = 'SQL,Tools,Polybase'
         $Java_required  = $true
         }
-
+      'SQL2016_ISO'  
+        {
+         Write-Host -ForegroundColor Magenta " ==> Installing NetFramework"
+        .$NodeScriptDir\install-netframework.ps1 -net_ver 461
+        Write-Host -ForegroundColor Magenta " ==> Installing Java"
+        .$NodeScriptDir\install-java.ps1 -java_ver 8
+        $SQL_BASEVER = "SQL2016"
+        $SQL_BASEDir = Join-Path $ProductDir $SQL_BASEVER
+        Write-Host -ForegroundColor Magenta " ==> Installing SQL Server Management Studio"
+        $Setupcmd = 'SSMS-Setup-ENU.exe'
+        $Setuppath = "$SQL_BASEDir\$Setupcmd"
+        .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
+        $Arguments = "/install /passive /norestart"
+        Start-Process $Setuppath -ArgumentList  $Arguments -Wait -PassThru
+        $Isopath = "$SQL_BASEDir\SQLServer2016-x64-ENU.iso"
+        Write-Verbose $Isopath
+        .$Nodescriptdir\test-setup -setup $SQL_BASEVER -setuppath $Isopath
+        Write-Host -ForegroundColor Gray "Copying $SQL_BASEVER ISO locally"
+        Copy-Item $Isopath -Destination "$env:USERPROFILE\Downloads"
+        $Temp_Iso = "$env:USERPROFILE\Downloads\SQLServer2016-x64-ENU.iso"
+        $ismount = Mount-DiskImage -ImagePath $Temp_Iso -PassThru
+        $Driveletter = (Get-Volume | where { $_.size -eq $ismount.Size}).driveletter
+        $Setupcmd = "setup.exe"        
+        $Setuppath = "$($Driveletter):\$Setupcmd"
+        $Features = 'SQL,Tools,Polybase'
+        $Java_required  = $true
+        }
     }
 if (!$DefaultDBpath.IsPresent)
     {
