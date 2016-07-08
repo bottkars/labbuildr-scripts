@@ -49,7 +49,7 @@ if ($Nmm_ver -lt 'nmm85')
     $Setuppath = "$Sourcepath\$nmm_ver\win_x64\networkr\setup.exe" 
     .$NodeScriptDir\test-setup -setup NMM -setuppath $Setuppath
     $argumentlist = '/s /v" /qn /l*v c:\scripts\nmm.log RMEXCHDOMAIN='+$Domain+' RMEXCHUSER=NMMBackupUser RMEXCHPASSWORD=Password123! RMCPORT=6730 RMDPORT=6731"'
-    start-process -filepath "$Setuppath\setup.exe" -ArgumentList $argumentlist -wait
+    start-process -filepath "$Setuppath\setup.exe" -ArgumentList $argumentlist -wait -PassThru
     }
 else
     {
