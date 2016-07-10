@@ -11,6 +11,7 @@
 param (
 $sp_version= "SP2013sp1fndtn",
 $SourcePath = "\\vmware-host\Shared Folders\Sources",
+$Scriptdir = "\\vmware-host\Shared Folders\Scripts",
 $Setupcmd = "Setup.exe",
 [Validateset('AAG','MSDE')]$DBtype,
 $DBInstance
@@ -22,7 +23,8 @@ $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
 New-Item -ItemType file  "$Builddir\$ScriptName$Logtime.log"
 .$Builddir\test-sharedfolders.ps1
 $Setuppath = "$SourcePath\$sp_version\$Setupcmd"
-.$Builddir\test-setup.ps1 -setup "Sharepoint 2013" -setuppath $Setuppath
+$Nodescriptdir = Join-Path $Scriptdir "Node"
+.$NodeScriptDir\test-setup.ps1 -setup "Sharepoint 2013" -setuppath $Setuppath
 switch ($DBtype)
     {
     'AAG'
