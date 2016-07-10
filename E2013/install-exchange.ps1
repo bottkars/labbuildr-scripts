@@ -38,7 +38,7 @@ $Setuppath = "$Exchange_Dir\$ex_version\$EX_Version$($e15_cu)\$Setupcmd"
 .$Nodescriptdir\test-setup -setup $Ex_version -setuppath $Setuppath
 
 $DB1 = "DB1_"+$env:COMPUTERNAME
-$ArgumentLst = "/mode:Install /role:/role:ClientAccess,Mailbox /OrganizationName:`"$Env:USERDOMAIN`" /IAcceptExchangeServerLicenseTerms /MdbName:$DB1 /DbFilePath:$ExDatabasesBase\DB1\DB1.DB\DB1.EDB /LogFolderPath:$ExDatabasesBase\DB1\DB1.LOG"
+$ArgumentLst = "/mode:Install /role:ClientAccess,Mailbox /OrganizationName:`"$Env:USERDOMAIN`" /IAcceptExchangeServerLicenseTerms /MdbName:$DB1 /DbFilePath:$ExDatabasesBase\DB1\DB1.DB\DB1.EDB /LogFolderPath:$ExDatabasesBase\DB1\DB1.LOG"
 Start-Process $Setuppath -ArgumentList  $ArgumentLst -Wait -NoNewWindow
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {
