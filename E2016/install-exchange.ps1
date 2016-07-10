@@ -10,7 +10,7 @@
 [CmdletBinding()]
 param(
 [Parameter(Mandatory=$true)]
-[ValidateSet('cu1','final')]
+[ValidateSet('cu2','cu1','final')]
 $ex_cu,
 $ExDatabasesBase = "C:\ExchangeDatabases",
 [ValidateSet('exe','iso')]$install_from,
