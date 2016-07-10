@@ -10,7 +10,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)]
-    [ValidateSet('cu1', 'cu2', 'cu3', 'sp1','cu5','cu6','cu7','cu8','cu9','cu10','CU11','cu12')]
+    [ValidateSet('cu1', 'cu2', 'cu3', 'sp1','cu5','cu6','cu7','cu8','cu9','cu10','CU11','cu12','cu13')]
     [alias('ex_cu')]$e15_cu,
     $ExDatabasesBase = "C:\ExchangeDatabases",
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
