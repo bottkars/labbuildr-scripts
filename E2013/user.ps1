@@ -72,8 +72,17 @@ New-MailboxDatabase -Recovery -Name rdb$env:COMPUTERNAME -server $Smtpserver -Ed
 Restart-Service MSExchangeIS
 #>
 Get-AddressList  | Update-AddressList
-Send-MailMessage -From $SenderSMTP -Subject $Subject -To "$BackupAdmin$maildom"  -Body $Body -Attachments $attachment[0].FullName -DeliveryNotificationOption None -SmtpServer $Smtpserver -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
-Send-MailMessage -From $SenderSMTP -Subject $Subject -To $SenderSMTP -Body $Body -Attachments $attachment[0].FullName -DeliveryNotificationOption None -SmtpServer $Smtpserver -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
+if ($Attachment)
+    {
+    Send-MailMessage -From $SenderSMTP -Subject $Subject -To "$BackupAdmin$maildom"  -Body $Body -Attachments $attachment[0].FullName -DeliveryNotificationOption None -SmtpServer $Smtpserver -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
+    Send-MailMessage -From $SenderSMTP -Subject $Subject -To $SenderSMTP -Body $Body -Attachments $attachment[0].FullName -DeliveryNotificationOption None -SmtpServer $Smtpserver -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
+    }
+else
+    {
+    Send-MailMessage -From $SenderSMTP -Subject $Subject -To "$BackupAdmin$maildom"  -Body $Body -DeliveryNotificationOption None -SmtpServer $Smtpserver -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
+    Send-MailMessage -From $SenderSMTP -Subject $Subject -To $SenderSMTP -Body $Body -DeliveryNotificationOption None -SmtpServer $Smtpserver -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
+    }
+
 get-ExchangeServer  | add-adpermission -user $BackupAdmin -accessrights ExtendedRight -extendedrights Send-As, Receive-As, ms-Exch-Store-Admin
 if (Get-DatabaseAvailabilityGroup)
     {
@@ -108,7 +117,15 @@ accountpassword=(ConvertTo-SecureString "Welcome1" -AsPlainText -Force);
         $user
         New-ADUser @user -Enabled $True
         Enable-Mailbox $user.samaccountname -database $Database
-        Send-MailMessage -From $SenderSMTP -Subject $Subject -Attachments $attachment[0].FullName -To $UPN -Body $Body -DeliveryNotificationOption None -SmtpServer $Smtpserver -Credential $Credential -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
+        if ($attachment)
+            {
+            Send-MailMessage -From $SenderSMTP -Subject $Subject -Attachments $attachment[0].FullName -To $UPN -Body $Body -DeliveryNotificationOption None -SmtpServer $Smtpserver -Credential $Credential -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
+            }
+        else
+            {
+            Send-MailMessage -From $SenderSMTP -Subject $Subject -To $UPN -Body $Body -DeliveryNotificationOption None -SmtpServer $Smtpserver -Credential $Credential -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
+            }
+
     }
 #######
 ##Public Folder Structure
