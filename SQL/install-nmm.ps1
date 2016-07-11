@@ -46,8 +46,8 @@ if ($Nmm_ver -lt 'nmm85')
     start-process -filepath "$Setuppath" -ArgumentList '/s /v" /qn /L*v c:\scripts\nmm.log'  -Wait -PassThru
     Write-Host -ForegroundColor Magenta " ==> Doing NWVSS Install"
     start-process -filepath "$Setuppath" -ArgumentList '/s /v" /qn /L*v c:\scripts\nmmglr.log NW_INSTALLLEVEL=200 REBOOTMACHINE=0 NW_GLR_FEATURE=1 WRITECACHEDIR="C:\Program Files\EMC NetWorker\nsr\tmp\nwfs" MOUNTPOINTDIR="C:\Program Files\EMC NetWorker\nsr\tmp\nwfs\NetWorker Virtual File System" HYPERVMOUNTPOINTDIR="C:\Program Files\EMC NetWorker\nsr\tmp" SETUPTYPE=Install"' -Wait -PassThru
-    Write-Host -ForegroundColor Magenta " ==> Doing SSMS Plugin Install"
-    start-process -filepath "$Setuppath" -ArgumentList '/s /v" /qn /L*v c:\scripts\nmmglr.log INSTALLLEVEL=150 SETUPTYPE=Install INSTCLIENTPUSH=1 RMCPORT=6728 RMDPORT=6729 NW_SSMS_FEATURE=1"' -Wait -PassThru
+#    Write-Host -ForegroundColor Magenta " ==> Doing SSMS Plugin Install"
+#    start-process -filepath "$Setuppath" -ArgumentList '/s /v" /qn /L*v c:\scripts\nmmglr.log INSTALLLEVEL=150 SETUPTYPE=Install INSTCLIENTPUSH=1 RMCPORT=6728 RMDPORT=6729 NW_SSMS_FEATURE=1"' -Wait -PassThru
     }
 else
     {
