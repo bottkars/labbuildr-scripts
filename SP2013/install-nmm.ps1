@@ -38,7 +38,7 @@ Write-Verbose $Domain
 if ($Nmm_ver -lt 'nmm85')
     {
     $Setuppath = "$Sourcepath\$nmm_ver\win_x64\networkr\setup.exe" 
-    .$Builddir\test-setup -setup NMM -setuppath $Setuppath
+    .$Nodescriptdir\test-setup -setup NMM -setuppath $Setuppath
     Write-Host -ForegroundColor Magenta " ==> Doing NMM Base Install"
     start-process -filepath "$Setuppath" -ArgumentList '/s /v" /qn /L*v c:\scripts\nmm.log'  -Wait -PassThru
     Write-Host -ForegroundColor Magenta " ==> Doing NWVSS Install"
@@ -49,7 +49,7 @@ if ($Nmm_ver -lt 'nmm85')
 else
     {
     $Setuppath = "$Sourcepath\$nmm_ver\win_x64\networkr\nwvss.exe"
-    .$Builddir\test-setup -setup NMM -setuppath $Setuppath 
+    .$Nodescriptdir\test-setup -setup NMM -setuppath $Setuppath 
     Start-Process -Wait -FilePath $Setuppath -ArgumentList "/s /q /log `"C:\scripts\NMM_nw_install_detail.log`" InstallLevel=200 RebootMachine=0 NwGlrFeature=1 EnableClientPush=1 WriteCacheFolder=`"C:\Program Files\EMC NetWorker\nsr\tmp\nwfs`" MountPointFolder=`"C:\Program Files\EMC NetWorker\nsr\tmp\nwfs\NetWorker Virtual File System`" BBBMountPointFolder=`"C:\Program Files\EMC NetWorker\nsr\tmp\BBBMountPoint`" SetupType=Install"
     }
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
