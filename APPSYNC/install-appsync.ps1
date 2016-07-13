@@ -37,9 +37,8 @@ Write-Warning "Installing APPSYNC $APPSYNC_VER, this could take up to 10 Minutes
 Write-Warning "Installing APPSYNC $APPSYNC_VER"
 
 
-$Arguments = "/S" 
+$Arguments = "-i silent -f `"$Builddir\appsync.properties`"" 
 Start-Process -FilePath $Setuppath -ArgumentList $Arguments -PassThru -Wait
-#Start-Process "http://$($Env:COMPUTERNAME):58080/APG/"
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {
     Pause
