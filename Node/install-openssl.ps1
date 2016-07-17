@@ -10,7 +10,7 @@
 [CmdletBinding()]
 param(    
     [ValidateSet('1_0_1s','1_0_2h')]
-    $opensslver='1_0_2h',
+    $openssl_ver='1_0_2h',
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
     $logpath = "c:\Scripts"
@@ -28,10 +28,10 @@ $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 .$Nodescriptdir\test-sharedfolders.ps1 -Folder $Sourcepath
-$Setuppath = "\\vmware-host\Shared Folders\Sources\Win64OpenSSL*-$opensslver.exe"
+$Setuppath = "\\vmware-host\Shared Folders\Sources\Win64OpenSSL*-$openssl_ver.exe"
 .$NodeScriptDir\test-setup -setup OpenSSL -setuppath $Setuppath
 
-Write-Warning "Installing OPENSSL $opensslver"
+Write-Warning "Installing OPENSSL $openssl_ver"
 $setuppath = ((Get-ChildItem -Path $setuppath).FullName | Sort-Object -Descending | Select-Object -First 1)
 $OpenSSLArgs = '/silent'
 Start-Process -FilePath $Setuppath -ArgumentList $OpenSSLArgs -PassThru -Wait
