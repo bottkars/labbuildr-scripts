@@ -46,22 +46,24 @@ else
 		{
 			"final"	
 			{
-			$Isopath = "$Exchange_Dir\$ex_version\ExchangeServer2016-x64.iso"
+			$Iso = "ExchangeServer2016-x64.iso"
 			}
 			"cu1"
 			{
-			$Isopath = "$Exchange_Dir\$ex_version\ExchangeServer2016-$ex_cu.iso"
+			$Iso = "ExchangeServer2016-$ex_cu.iso"
 			}
 			default
 			{
-			$Isopath = "$Exchange_Dir\$ex_version\ExchangeServer2016-x64-$ex_cu.iso"
+			$Iso = "ExchangeServer2016-x64-$ex_cu.iso"
 			}
 		}
+	$Isopath = "$Exchange_Dir\$ex_version\$iso"
+
     Write-Verbose $Isopath
     .$Nodescriptdir\test-setup -setup $Ex_version -setuppath $Isopath
     Write-Host -ForegroundColor Gray "Copying Exchange ISO locally"
     Copy-Item $Isopath -Destination "$env:USERPROFILE\Downloads"
-    $Temp_Iso = "$env:USERPROFILE\Downloads\ExchangeServer2016-$ex_cu.iso"
+    $Temp_Iso = "$env:USERPROFILE\Downloads\$Iso"
     $ismount = Mount-DiskImage -ImagePath $Temp_Iso -PassThru
     $Driveletter = (Get-Volume | where { $_.size -eq $ismount.Size}).driveletter
     $Setuppath = "$($Driveletter):\$Setupcmd"
