@@ -42,7 +42,7 @@ if ($install_from -eq "exe")
     }
 else
     {
-    $Isopath = "$Exchange_Dir\$ex_version\ExchangeServer2016-$ex_cu.iso"
+    $Isopath = "$Exchange_Dir\$ex_version\ExchangeServer2016-x64-$ex_cu.iso"
     Write-Verbose $Isopath
     .$Nodescriptdir\test-setup -setup $Ex_version -setuppath $Isopath
     Write-Host -ForegroundColor Gray "Copying Exchange ISO locally"
