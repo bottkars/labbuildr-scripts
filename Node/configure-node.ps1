@@ -20,7 +20,7 @@ param(
     $AddonFeatures,
     [ipaddress]$DefaultGateway,
     $Domain="labbuildr",
-    $domainsuffix = ".local",
+    $domainsuffix = "local",
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
     $logpath = "c:\Scripts"
@@ -161,7 +161,7 @@ Do {
         }
     }
 Until ($Ping)    
-$Mydomain = "$Domain$domainsuffix"
+$Mydomain = "$(Domain).$($domainsuffix)"
 $PlainPassword = "Password123!" 
 $password = $PlainPassword | ConvertTo-SecureString -asPlainText -Force
 $username = "$domain\Administrator" 
