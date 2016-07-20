@@ -161,7 +161,7 @@ Do {
         }
     }
 Until ($Ping)    
-$Mydomain = "$(Domain).$($domainsuffix)"
+$MyDomain = "$($Domain).$($Domainsuffix)"
 $PlainPassword = "Password123!" 
 $password = $PlainPassword | ConvertTo-SecureString -asPlainText -Force
 $username = "$domain\Administrator" 
