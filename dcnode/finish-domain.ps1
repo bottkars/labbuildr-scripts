@@ -10,7 +10,7 @@
 [CmdletBinding()]
 param(
 $Domain,
-$domainsuffix = ".local",
+$domainsuffix = "local",
 $logpath = "c:\Scripts"
 )
 $ScriptName = $MyInvocation.MyCommand.Name
@@ -24,7 +24,7 @@ if (!(Test-Path $logpath))
 $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
-$MyDomain = $Domain+$domainsuffix
+$MyDomain = "$($Domain).$($Domainsuffix)"
 Write-Verbose "trying tools update"
 try {
     $CDDrive = Get-Volume -FileSystemLabel "VMware Tools"  -ErrorAction SilentlyContinue
