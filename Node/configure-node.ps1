@@ -45,16 +45,6 @@ Write-Verbose $IPv6PrefixLength
 Write-Verbose $IPv6Address
 Write-Verbose $IPv6subnet
 Write-Verbose $AddonFeatures
-
-<# checking uefi or Normal Machine dirty hack
-if ($eth0 = Get-NetAdapter -Name "Ethernet0" -ErrorAction SilentlyContinue) {
-[switch]$uefi = $True
-}
-else
-{
-$eth0 = Get-NetAdapter -Name "Ethernet" -ErrorAction SilentlyContinue
-}
-#>
 $OS_Build = ([Environment]::OSVersion.Version).Build
 if ($OS_Build -le 9200)
     {
@@ -71,16 +61,6 @@ if ($nics.Count -gt 1)
 $eth0 = Get-NetIPAddress -AddressFamily IPv4 -PrefixOrigin WellKnown -PrefixLength 16 | Get-NetAdapter
 
 Rename-NetAdapter $eth0.Name -NewName $Domain
- 
-<#
-elseif  ($eth1 = Get-NetAdapter -Name "Ethernet1" -ErrorAction SilentlyContinue ) 
-    {
-    Rename-NetAdapter $eth0.Name -NewName "External DHCP"
-    Rename-NetAdapter $eth1.Name -NewName "Ethernet"
-    }
-
-#>
-
 If ($AddressFamily -match 'IPv4')
 {
 
@@ -112,7 +92,6 @@ if ( $AddressFamily -notmatch 'IPv4')
     $eth1 | Disable-NetAdapterBinding -ComponentID ms_tcpip
     Set-DnsClientServerAddress -InterfaceAlias "$Domain" -ServerAddresses "$IPv6subnet.10"
     }
-
 Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server' -Name fDenyTSConnections -Value 0
 Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name UserAuthentication -Value 1
 Set-NetFirewallRule -DisplayGroup 'Remote*Desktop' -Enabled True

@@ -9,6 +9,11 @@
     <AssemblyName>MyApplication</AssemblyName>
     <Name>labbuildr-scripts</Name>
     <WorkingDirectory>C:\github\labbuildr-scripts</WorkingDirectory>
+    <Author>Karsten Bott</Author>
+    <CompanyName>EMC</CompanyName>
+    <Copyright />
+    <Description />
+    <Guid>425a44b3-799c-4686-8840-1523ed3f0888</Guid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
