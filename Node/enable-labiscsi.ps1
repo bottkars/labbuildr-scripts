@@ -29,7 +29,8 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ######################################################################
 
 Write-Host -ForegroundColor Gray " ==>Enabling iSCSI"
-Set-Service Set-Service -Name MSiSCSI -StartupType Automatic
+Set-Service -Name MSiSCSI -StartupType Automatic
 Start-Service MSiSCSI
 Write-Host -ForegroundColor Magenta " ==>Connecting to iSCSI Portal $Target_IP"
+$Portal = New-IscsiTargetPortal –TargetPortalAddress $Target_IP
 
