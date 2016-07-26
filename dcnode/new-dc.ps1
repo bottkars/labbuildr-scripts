@@ -4,7 +4,7 @@
 .DESCRIPTION
    labbuildr is a Self Installing Windows/Networker/NMM Environemnt Supporting Exchange 2013 and NMM 3.0
 .LINK
-   https://community.emc.com/blogs/bottk/2015/03/30/labbuildrbeta
+   https://github.com/bottkars/labbuildr/wiki
 #>
 #requires -version 3
 

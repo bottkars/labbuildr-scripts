@@ -3,7 +3,7 @@
 # Karsten.Bott@emc.com  
 # 24.05.2013
 # modified 05.04.2015 for labbuildr  
-# twitter @hyperv_guy  
+# twitter @sddc_guy  
 ####################  
 # Adjust Parameter to your needs or start with-parameter  
 param (  
