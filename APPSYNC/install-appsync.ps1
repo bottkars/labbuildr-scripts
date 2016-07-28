@@ -13,9 +13,9 @@ param(
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
     $logpath = "c:\Scripts",
     [ValidateSet(
-    '3.0.0'
+    '3.0.0','3.0.1'
     )]
-    $APPSYNC_VER='3.0.0'
+    $APPSYNC_VER='3.0.1'
     )
 $Nodescriptdir = "$Scriptdir\Node"
 $ScriptName = $MyInvocation.MyCommand.Name
