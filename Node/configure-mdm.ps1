@@ -41,7 +41,6 @@ if (!($Cluster = Get-Cluster . -ErrorAction SilentlyContinue) )
 
 $Location = $Cluster.Name
 Write-Host " we will use $Location ad name"
-pause
 $nodes = Get-ClusterNode
 $Percentage = [math]::Round(100/$nodes.count)+1
 write-verbose "fetching remote IP Addresses..."
