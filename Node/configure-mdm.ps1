@@ -342,7 +342,7 @@ Write-Host -ForegroundColor Magenta  "Adding Storage Data Client $($Node.Name) t
 
 Invoke-Command -ComputerName $node.name -ScriptBlock {param( $mdm_ip )
 
-#."C:\Program Files\emc\scaleio\sdc\bin\drv_cfg.exe" --add_mdm --ip $mdm_ip | out-null
+."C:\Program Files\emc\scaleio\sdc\bin\drv_cfg.exe" --add_mdm --ip $mdm_ip # | out-null
 ."C:\Program Files\emc\scaleio\sdc\bin\drv_cfg.exe" --query_mdms
 
 } -ArgumentList $mdm_ip

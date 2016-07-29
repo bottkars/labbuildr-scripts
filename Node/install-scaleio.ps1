@@ -36,6 +36,14 @@ if (!(Test-Path $logpath))
 $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
+if ($mdmipa -eq $mdmipb)
+    {
+    $sdc_options = "MDM_IP='+$mdmipa+'"
+    }
+else
+    {
+    $sdc_options = "MDM_IP='+$mdmipa+','+$mdmipb+'"
+    }
 $scaleio_major = $ScaleIOVer[0]
 .$Nodescriptdir\test-sharedfolders.ps1 -Folder $Sourcepath
 $ScaleIORoot = Join-Path $SourcePath "Scaleio"
@@ -151,7 +159,8 @@ else
             {
             "sdc"
                 {
-                $ScaleIOArgs = '/i "'+$Setuppath+'" MDM_IP='+$mdmipa+','+$mdmipb+' /quiet'
+                $ScaleIOArgs = '/i "'+$Setuppath+'" /quiet' # MDM_IP='+$mdmipa+','+$mdmipb+'
+                # $ScaleIOArgs = '/i "'+$Setuppath+'" '+$sdc_options+' /quiet' 
                 }
             "lia"
                 {
