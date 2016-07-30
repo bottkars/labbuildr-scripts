@@ -9,6 +9,7 @@
 #requires -version 3
 [CmdletBinding()]
 param(
+    [version]$Subnet,
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
     $logpath = "c:\Scripts",
@@ -36,18 +37,36 @@ if (!(Test-Path "$Clustervolume\Replica"))
 
 $Clustername = (get-cluster .).name
 
+
+if (!$Subnet)
+    {
+    write-host -ForegroundColor Gray " ==>Trying to fetch cluster IP from $Clustername"
+    [IPAddress]$Subnet = (Get-ClusterResource -Name "Cluster IP Address" |Get-ClusterParameter Address).Value
+    }
+[System.Version]$subnet = $Subnet.ToString()
+$Subnet = $Subnet.major.ToString() + "." + $Subnet.Minor + "." + $Subnet.Build
+if (!$Subnet)
+    {
+    Write-Warning "could not evaluate subnet ! "
+    }
+else
+    {
+    Write-Host -ForegroundColor Gray " ==>using Subnet $Subnet"
+    }
 switch ($Clustername)
     {
     "HV1Cluster"
     {
-    $Broker_IP = "192.168.2.154"
+    $Broker_IP = "$Subnet.154"
     }
     "HV2Cluster"
     {
-    $Broker_IP = "192.168.2.159"
+    $Broker_IP = "$Subnet.159"
     }
 }
+
 $BrokerName = “$($Clustername)-Broker”
+Write-Host -ForegroundColor Gray " ==>Trying to setup Hyper-V Replika Broker $BrokerName with $Broker_IP"
 Add-ClusterServerRole -Name $BrokerName –StaticAddress $Broker_IP
 Add-ClusterResource -Name “Virtual Machine Replication Broker” -Type "Virtual Machine Replication Broker" -Group $BrokerName
 Add-ClusterResourceDependency “Virtual Machine Replication Broker” $BrokerName
