@@ -70,6 +70,9 @@ $ProtectionDomainName = "PD_$Location"
 $StoragePoolName = "SP_$Location"
 $SystemName = "ScaleIO@$Location"
 $FaultSetName = "Rack_"
+$mdm_name_a = "Manager_A"
+$mdm_name_b = "Manager_B"
+$tb_name = "TB"
 
 # 2. ######################################################################################################
 ####### create MDM
@@ -90,7 +93,8 @@ do {
             }
         2
             {
-            $sclicmd = scli  --create_mdm_cluster --master_mdm_ip $mdm_ipa  --master_mdm_management_ip $mdm_ipa  --approve_certificate --accept_license #| Out-Null
+            #$sclicmd = scli  --create_mdm_cluster --master_mdm_ip $mdm_ipa  --master_mdm_management_ip $mdm_ipa  --approve_certificate --accept_license #| Out-Null
+            $sclicmd = scli  --create_mdm_cluster --master_mdm_ip $mdm_ipa  --master_mdm_management_ip $mdm_ipa --master_mdm_name $mdm_name_a --approve_certificate --accept_license
             }
         }
             $sclicmd
@@ -146,7 +150,8 @@ if (!$singlemdm.IsPresent)
                 }
                 2
                 {
-                $sclicmd = scli --add_standby_mdm --mdm_role manager --new_mdm_ip $mdm_ipb --mdm_ip $mdm_ipa 2> $sclierror
+                #$sclicmd = scli --add_standby_mdm --mdm_role manager --new_mdm_ip $mdm_ipb --mdm_ip $mdm_ipa 2> $sclierror
+                $sclicmd = scli --add_standby_mdm --mdm_role manager --new_mdm_ip $mdm_ipb --new_mdm_management_ip $mdm_ipb --new_mdm_name $mdm_name_b --mdm_ip $mdm_ipa 2> $sclierror
                 }
             }
 
@@ -165,7 +170,8 @@ if (!$singlemdm.IsPresent)
                 }
                 2
                 {
-                $sclicmd = scli --add_standby_mdm --mdm_role tb  --new_mdm_ip $tb_ip --mdm_ip $mdm_ipa  #2> $sclierror
+                #$sclicmd = scli --add_standby_mdm --mdm_role tb  --new_mdm_ip $tb_ip --mdm_ip $mdm_ipa  #2> $sclierror
+                $sclicmd = scli --add_standby_mdm --mdm_role tb  --new_mdm_ip $tb_ip --tb_name $tb_name --mdm_ip $mdm_ipa
                 }
             }
         Write-Verbose $LASTEXITCODE
