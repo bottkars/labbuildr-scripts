@@ -12,8 +12,8 @@ param(
     [version]$Subnet,
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
-    $logpath = "c:\Scripts",
-    [string]$Clustervolume = "C:\ClusterStorage\Volume1"
+    $logpath = "c:\Scripts"
+    #[string]$Clustervolume = "C:\ClusterStorage\Volume1"
 
 )
 $Nodescriptdir = "$Scriptdir\NODE"
@@ -29,11 +29,6 @@ if (!(Test-Path $logpath))
 $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ######################################################################
-
-if (!(Test-Path "$Clustervolume\Replica"))
-    {
-    New-Item -ItemType Directory -Path "$Clustervolume\Replica" -Force
-    }
 
 $Clustername = (get-cluster .).name
 
