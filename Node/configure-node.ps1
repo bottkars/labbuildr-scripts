@@ -145,17 +145,20 @@ $PlainPassword = "Password123!"
 $password = $PlainPassword | ConvertTo-SecureString -asPlainText -Force
 $username = "$domain\Administrator" 
 $credential = New-Object System.Management.Automation.PSCredential($username,$password)
-Do {
+#Do {
     $Domain_OK = Add-Computer -DomainName $Mydomain -Credential $credential -PassThru -NewName $Nodename
     If (!$Domain_OK.HasSucceeded)
         {
         Write-Warning "Can Not Join Domain $Domain, please verify and retry
                     Most likely this Computer has not been removed from Domain or Domain needs to refresh
-                    Please Check Active Directory Users and Computers on the DC"
-        Pause
+                    Please Check Active Directory Users and Computers on the DC. Most likely the computer could not be re-named"
+        Write-Host "after keypress, we will try rename-computer -newname $nodename , as this is most-likely the issue"
+		Pause
+		Rename-Computer -NewName $Nodename
+		Pause
         }
-    }
-Until ($Domain_OK.HasSucceeded)
+#    }
+#Until ($Domain_OK.HasSucceeded)
 $vmwarehost = "vmware-host"
 Write-Host -ForegroundColor Magenta "Setting $vmwarehost as local intranet"
 $Zonemaps = ("HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap")
