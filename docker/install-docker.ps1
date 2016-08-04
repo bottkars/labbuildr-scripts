@@ -36,14 +36,19 @@ $Docker_Uri = "https://get.docker.com/builds/Windows/x86_64"
 $Uri = "$Docker_Uri/$Docker_Downloadfile"
 
 Start-BitsTransfer $Uri -Description "Downloding Docker $Docker_VER" -Destination $env:TEMP
+Write-Host -ForegroundColor Gray " ==>expanding archive $Docker_Downloadfile"
 Expand-Archive -Path "$env:TEMP\$Docker_Downloadfile" -DestinationPath $env:ProgramFiles
+Write-Host -ForegroundColor Gray " ==> adding docker path to environment"
 [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Program Files\Docker", [EnvironmentVariableTarget]::Machine)
 $env:Path = $env:Path + ";C:\Program Files\Docker"
+Write-Host -ForegroundColor Gray " ==>registering docker service"
 & $env:ProgramFiles\docker\dockerd.exe --register-service
+Write-Host -ForegroundColor Gray " ==>starting docker service"
 Start-Service Docker
 # Install-PackageProvider ContainerImage -Force
 # Install-ContainerImage -Name WindowsServerCore
 # Restart-Service docker
+Write-Host -ForegroundColor Gray " ==>getting docker windowsservercore"
 docker run microsoft/windowsservercore:10.0.14300.1030
 pause
 # docker tag windowsservercore:10.0.14300.1030 windowsservercore:latest
