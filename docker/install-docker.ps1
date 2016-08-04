@@ -35,7 +35,7 @@ $Docker_Downloadfile = "docker-$($Docker_VER).zip"
 $Docker_Uri = "https://get.docker.com/builds/Windows/x86_64"
 $Uri = "$Docker_Uri/$Docker_Downloadfile"
 
-Invoke-WebRequest $Uri -OutFile "$env:TEMP\$Docker_Downloadfile" -UseBasicParsing
+Start-BitsTransfer $Uri -Description "Downloding Docker $Docker_VER" -Destination $env:TEMP
 Expand-Archive -Path "$env:TEMP\$Docker_Downloadfile" -DestinationPath $env:ProgramFiles
 [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Program Files\Docker", [EnvironmentVariableTarget]::Machine)
 $env:Path = $env:Path + ";C:\Program Files\Docker"
