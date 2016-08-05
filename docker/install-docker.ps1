@@ -13,9 +13,9 @@ param(
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
     $logpath = "c:\Scripts",
     [ValidateSet(
-    '1.12.0'
+    '1.12.0','latest'
     )]
-    $Docker_VER='1.12.0'
+    $Docker_VER='latest'
     )
 $Nodescriptdir = "$Scriptdir\Node"
 $ScriptName = $MyInvocation.MyCommand.Name
@@ -30,7 +30,6 @@ $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 .$Nodescriptdir\test-sharedfolders.ps1 -Folder $Sourcepath
-
 $Docker_Downloadfile = "docker-$($Docker_VER).zip"
 $Docker_Uri = "https://get.docker.com/builds/Windows/x86_64"
 $Uri = "$Docker_Uri/$Docker_Downloadfile"

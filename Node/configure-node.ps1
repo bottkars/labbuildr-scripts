@@ -153,9 +153,8 @@ $credential = New-Object System.Management.Automation.PSCredential($username,$pa
                     Most likely this Computer has not been removed from Domain or Domain needs to refresh
                     Please Check Active Directory Users and Computers on the DC. Most likely the computer could not be re-named"
         Write-Host "after keypress, we will try rename-computer -newname $nodename , as this is most-likely the issue"
-		Pause
+		pause
 		Rename-Computer -NewName $Nodename
-		Pause
         }
 #    }
 #Until ($Domain_OK.HasSucceeded)
