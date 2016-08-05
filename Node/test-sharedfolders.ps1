@@ -1,6 +1,6 @@
 ﻿<#
 .Synopsis
-   Short description
+   script tests if shared folders are vailable within guest os
 .DESCRIPTION
    labbuildr is a Self Installing Windows/Networker/NMM Environemnt Supporting Exchange 2013 and NMM 3.0
 .LINK
@@ -11,6 +11,7 @@
 param (
 $Folder = "\\vmware-host\shared folders"
 )
+Write-Host -ForegroundColor Gray " ==>testing shared folders"
 do {
 
     $Enabled = Test-Path $folder
@@ -23,4 +24,4 @@ do {
         }
     }
 until ($Enabled -match $true)
-write-warning "Shared-Folders are enabled"
+write-host -ForegroundColor Gray " ==>Shared-Folders are enabled"

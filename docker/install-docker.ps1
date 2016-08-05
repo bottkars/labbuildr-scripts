@@ -38,7 +38,7 @@ $Uri = "$Docker_Uri/$Docker_Downloadfile"
 Start-BitsTransfer $Uri -Description "Downloding Docker $Docker_VER" -Destination $env:TEMP
 Write-Host -ForegroundColor Gray " ==>expanding archive $Docker_Downloadfile"
 Expand-Archive -Path "$env:TEMP\$Docker_Downloadfile" -DestinationPath $env:ProgramFiles
-Write-Host -ForegroundColor Gray " ==> adding docker path to environment"
+Write-Host -ForegroundColor Gray " ==>adding docker path to environment"
 [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Program Files\Docker", [EnvironmentVariableTarget]::Machine)
 $env:Path = $env:Path + ";C:\Program Files\Docker"
 Write-Host -ForegroundColor Gray " ==>registering docker service"
@@ -52,5 +52,7 @@ Write-Host -ForegroundColor Gray " ==>getting nanoserver containerimage from doc
 # docker pull microsoft/windowsservercore:10.0.14300.1030
 docker pull microsoft/nanoserver:10.0.14300.1030
 Write-Host -ForegroundColor Gray " ==>starting nanoserver container using hyper-v as isolator"
-docker run -it --isolation=hyperv microsoft/nanoserver:10.0.14300.1030 cmd
+Start-Process "docker" -ArgumentList "run -it --isolation=hyperv microsoft/nanoserver:10.0.14300.1030 cmd"
+Write-Host -ForegroundColor Gray " ==>starting docker statistics"
+Start-Process "docker" -ArgumentList "stats"
 # docker tag windowsservercore:10.0.14300.1030 windowsservercore:latest
