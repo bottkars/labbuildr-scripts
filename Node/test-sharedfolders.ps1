@@ -11,7 +11,7 @@
 param (
 $Folder = "\\vmware-host\shared folders"
 )
-Write-Host -ForegroundColor Gray " ==>testing shared folders"
+Write-Host -ForegroundColor Gray " ==>testing shared folders $Folder"
 do {
 
     $Enabled = Test-Path $folder
@@ -24,4 +24,4 @@ do {
         }
     }
 until ($Enabled -match $true)
-write-host -ForegroundColor Gray " ==>Shared-Folders are enabled"
+write-host -ForegroundColor Gray " ==>shared folders $Folder are enabled"
