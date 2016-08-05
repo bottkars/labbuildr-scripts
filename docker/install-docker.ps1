@@ -49,6 +49,7 @@ Start-Service Docker
 # Install-ContainerImage -Name WindowsServerCore
 # Restart-Service docker
 Write-Host -ForegroundColor Gray " ==>getting docker windowsservercore"
-docker pull microsoft/windowsservercore:10.0.14300.1030
+#docker pull microsoft/windowsservercore:10.0.14300.1030
+docker pull microsoft/nanoserver:10.0.14300.1030
 pause
 # docker tag windowsservercore:10.0.14300.1030 windowsservercore:latest
