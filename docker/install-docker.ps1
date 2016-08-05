@@ -48,8 +48,9 @@ Start-Service Docker
 # Install-PackageProvider ContainerImage -Force
 # Install-ContainerImage -Name WindowsServerCore
 # Restart-Service docker
-Write-Host -ForegroundColor Gray " ==>getting docker windowsservercore"
-docker pull microsoft/windowsservercore:10.0.14300.1030
-# docker pull microsoft/nanoserver:10.0.14300.1030
-pause
+Write-Host -ForegroundColor Gray " ==>getting nanoserver containerimage from dockerhub"
+# docker pull microsoft/windowsservercore:10.0.14300.1030
+docker pull microsoft/nanoserver:10.0.14300.1030
+Write-Host -ForegroundColor Gray " ==>starting nanoserver container using hyper-v as isolator"
+docker run -it --isolation=hyperv microsoft/nanoserver:10.0.14300.1030 cmd
 # docker tag windowsservercore:10.0.14300.1030 windowsservercore:latest
