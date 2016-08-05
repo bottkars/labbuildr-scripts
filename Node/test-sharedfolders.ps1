@@ -25,3 +25,4 @@ do {
     }
 until ($Enabled -match $true)
 write-host -ForegroundColor Gray " ==>shared folders $Folder are enabled"
+return
