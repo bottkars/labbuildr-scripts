@@ -46,9 +46,10 @@ Write-Host -ForegroundColor Gray " ==>starting docker service"
 Start-Service Docker
 # Install-PackageProvider ContainerImage -Force
 # Install-ContainerImage -Name WindowsServerCore
-# Restart-Service docker
+# 
 Write-Host -ForegroundColor Gray " ==>getting nanoserver containerimage from dockerhub"
 # docker pull microsoft/windowsservercore:10.0.14300.1030
+Restart-Service docker
 Start-Process "docker" -ArgumentList "pull microsoft/nanoserver:10.0.14300.1030" -Wait -PassThru
 Write-Host -ForegroundColor Gray " ==>starting nanoserver container using hyper-v as isolator"
 Start-Process "docker" -ArgumentList "run -it --isolation=hyperv microsoft/nanoserver:10.0.14300.1030 cmd"
