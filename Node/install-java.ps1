@@ -53,7 +53,7 @@ switch ($java_ver)
     Write-Verbose "Checking for Java 8"
     if (!($Java8 = Get-ChildItem -Path $Sourcepath -Filter 'jre-8*x64*'))
         {
-	    Write-Host -ForegroundColor Gray " ==> Java8 not found, please use get-labjava8"
+	    Write-Host -ForegroundColor Gray " ==> Java8 not found, please use receive-labjava64"
         break
         }
     else
