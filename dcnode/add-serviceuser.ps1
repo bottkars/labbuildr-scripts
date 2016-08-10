@@ -3,7 +3,7 @@
    labbuildr allows you to create Virtual Machines with VMware Workstation froim Predefined Scenarios.
    Scenarios include Exchange 2013, SQL, Hyper-V, SCVMM
 .DESCRIPTION
-   labbuildr is a Self Installing Windows/Networker/NMM Environemnt Supporting Exchange 2013 and NMM 3.0
+   labbuildr builds your on-demand labs
 .LINK
    https://github.com/bottkars/labbuildr/wiki
 #>
