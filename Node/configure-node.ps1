@@ -175,7 +175,7 @@ Write-Host -ForegroundColor Gray " ==>setting low risk associations"
 $Associations = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments"
 if (!(test-path $Associations))
 	{
-	New-Item -ItemType Directory $Associations
+	$Item = New-Item -ItemType Directory $Associations
 	}
 Set-ItemProperty -Path $Associations -Name "LowRiskFileTypes" -Value ".exe;.bat;.reg;.vbs"
 
