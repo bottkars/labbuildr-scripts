@@ -49,6 +49,14 @@ $lclanguage = (Get-WmiObject Win32_OperatingSystem).oslanguage
             $DomainAdmins = "Domain Admins"
             }
         }
+Write-Host -ForegroundColor Gray " ==>setting low risk associations"
+$Associations = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Associations"
+if (!(test-path $Associations))
+	{
+	New-Item -ItemType Directory $Associations
+	}
+Set-ItemProperty -Path $Associations -Name "LowRiskFileTypes" -Value ".exe;.bat;.reg;.vbs"
+
 Enable-PSRemoting -Confirm:$false -Force
 Set-Item -Path WSMan:\localhost\Service\Auth\Basic -Value True
 Set-Item -Path WSMan:\localhost\Service\AllowRemoteAccess True

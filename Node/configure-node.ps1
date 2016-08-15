@@ -171,6 +171,14 @@ $Zonemaps = ("HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings\
     $Range1 | New-ItemProperty -Name ":Range" -Value $vmwarehost
     $Range1 | New-ItemProperty -Name "file" -PropertyType DWORD -Value  "1"
    }
+Write-Host -ForegroundColor Gray " ==>setting low risk associations"
+$Associations = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments"
+if (!(test-path $Associations))
+	{
+	New-Item -ItemType Directory $Associations
+	}
+Set-ItemProperty -Path $Associations -Name "LowRiskFileTypes" -Value ".exe;.bat;.reg;.vbs"
+
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Confirm:$false -Force
 New-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce -Name "Pass3" -Value "$PSHOME\powershell.exe -Command `"New-Item -ItemType File -Path c:\scripts\3.pass`""
 ."$Nodescriptdir\set-autologon.ps1" -domain $Domain -user "Administrator" -Password $PlainPassword
