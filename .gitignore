@@ -40,7 +40,11 @@ local.properties
 *.suo
 *.user
 *.sln.docstates
-
+*.pssproj 
+*.pssproj.*
+*.sln
+.vs
+./.vs
 # Build results
 
 [Dd]ebug/
