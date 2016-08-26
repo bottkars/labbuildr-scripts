@@ -1,6 +1,6 @@
 .encoding = "UTF-8"
 displayname = "viprmaster"
-annotation = "EMC ViPR Controller Labbuildr Edition"
+annotation = "EMC ViPR Controller 3 Labbuildr Edition"
 guestos = "sles11-64"
 virtualhw.version = "10"
 config.version = "8"
