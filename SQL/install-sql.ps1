@@ -163,7 +163,7 @@ Write-Verbose $Isopath
 .$Nodescriptdir\test-setup -setup $SQL_BASEVER -setuppath $Isopath
 Write-Host -ForegroundColor Gray "Copying $SQL_BASEVER ISO locally"
 Copy-Item $Isopath -Destination "$env:USERPROFILE\Downloads"
-$Temp_Iso = "$env:USERPROFILE\Downloads\$IsoFile"
+$Temp_Iso = "$env:USERPROFILE\Downloads\$Iso_File"
 $ismount = Mount-DiskImage -ImagePath $Temp_Iso -PassThru
 $Driveletter = (Get-Volume | where { $_.size -eq $ismount.Size}).driveletter
 $Setupcmd = "setup.exe"        
