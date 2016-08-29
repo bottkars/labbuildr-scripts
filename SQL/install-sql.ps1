@@ -144,10 +144,6 @@ Switch ($SQLVER)
 	    'SQL2012_ISO'  
         {
 		$Iso_File = "SQLFULL_ENU.iso"
-        Write-Host -ForegroundColor Magenta " ==> Installing NetFramework"
-        .$NodeScriptDir\install-netframework.ps1 -net_ver 461
-        Write-Host -ForegroundColor Magenta " ==> Installing Java"
-        .$NodeScriptDir\install-java.ps1 -java_ver 8
         $SQL_BASEVER = "SQL2012"
         $SQL_BASEDir = Join-Path $ProductDir $SQL_BASEVER
         $Features = 'SQL,Tools'
@@ -155,11 +151,7 @@ Switch ($SQLVER)
 		'SQL2014SP2_ISO'  
         {
 		$Iso_File = "SQLServer2014SP2-FullSlipstream-x64-ENU.iso"
-        Write-Host -ForegroundColor Magenta " ==> Installing NetFramework"
-        .$NodeScriptDir\install-netframework.ps1 -net_ver 461
-        Write-Host -ForegroundColor Magenta " ==> Installing Java"
-        .$NodeScriptDir\install-java.ps1 -java_ver 8
-        $SQL_BASEVER = "SQL2012"
+        $SQL_BASEVER = "SQL2014"
         $SQL_BASEDir = Join-Path $ProductDir $SQL_BASEVER
         $Features = 'SQL,Tools'
         }
