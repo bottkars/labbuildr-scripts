@@ -163,9 +163,6 @@ Switch ($SQLVER)
         $SQL_BASEDir = Join-Path $ProductDir $SQL_BASEVER
         $Features = 'SQL,Tools'
         }
-
-
-
     }
 
 
