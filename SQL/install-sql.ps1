@@ -158,7 +158,7 @@ Switch ($SQLVER)
     }
 
 
-$Isopath = "$SQL_BASEDir\$Iso_File"
+$Isopath = Join-path $SQL_BASEDir $Iso_File
 Write-Verbose $Isopath
 .$Nodescriptdir\test-setup -setup $SQL_BASEVER -setuppath $Isopath
 Write-Host -ForegroundColor Gray "Copying $SQL_BASEVER ISO locally"
