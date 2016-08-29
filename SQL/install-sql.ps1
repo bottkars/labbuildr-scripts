@@ -13,10 +13,11 @@ param(
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
     $logpath = "c:\Scripts",
     $Prereq ="Prereq",
-	[ValidateSet(
-    'SQL2014SP1slip','SQL2012','SQL2012SP1','SQL2012SP2','SQL2012SP1SLIP','SQL2014','SQL2016','SQL2016_ISO'
-   )]$SQLVER,
-    $Diskparameter = "",
+    [ValidateSet(#'SQL2014SP1slip','SQL2012','SQL2012SP1','SQL2012SP2','SQL2012SP1SLIP','SQL2014','SQL2016',
+	'SQL2012_ISO',
+	'SQL2014SP2_ISO',
+	'SQL2016_ISO')]$SQLVER, 
+	$Diskparameter = "",
     $DBInstance,
     $ProductDir = "SQL",
     [switch]$DefaultDBpath,
@@ -51,7 +52,7 @@ $Features = 'SQL,SSMS'
 
 Switch ($SQLVER)
     {
-    'SQL2012SP1'
+<#    'SQL2012SP1'
         {
         $SQL_BASEVER = "SQL2012"
         $SQL_BASEDir = Join-Path $ProductDir $SQL_BASEVER
@@ -121,10 +122,11 @@ Switch ($SQLVER)
         .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
         $Features = 'SQL,Tools,Polybase'
         $Java_required  = $true
-        }
+        }#>
       'SQL2016_ISO'  
         {
-         Write-Host -ForegroundColor Magenta " ==> Installing NetFramework"
+		$Iso_File = "SQLServer2016-x64-ENU.iso"
+        Write-Host -ForegroundColor Magenta " ==> Installing NetFramework"
         .$NodeScriptDir\install-netframework.ps1 -net_ver 461
         Write-Host -ForegroundColor Magenta " ==> Installing Java"
         .$NodeScriptDir\install-java.ps1 -java_ver 8
@@ -136,20 +138,49 @@ Switch ($SQLVER)
         .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
         $Arguments = "/install /passive /norestart"
         Start-Process $Setuppath -ArgumentList  $Arguments -Wait -PassThru
-        $Isopath = "$SQL_BASEDir\SQLServer2016-x64-ENU.iso"
-        Write-Verbose $Isopath
-        .$Nodescriptdir\test-setup -setup $SQL_BASEVER -setuppath $Isopath
-        Write-Host -ForegroundColor Gray "Copying $SQL_BASEVER ISO locally"
-        Copy-Item $Isopath -Destination "$env:USERPROFILE\Downloads"
-        $Temp_Iso = "$env:USERPROFILE\Downloads\SQLServer2016-x64-ENU.iso"
-        $ismount = Mount-DiskImage -ImagePath $Temp_Iso -PassThru
-        $Driveletter = (Get-Volume | where { $_.size -eq $ismount.Size}).driveletter
-        $Setupcmd = "setup.exe"        
-        $Setuppath = "$($Driveletter):\$Setupcmd"
         $Features = 'SQL,Tools,Polybase'
         $Java_required  = $true
         }
+	    'SQL2012_ISO'  
+        {
+		$Iso_File = "SQLFULL_ENU.iso"
+        Write-Host -ForegroundColor Magenta " ==> Installing NetFramework"
+        .$NodeScriptDir\install-netframework.ps1 -net_ver 461
+        Write-Host -ForegroundColor Magenta " ==> Installing Java"
+        .$NodeScriptDir\install-java.ps1 -java_ver 8
+        $SQL_BASEVER = "SQL2012"
+        $SQL_BASEDir = Join-Path $ProductDir $SQL_BASEVER
+        $Features = 'SQL,Tools'
+        }
+		'SQL2014SP2_ISO'  
+        {
+		$Iso_File = "SQLServer2014SP2-FullSlipstream-x64-ENU.iso"
+        Write-Host -ForegroundColor Magenta " ==> Installing NetFramework"
+        .$NodeScriptDir\install-netframework.ps1 -net_ver 461
+        Write-Host -ForegroundColor Magenta " ==> Installing Java"
+        .$NodeScriptDir\install-java.ps1 -java_ver 8
+        $SQL_BASEVER = "SQL2012"
+        $SQL_BASEDir = Join-Path $ProductDir $SQL_BASEVER
+        $Features = 'SQL,Tools'
+        }
+
+
+
     }
+
+
+$Isopath = "$SQL_BASEDir\$Iso_File"
+Write-Verbose $Isopath
+.$Nodescriptdir\test-setup -setup $SQL_BASEVER -setuppath $Isopath
+Write-Host -ForegroundColor Gray "Copying $SQL_BASEVER ISO locally"
+Copy-Item $Isopath -Destination "$env:USERPROFILE\Downloads"
+$Temp_Iso = "$env:USERPROFILE\Downloads\$IsoFile"
+$ismount = Mount-DiskImage -ImagePath $Temp_Iso -PassThru
+$Driveletter = (Get-Volume | where { $_.size -eq $ismount.Size}).driveletter
+$Setupcmd = "setup.exe"        
+$Setuppath = "$($Driveletter):\$Setupcmd"
+
+
 if (!$DefaultDBpath.IsPresent)
     {
     $Diskparameter = "/SQLUSERDBDIR=m:\ /SQLUSERDBLOGDIR=n:\ /SQLTEMPDBDIR=o:\ /SQLTEMPDBLOGDIR=p:\"
