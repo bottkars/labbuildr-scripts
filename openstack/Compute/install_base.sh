@@ -1,5 +1,27 @@
 #!/bin/bash
-#### Define Colors
+# Openstack Controller with Parameters
+
+while [[ $# -gt 1 ]]
+do
+key="$1"
+
+case $key in
+    -cip|--controllerip)
+    CONTROLLERIP="$2"
+    shift # past argument
+    ;;
+    -cname|--controller_name)
+    CONTROLLERNAME="$2"
+    shift # past argument
+    ;;
+    *)
+            # unknown option
+    ;;
+esac
+shift # past argument or value
+done
+
+
 red='\e[1;31m%s\e[0m\n'
 green='\e[1;32m%s\e[0m\n'
 yellow='\e[1;33m%s\e[0m\n'
@@ -19,10 +41,10 @@ printf "$green" '############################
 ############################'
 printf '\n'
 
-echo -n ' Bitte Controller IP eingeben: '
-read CONTROLLERIP
-echo -n ' Bitte Controller Shortname eingeben: '
-read CONTROLLERNAME
+#echo -n ' Bitte Controller IP eingeben: '
+#read CONTROLLERIP
+#echo -n ' Bitte Controller Shortname eingeben: '
+#read CONTROLLERNAME
 
 printf '### Controller Name: '$CONTROLLERNAME'\n'
 printf '### Controller IP: '$CONTROLLERIP'\n\n'
