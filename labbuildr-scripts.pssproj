@@ -32,6 +32,9 @@
     <Folder Include="openstack4labbuildr\Compute\configs\" />
     <Folder Include="openstack4labbuildr\Controller\" />
     <Folder Include="openstack4labbuildr\Controller\configs\" />
+    <Folder Include="openstack\" />
+    <Folder Include="openstack\Controller\" />
+    <Folder Include="openstack\Controller\logs\" />
     <Folder Include="viprmaster\" />
   </ItemGroup>
   <ItemGroup>

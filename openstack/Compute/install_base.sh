@@ -7,7 +7,7 @@ yellow='\e[1;33m%s\e[0m\n'
 LOCALHOSTNAME=$(hostname)
 LOCALIP=$(ifconfig eth0 | awk '/inet addr/{print substr($2,6)}')
 
-while [[ $# -gt 1 ]]
+while [ $# -gt 1 ]
 do
 key="$1"
 case $key in
