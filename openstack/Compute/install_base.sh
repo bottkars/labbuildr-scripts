@@ -27,17 +27,18 @@ shift # past argument or value
 done
 
 # Check if controllerip and ist set
-#	if [ -z $CONTROLLERIP ]; then 
-#		printf "Please set Controller IP
-#[-cip | --controllerip] X.X.X.X \n"
-#		exit
-#	fi
+	if [ -z $CONTROLLERIP ]; then 
+		printf "Please set Controller IP
+		[-cip | --controllerip] X.X.X.X \n"
+		exit
+	fi
 # Check if controller_name and ist set
-#	if [ -z $CONTROLLERNAME ]; then 
-#		printf "Please set Controller Name
-#[-cname | --controller_name] X.X.X.X \n"
-#		exit
-#	fi	
+	if [ -z $CONTROLLERNAME ]; then 
+		printf "Please set Controller Name
+		[-cname | --controller_name] X.X.X.X \n"
+		exit
+	fi
+		
 	
 #Switch to script dir
 cd "$( dirname "${BASH_SOURCE[0]}" )"
