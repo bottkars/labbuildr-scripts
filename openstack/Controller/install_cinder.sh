@@ -15,10 +15,10 @@ printf "\n\n #### Start Cinder Installation \n"
 
 ### Install
 	printf " ### Install Packages "
-		if apt-get install cinder-api cinder-scheduler python-cinderclient cinder-volume -y >> ./logs/cinder.log 2>&1; then
+		if apt-get install cinder-api cinder-scheduler python-cinderclient cinder-volume -y >> /tmp/os_logs/cinder.log 2>&1; then
 			printf $green " --> done"
 		else
-			printf $red " --> Could not install Cinder Packages - see $(pwd)/logs/Cinder.log"
+			printf $red " --> Could not install Cinder Packages - see /tmp/os_logs/cinder.log"
 		fi		
 		
 #Copy Predefined Configs
@@ -41,18 +41,18 @@ os_region_name = RegionOne" >> /etc/nova/nova.conf
 
 #Populate Database
 	printf " ### Populate Cinder Database "
-		if su -s /bin/sh -c "cinder-manage db sync" cinder >> ./logs/cinder.log 2>&1; then
+		if su -s /bin/sh -c "cinder-manage db sync" cinder >> /tmp/os_logs/cinder.log 2>&1; then
 	printf $green " --> done"
 		else
-			printf $red " --> Could not populate Cinder Database - see $(pwd)/logs/cinder.log"		
+			printf $red " --> Could not populate Cinder Database - see /tmp/os_logs/cinder.log"		
 		fi
 		
 #Restart Services
 		printf " ### Restart Cinder and Cinder related Services"
-			if service nova-api restart >> ./logs/nova.log 2>&1; 				then printf " --> Restart Nova-api done\n"; 				else printf  " --> Could not restart Nova-api Service - see $(pwd)/logs/cinder.log\n"; fi
-			if service cinder-api restart >> ./logs/cinder.log 2>&1; 				then printf " --> Restart cinder-api done\n"; 				else printf  " --> Could not restart cinder-api Service - see $(pwd)/logs/cinder.log\n"; fi
-			if service cinder-scheduler restart >> ./logs/cinder.log 2>&1; 	then printf " --> Restart cinder-scheduler done\n";	else printf  " --> Could not restart cinder-scheduler Service - see $(pwd)/logs/cinder.log\n"; fi
-			if service cinder-volume restart >> ./logs/cinder.log 2>&1; 		then printf " --> Restart cinder-volume done\n"; 		else printf  " --> Could not restart cinder-volume Service - see $(pwd)/logs/cinder.log\n"; fi
+			if service nova-api restart >> /tmp/os_logs/nova.log 2>&1; 				then printf " --> Restart Nova-api done\n"; 				else printf  " --> Could not restart Nova-api Service - see /tmp/os_logs/cinder.log\n"; fi
+			if service cinder-api restart >> /tmp/os_logs/cinder.log 2>&1; 			then printf " --> Restart cinder-api done\n"; 			else printf  " --> Could not restart cinder-api Service - see /tmp/os_logs/cinder.log\n"; fi
+			if service cinder-scheduler restart >> /tmp/os_logs/cinder.log 2>&1; 	then printf " --> Restart cinder-scheduler done\n";	else printf  " --> Could not restart cinder-scheduler Service - see /tmp/os_logs/cinder.log\n"; fi
+			if service cinder-volume restart >> /tmp/os_logs/cinder.log 2>&1; 		then printf " --> Restart cinder-volume done\n"; 		else printf  " --> Could not restart cinder-volume Service - see /tmp/os_logs/cinder.log\n"; fi
 
 ##Remove cinder dummy database
 	printf " ### Remove Cinder Dummy Database"

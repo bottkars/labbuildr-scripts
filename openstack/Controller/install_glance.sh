@@ -11,10 +11,10 @@ printf "\n\n #### Start Glance Installation \n"
 
 ### Install
 	printf " ### Install Packages "
-		if apt-get install glance python-glanceclient -y >> ./logs/glance.log 2>&1 >> ./logs/glance.log 2>&1; then
+		if apt-get install glance python-glanceclient -y >> /tmp/os_logs/glance.log 2>&1 >> /tmp/os_logs/glance.log 2>&1; then
 					printf $green " --> done"
 		else
-			printf $red " --> Could not install Glance Packages - see $(pwd)/logs/glance.log"
+			printf $red " --> Could not install Glance Packages - see /tmp/os_logs/glance.log"
 		fi				
 
 #Copy Predefined Configs
@@ -35,16 +35,16 @@ printf "\n\n #### Start Glance Installation \n"
 	
 	### Populate Database
 	printf " ### Populate Glance Database "
-		if su -s /bin/sh -c "glance-manage db_sync" glance >> ./logs/glance.log 2>&1 >> ./logs/glance.log 2>&1; then
+		if su -s /bin/sh -c "glance-manage db_sync" glance >> /tmp/os_logs/glance.log 2>&1 >> /tmp/os_logs/glance.log 2>&1; then
 			printf $green " --> done"
 		else
-			printf $red " --> Could not populate Glance Database - see $(pwd)/logs/glance.log"		
+			printf $red " --> Could not populate Glance Database - see /tmp/os_logs/glance.log"		
 		fi
 
 	### Restart Glance-Api
 	printf " ### Restart Glance Services"
-		if service glance-api restart >> ./logs/glance.log 2>&1; 		then printf $green " --> Restart Glance-Api done"; 			else printf $red " --> Could not restart Glance-Api Service - see $(pwd)/logs/glance.log"; fi
-		if service glance-registry restart >> ./logs/glance.log 2>&1; then printf $green " --> Restart Glance-Registry done"; 	else printf $red " --> Could not restart Glance-Registry Service - see $(pwd)/logs/glance.log"; fi		
+		if service glance-api restart >> /tmp/os_logs/glance.log 2>&1; 		then printf $green " --> Restart Glance-Api done"; 			else printf $red " --> Could not restart Glance-Api Service - see /tmp/os_logs/glance.log"; fi
+		if service glance-registry restart >> /tmp/os_logs/glance.log 2>&1; then printf $green " --> Restart Glance-Registry done"; 	else printf $red " --> Could not restart Glance-Registry Service - see /tmp/os_logs/glance.log"; fi		
 	
 	#Remove glance dummy database
 	printf " ### Remove Glance Dummy Database"

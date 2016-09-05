@@ -13,10 +13,10 @@ printf "\n\n #### Start Nova Installation \n"
 
 	### Install
 	printf " ### Install Packages "
-		if apt-get install nova-compute -y >> ./logs/nova.log 2>&1; then
+		if apt-get install nova-compute -y >> /tmp/os_logs/nova.log 2>&1; then
 			printf $green " --> done"
 		else
-			printf $red " --> Could not install Nova Packages - see $(pwd)/logs/nova.log"
+			printf $red " --> Could not install Nova Packages - see /tmp/os_logs/nova.log"
 		fi			
 
 	printf " ### Configure Nova \n"
@@ -68,7 +68,7 @@ lock_path = /var/lib/nova/tmp
 	
 #Restart Services
 	printf " ### Restart Nova Services"
-			if service nova-compute restart >> ./logs/nova.log 2>&1; 				then printf " --> Restart Nova-compute done\n"; 				else printf  " --> Could not restart Nova-compute Service - see $(pwd)/logs/nova.log\n";fi
+			if service nova-compute restart >> /tmp/os_logs/nova.log 2>&1; 				then printf " --> Restart Nova-compute done\n"; 				else printf  " --> Could not restart Nova-compute Service - see /tmp/os_logs/nova.log\n";fi
 			
 	#Remove nova dummy database
 	printf " ### Remove Nova Dummy Database"

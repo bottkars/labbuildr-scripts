@@ -29,16 +29,15 @@ done
 # Check if controllerip and ist set
 	if [ -z $CONTROLLERIP ]; then 
 		printf "Please set Controller IP
-		[-cip | --controllerip] X.X.X.X \n"
+[-cip | --controllerip] X.X.X.X \n"
 		exit
 	fi
 # Check if controller_name and ist set
 	if [ -z $CONTROLLERNAME ]; then 
 		printf "Please set Controller Name
-		[-cname | --controller_name] X.X.X.X \n"
+[-cname | --controller_name] X.X.X.X \n"
 		exit
-	fi
-		
+	fi	
 	
 #Switch to script dir
 cd "$( dirname "${BASH_SOURCE[0]}" )"
@@ -65,41 +64,41 @@ printf " #### Prepare Installation\n"
 				printf $green " --> OK"
 		fi
 
-	printf " ### Create Log Files on $(pwd)/logs\t"
-		if mkdir logs && touch ./logs/general.log ./logs/nova.log ./logs/neutron.log ; then
+	printf " ### Create Log Files on /tmp/os_logs\t"
+		if mkdir /tmp/os_logs && touch /tmp/os_logs/general.log /tmp/os_logs/nova.log /tmp/os_logs/neutron.log ; then
 			printf $green " --> done"
 	else	
 		printf $red " --> Could not create Log Files"
 	fi
 	
 	printf " ### Make Scripts executable\t"	
-		if chmod +x install_nova.sh install_neutron.sh >> ./logs/general.log 2>&1; then
+		if chmod +x install_nova.sh install_neutron.sh >> /tmp/os_logs/general.log 2>&1; then
 			printf $green "--> done"
 	else
-		printf $red " --> Could not set permissions - see $(pwd)/logs/general.log"
+		printf $red " --> Could not set permissions - see /tmp/os_logs/general.log"
 	fi	
 
 
 printf " #### Add Repositories\n"
 	printf " ### Openstack Liberty"
-		if (apt-get install software-properties-common -y && add-apt-repository cloud-archive:liberty -y) >> ./logs/general.log 2>&1; then
+		if (apt-get install software-properties-common -y && add-apt-repository cloud-archive:liberty -y) >> /tmp/os_logs/general.log 2>&1; then
 			printf $green " --> done"
 		else
-			printf $red " --> Could not add Liberty Repo - see $(pwd)/logs/general.log"
+			printf $red " --> Could not add Liberty Repo - see /tmp/os_logs/general.log"
 		fi
 	
 	
 printf " #### Install Basic Tools\n"
 
 	printf " ### Update Package List"
-		apt-get update >> ./logs/general.log 2>&1
+		apt-get update >> /tmp/os_logs/general.log 2>&1
 	printf $green " --> done"
 
 	printf " ### Install Python-Pymysql and Python-Openstackclient"
-		if apt-get install python-openstackclient python-pymysql -y >> ./logs/general.log 2>&1; then
+		if apt-get install python-openstackclient python-pymysql -y >> /tmp/os_logs/general.log 2>&1; then
 			printf $green " --> done"
 		else
-			printf $red " --> Could not install Packages - see $(pwd)/logs/general.log"
+			printf $red " --> Could not install Packages - see /tmp/os_logs/general.log"
 		fi
 
 ./install_nova.sh $LOCALIP $CONTROLLERIP $CONTROLLERNAME

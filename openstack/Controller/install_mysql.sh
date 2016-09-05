@@ -19,16 +19,16 @@ printf " ####Start MariaDB Installation \n"
 
 ### Install MariaDB 10.1
 	printf " ### Install Packages "
-		if apt-get install mariadb-server-10.1 -y >> ./logs/mysql.log 2>&1; then
+		if apt-get install mariadb-server-10.1 -y >> /tmp/os_logs/mysql.log 2>&1; then
 			printf $green " --> done"
 		else
-			printf $red " --> Could not install MariaDB Packages - see $(pwd)/logs/mysql.log"
+			printf $red " --> Could not install MariaDB Packages - see /tmp/os_logs/mysql.log"
 		fi
 
 
 ### Stop Service
 	printf "### Stop mysqld service \n"
-		service mysql stop >> ./logs/mysql.log 2>&1
+		service mysql stop >> /tmp/os_logs/mysql.log 2>&1
 
 ### Configure
 	printf " ### Configure Mysql \n"
@@ -37,18 +37,18 @@ printf " ####Start MariaDB Installation \n"
 
 ### Start MariaDB-Server
 	printf " ### Start mysqld service"
-		if service mysql start >> ./logs/mysql.log 2>&1; then
+		if service mysql start >> /tmp/os_logs/mysql.log 2>&1; then
 			printf $green " --> done"
 		else
-			printf $red " --> Could not start mysqld service - see $(pwd)/logs/mysql.log"
+			printf $red " --> Could not start mysqld service - see /tmp/os_logs/mysql.log"
 		fi
 
 	printf ' ### Create Tables'
-	if (mysql -u root --password='Password123!' -e "CREATE DATABASE keystone;") >> ./logs/mysql.log 2>&1; 	then printf " ## Keystone Database created\n"; 	else printf " --> Could not create Keystone Database - see $(pwd)/logs/mysql.log\n"; fi
-	if (mysql -u root --password='Password123!' -e "CREATE DATABASE glance;") >> ./logs/mysql.log 2>&1; 		then printf " ## Glance Database created\n"; 		else printf " --> Could not create Glance Database - see $(pwd)/logs/mysql.log\n"; fi
-	if (mysql -u root --password='Password123!' -e "CREATE DATABASE nova;") >> ./logs/mysql.log 2>&1; 			then printf " ## Nova Database created\n"; 		else printf " --> Could not create Nova Database - see $(pwd)/logs/mysql.log\n"; fi
-	if (mysql -u root --password='Password123!' -e "CREATE DATABASE neutron;") >> ./logs/mysql.log 2>&1; 		then printf " ## Neutron Database created\n"; 	else printf " --> Could not create Neutron Database - see $(pwd)/logs/mysql.log\n"; fi
-	if (mysql -u root --password='Password123!' -e "CREATE DATABASE cinder;") >> ./logs/mysql.log 2>&1; 		then printf " ## Cinder Database created\n"; 		else printf " --> Could not create Cinder Database - see $(pwd)/logs/mysql.log\n"; fi
+	if (mysql -u root --password='Password123!' -e "CREATE DATABASE keystone;") >> /tmp/os_logs/mysql.log 2>&1; 	then printf " ## Keystone Database created\n"; 	else printf " --> Could not create Keystone Database - see /tmp/os_logs/mysql.log\n"; fi
+	if (mysql -u root --password='Password123!' -e "CREATE DATABASE glance;") >> /tmp/os_logs/mysql.log 2>&1; 		then printf " ## Glance Database created\n"; 		else printf " --> Could not create Glance Database - see /tmp/os_logs/mysql.log\n"; fi
+	if (mysql -u root --password='Password123!' -e "CREATE DATABASE nova;") >> /tmp/os_logs/mysql.log 2>&1; 			then printf " ## Nova Database created\n"; 		else printf " --> Could not create Nova Database - see /tmp/os_logs/mysql.log\n"; fi
+	if (mysql -u root --password='Password123!' -e "CREATE DATABASE neutron;") >> /tmp/os_logs/mysql.log 2>&1; 		then printf " ## Neutron Database created\n"; 	else printf " --> Could not create Neutron Database - see /tmp/os_logs/mysql.log\n"; fi
+	if (mysql -u root --password='Password123!' -e "CREATE DATABASE cinder;") >> /tmp/os_logs/mysql.log 2>&1; 		then printf " ## Cinder Database created\n"; 		else printf " --> Could not create Cinder Database - see /tmp/os_logs/mysql.log\n"; fi
 			
 	printf " ### Create SQL User and Permissions "	
 		#Keystone

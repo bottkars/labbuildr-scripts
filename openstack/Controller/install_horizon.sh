@@ -12,17 +12,17 @@ printf "\n\n #### Start Horizon Installation \n"
 
 ### Install
 	printf " ### Install Packages "
-		if apt-get install openstack-dashboard -y >> ./logs/horizon.log 2>&1; then
+		if apt-get install openstack-dashboard -y >> /tmp/os_logs/horizon.log 2>&1; then
 			printf $green " --> done"
 		else
-			printf $red " --> Could not install Horizon Packages - see $(pwd)/logs/horizon.log"
+			printf $red " --> Could not install Horizon Packages - see /tmp/os_logs/horizon.log"
 		fi		
 ## Remove ubuntu theme (because of bugs)
 	printf " ### Remove  openstack-dashboard-ubuntu-theme"
-		if apt-get remove --auto-remove openstack-dashboard-ubuntu-theme -y >> ./logs/horizon.log 2>&1; then 
+		if apt-get remove --auto-remove openstack-dashboard-ubuntu-theme -y >> /tmp/os_logs/horizon.log 2>&1; then 
 				printf $green " --> done"
 		else
-			printf $red " --> Could not remove  openstack-dashboard-ubuntu-theme - see $(pwd)/logs/horizon.log"
+			printf $red " --> Could not remove  openstack-dashboard-ubuntu-theme - see /tmp/os_logs/horizon.log"
 		fi		
 		
 #Copy predefined Config
@@ -34,4 +34,4 @@ printf "\n\n #### Start Horizon Installation \n"
 
 #Restart Service
 	printf " ### Restart Apache2 Service"
-		if service apache2 restart >> ./logs/horizon.log 2>&1; then printf " --> done\n"; else printf  " --> Could not restart  Apache2 Service - see $(pwd)/logs/horizon.log\n"; fi 
+		if service apache2 restart >> /tmp/os_logs/horizon.log 2>&1; then printf " --> done\n"; else printf  " --> Could not restart  Apache2 Service - see /tmp/os_logs/horizon.log\n"; fi 

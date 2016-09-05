@@ -7,35 +7,35 @@ printf " #### Start RabbitMQ Installation \n"
 
 ### Install 
 	printf " ### Install Packages "
-		if apt-get install rabbitmq-server -y >> ./logs/rabbitmq.log 2>&1; then
+		if apt-get install rabbitmq-server -y >> /tmp/os_logs/rabbitmq.log 2>&1; then
 			printf $green " --> done"
 		else
-			printf $red " --> Could not install RabbitMQ Packages - see $(pwd)/logs/rabbitmq.log"
+			printf $red " --> Could not install RabbitMQ Packages - see /tmp/os_logs/rabbitmq.log"
 		fi			
 
 ### Configure Management plugins
 	printf " ### Configure Management Plugins "
-		if rabbitmq-plugins enable rabbitmq_management >> ./logs/rabbitmq.log 2>&1; then
+		if rabbitmq-plugins enable rabbitmq_management >> /tmp/os_logs/rabbitmq.log 2>&1; then
 			printf $green " --> done"	
 		else
-			printf $red " --> Could not configure Management Plugins - see $(pwd)/logs/rabbitmq.log"
+			printf $red " --> Could not configure Management Plugins - see /tmp/os_logs/rabbitmq.log"
 		fi			
 
 ### Restart Service
 
 	printf " ### Start mysqld service"
-		if service rabbitmq-server restart >> ./logs/rabbitmq.log 2>&1; then
+		if service rabbitmq-server restart >> /tmp/os_logs/rabbitmq.log 2>&1; then
 			printf $green " --> done"
 		else
-			printf $red " --> Could not restart rabbitmq-server service - see $(pwd)/logs/rabbitmq.log"
+			printf $red " --> Could not restart rabbitmq-server service - see /tmp/os_logs/rabbitmq.log"
 		fi
 	
 	printf '### Create Users '
-		if (rabbitmqctl add_user nova_ctrl Password123!) >> ./logs/rabbitmq.log 2>&1; 				then printf " ## Created user nova_ctrl \n"; 				else printf " Could not create user nova_ctrl - see $(pwd)/logs/rabbitmq.log\n"; fi
-		if (rabbitmqctl add_user nova_compute Password123!) >> ./logs/rabbitmq.log 2>&1; 		then printf " ## Created user nova_compute \n"; 		else printf " Could not create user nova_compute - see $(pwd)/logs/rabbitmq.log\n"; fi
-		if (rabbitmqctl add_user neutron Password123!) >> ./logs/rabbitmq.log 2>&1; 				then printf " ## Created user neutron \n"; 					else printf " Could not create user neutron - see $(pwd)/logs/rabbitmq.log\n"; fi
-		if (rabbitmqctl add_user neutron_compute Password123!) >> ./logs/rabbitmq.log 2>&1; 	then printf " ## Created user neutron_compute \n";	else printf " Could not create user neutron_compute - see $(pwd)/logs/rabbitmq.log\n"; fi
-		if (rabbitmqctl add_user cinder Password123!) >> ./logs/rabbitmq.log 2>&1; 					then printf " ## Created user cinder \n"; 					else printf " Could not create user cinder - see $(pwd)/logs/rabbitmq.log\n"; fi
+		if (rabbitmqctl add_user nova_ctrl Password123!) >> /tmp/os_logs/rabbitmq.log 2>&1; 				then printf " ## Created user nova_ctrl \n"; 				else printf " Could not create user nova_ctrl - see /tmp/os_logs/rabbitmq.log\n"; fi
+		if (rabbitmqctl add_user nova_compute Password123!) >> /tmp/os_logs/rabbitmq.log 2>&1; 		then printf " ## Created user nova_compute \n"; 		else printf " Could not create user nova_compute - see /tmp/os_logs/rabbitmq.log\n"; fi
+		if (rabbitmqctl add_user neutron Password123!) >> /tmp/os_logs/rabbitmq.log 2>&1; 				then printf " ## Created user neutron \n"; 					else printf " Could not create user neutron - see /tmp/os_logs/rabbitmq.log\n"; fi
+		if (rabbitmqctl add_user neutron_compute Password123!) >> /tmp/os_logs/rabbitmq.log 2>&1; 	then printf " ## Created user neutron_compute \n";	else printf " Could not create user neutron_compute - see /tmp/os_logs/rabbitmq.log\n"; fi
+		if (rabbitmqctl add_user cinder Password123!) >> /tmp/os_logs/rabbitmq.log 2>&1; 					then printf " ## Created user cinder \n"; 					else printf " Could not create user cinder - see /tmp/os_logs/rabbitmq.log\n"; fi
 		
 		
 	printf '### Configure user permissions '

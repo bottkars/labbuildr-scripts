@@ -13,10 +13,10 @@ printf "\n\n #### Start Neutron Installation \n"
 
 ### Install
 	printf " ### Install Packages "
-		if apt-get install neutron-plugin-linuxbridge-agent conntrack -y >> ./logs/neutron.log 2>&1; then
+		if apt-get install neutron-plugin-linuxbridge-agent conntrack -y >> /tmp/os_logs/neutron.log 2>&1; then
 					printf $green " --> done"
 		else
-			printf $red " --> Could not install Neutron Packages - see $(pwd)/logs/neutron.log"
+			printf $red " --> Could not install Neutron Packages - see /tmp/os_logs/neutron.log"
 		fi
 
 #Copy Predefined Configs
@@ -45,6 +45,6 @@ password = Password123!
 	
 #Restart Services
 	printf " ### Restart Neutron and Neutron related Services"
-		if service nova-compute restart >> ./logs/neutron.log 2>&1; 								then printf " --> Restart Nova-compute Service done\n"; 				else printf  " --> Could not restart Nova-compute Service - see $(pwd)/logs/neutron.log\n"; fi
-		if service neutron-plugin-linuxbridge-agent restart >> ./logs/neutron.log 2>&1; 	then printf " --> Restart neutron-plugin-linuxbridge-agent done\n"; 	else printf  " --> Could not restart neutron-plugin-linuxbridge-agent Service - see $(pwd)/logs/neutron.log\n"; fi
+		if service nova-compute restart >> /tmp/os_logs/neutron.log 2>&1; 								then printf " --> Restart Nova-compute Service done\n"; 				else printf  " --> Could not restart Nova-compute Service - see /tmp/os_logs/neutron.log\n"; fi
+		if service neutron-plugin-linuxbridge-agent restart >> /tmp/os_logs/neutron.log 2>&1; 	then printf " --> Restart neutron-plugin-linuxbridge-agent done\n"; 	else printf  " --> Could not restart neutron-plugin-linuxbridge-agent Service - see /tmp/os_logs/neutron.log\n"; fi
 

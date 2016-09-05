@@ -12,10 +12,10 @@ printf "\n\n #### Start Nova Installation \n"
 
 	### Install
 	printf " ### Install Packages "
-		if apt-get install nova-api nova-conductor nova-consoleauth nova-novncproxy nova-scheduler python-novaclient -y >> ./logs/nova.log 2>&1; then
+		if apt-get install nova-api nova-conductor nova-consoleauth nova-novncproxy nova-scheduler python-novaclient -y >> /tmp/os_logs/nova.log 2>&1; then
 					printf $green " --> done"
 		else
-			printf $red " --> Could not install Nova Packages - see $(pwd)/logs/nova.log"
+			printf $red " --> Could not install Nova Packages - see /tmp/os_logs/nova.log"
 		fi			
 
 	printf " ### Configure Nova \n"
@@ -67,19 +67,19 @@ lock_path = /var/lib/nova/tmp
 	
 #Populate the nova database
 	printf " ### Populate Nova Database "
-		if su -s /bin/sh -c "nova-manage db sync" nova >> ./logs/nova.log 2>&1; then
+		if su -s /bin/sh -c "nova-manage db sync" nova >> /tmp/os_logs/nova.log 2>&1; then
 			printf $green " --> done"
 		else
-			printf $red " --> Could not populate Nova Database - see $(pwd)/logs/nova.log"		
+			printf $red " --> Could not populate Nova Database - see /tmp/os_logs/nova.log"		
 		fi
 
 #Restart Services
 		printf " ### Restart Nova Services"
-			if service nova-api restart >> ./logs/nova.log 2>&1; 				then printf " --> Restart Nova-api done\n"; 				else printf  " --> Could not restart Nova-api Service - see $(pwd)/logs/nova.log\n";fi
-			if service nova-consoleauth restart >> ./logs/nova.log 2>&1; 	then printf " --> Restart Nova-consoleauth done\n"; else printf  " --> Could not restart Nova-consoleauth Service - see $(pwd)/logs/nova.log\n";fi
-			if service nova-scheduler restart >> ./logs/nova.log 2>&1; 		then printf " --> Restart Nova-scheduler done\n"; 	else printf  " --> Could not restart Nova-scheduler Service - see $(pwd)/logs/nova.log\n";fi
-			if service nova-conductor restart >> ./logs/nova.log 2>&1; 		then printf " --> Restart Nova-conductor done\n"; 	else printf  " --> Could not restart Nova-conductor Service - see $(pwd)/logs/nova.log\n";fi
-			if service nova-novncproxy restart >> ./logs/nova.log 2>&1; 	then printf " --> Restart Nova-novncproxy done\n"; 	else printf  " --> Could not restart Nova-novncproxy Service - see $(pwd)/logs/nova.log\n";fi
+			if service nova-api restart >> /tmp/os_logs/nova.log 2>&1; 				then printf " --> Restart Nova-api done\n"; 				else printf  " --> Could not restart Nova-api Service - see /tmp/os_logs/nova.log\n";fi
+			if service nova-consoleauth restart >> /tmp/os_logs/nova.log 2>&1; 	then printf " --> Restart Nova-consoleauth done\n"; else printf  " --> Could not restart Nova-consoleauth Service - see /tmp/os_logs/nova.log\n";fi
+			if service nova-scheduler restart >> /tmp/os_logs/nova.log 2>&1; 		then printf " --> Restart Nova-scheduler done\n"; 	else printf  " --> Could not restart Nova-scheduler Service - see /tmp/os_logs/nova.log\n";fi
+			if service nova-conductor restart >> /tmp/os_logs/nova.log 2>&1; 		then printf " --> Restart Nova-conductor done\n"; 	else printf  " --> Could not restart Nova-conductor Service - see /tmp/os_logs/nova.log\n";fi
+			if service nova-novncproxy restart >> /tmp/os_logs/nova.log 2>&1; 	then printf " --> Restart Nova-novncproxy done\n"; 	else printf  " --> Could not restart Nova-novncproxy Service - see /tmp/os_logs/nova.log\n";fi
 
 	#Remove nova dummy database
 	printf " ### Remove Nova Dummy Database"

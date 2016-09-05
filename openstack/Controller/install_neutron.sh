@@ -12,10 +12,10 @@ printf "\n\n #### Start Neutron Installation \n"
 
 ### Install
 	printf " ### Install Packages "
-		if apt-get install neutron-server neutron-plugin-ml2 neutron-plugin-linuxbridge-agent neutron-l3-agent neutron-dhcp-agent neutron-metadata-agent python-neutronclient -y >> ./logs/neutron.log 2>&1; then
+		if apt-get install neutron-server neutron-plugin-ml2 neutron-plugin-linuxbridge-agent neutron-l3-agent neutron-dhcp-agent neutron-metadata-agent python-neutronclient -y >> /tmp/os_logs/neutron.log 2>&1; then
 					printf $green " --> done"
 		else
-			printf $red " --> Could not install Neutron Packages - see $(pwd)/logs/neutron.log"
+			printf $red " --> Could not install Neutron Packages - see /tmp/os_logs/neutron.log"
 		fi
 
 #Copy Predefined Configs
@@ -57,20 +57,20 @@ metadata_proxy_shared_secret = Password123!
 
 #Populate Neutron Database
 	printf " ### Populate Neutron Database "
-		if su -s /bin/sh -c "neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head" neutron >> ./logs/neutron.log 2>&1; then
+		if su -s /bin/sh -c "neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head" neutron >> /tmp/os_logs/neutron.log 2>&1; then
 	printf $green " --> done"	
 		else
-			printf $red " --> Could not populate Neutron Database - see $(pwd)/logs/neutron.log"		
+			printf $red " --> Could not populate Neutron Database - see /tmp/os_logs/neutron.log"		
 		fi
 
 #Restart Services
 		printf " ### Restart Neutron and Neutron related Services"
-			if service nova-api restart >> ./logs/neutron.log 2>&1; 										then printf " --> Restart Nova-api Service done\n"; 							else printf  " --> Could not restart Nova-api Service - see $(pwd)/logs/neutron.log\n"; fi
-			if service neutron-server restart >> ./logs/neutron.log 2>&1; 								then printf " --> Restart neutron-server done\n"; 								else printf  " --> Could not restart neutron-server Service - see $(pwd)/logs/neutron.log\n"; fi
-			if service neutron-plugin-linuxbridge-agent restart >> ./logs/neutron.log 2>&1; 	then printf " --> Restart neutron-plugin-linuxbridge-agent done\n"; 	else printf  " --> Could not restart neutron-plugin-linuxbridge-agent Service - see $(pwd)/logs/neutron.log\n"; fi
-			if service neutron-dhcp-agent restart >> ./logs/neutron.log 2>&1; 						then printf " --> Restart neutron-dhcp-agent done\n"; 						else printf  " --> Could not restart neutron-dhcp-agent Service - see $(pwd)/logs/neutron.log\n"; fi
-			if service neutron-metadata-agent restart >> ./logs/neutron.log 2>&1; 				then printf " --> Restart neutron-metadata-agent done\n"; 				else printf  " --> Could not restart neutron-metadata-agent Service - see $(pwd)/logs/neutron.log\n"; fi
-			if service neutron-l3-agent restart >> ./logs/neutron.log 2>&1; 							then printf " --> Restart neutron-l3-agent done\n"; 							else printf  " --> Could not restart neutron-l3-agent Service - see $(pwd)/logs/neutron.log\n"; fi
+			if service nova-api restart >> /tmp/os_logs/neutron.log 2>&1; 										then printf " --> Restart Nova-api Service done\n"; 							else printf  " --> Could not restart Nova-api Service - see /tmp/os_logs/neutron.log\n"; fi
+			if service neutron-server restart >> /tmp/os_logs/neutron.log 2>&1; 								then printf " --> Restart neutron-server done\n"; 								else printf  " --> Could not restart neutron-server Service - see /tmp/os_logs/neutron.log\n"; fi
+			if service neutron-plugin-linuxbridge-agent restart >> /tmp/os_logs/neutron.log 2>&1; 	then printf " --> Restart neutron-plugin-linuxbridge-agent done\n"; 	else printf  " --> Could not restart neutron-plugin-linuxbridge-agent Service - see /tmp/os_logs/neutron.log\n"; fi
+			if service neutron-dhcp-agent restart >> /tmp/os_logs/neutron.log 2>&1; 						then printf " --> Restart neutron-dhcp-agent done\n"; 						else printf  " --> Could not restart neutron-dhcp-agent Service - see /tmp/os_logs/neutron.log\n"; fi
+			if service neutron-metadata-agent restart >> /tmp/os_logs/neutron.log 2>&1; 				then printf " --> Restart neutron-metadata-agent done\n"; 				else printf  " --> Could not restart neutron-metadata-agent Service - see /tmp/os_logs/neutron.log\n"; fi
+			if service neutron-l3-agent restart >> /tmp/os_logs/neutron.log 2>&1; 							then printf " --> Restart neutron-l3-agent done\n"; 							else printf  " --> Could not restart neutron-l3-agent Service - see /tmp/os_logs/neutron.log\n"; fi
 
 #Remove Neutron Dummy Database
 	printf " ### Remove Neutron  Dummy Database"
