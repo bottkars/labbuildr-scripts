@@ -9,54 +9,65 @@ LOCALHOSTNAME=$1
 LOCALIP=$2
 
 
-printf "$green" '############################
-###### Install MariaDB #####
-#############################'
-printf '\n'
+printf " ####Start MariaDB Installation \n"
 
 ### SET PW
-debconf-set-selections <<< "mysql-server mysql-server/root_password password Password123!"
-debconf-set-selections <<< "mysql-server mysql-server/root_password_again password Password123!"
+	printf " ### debconf-set-selections"
+		debconf-set-selections <<< "mysql-server mysql-server/root_password password Password123!"
+		debconf-set-selections <<< "mysql-server mysql-server/root_password_again password Password123!"
+		printf $green " --> done"
 
 ### Install MariaDB 10.1
-apt-get install mariadb-server-10.1 -y >> ./logs/mysql.log 2>&1
+	printf " ### Install Packages "
+		if apt-get install mariadb-server-10.1 -y >> ./logs/mysql.log 2>&1; then
+			printf $green " --> done"
+		else
+			printf $red " --> Could not install MariaDB Packages - see $(pwd)/logs/mysql.log"
+		fi
+
 
 ### Stop Service
-service mysql stop >> ./logs/mysql.log 2>&1
+	printf "### Stop mysqld service \n"
+		service mysql stop >> ./logs/mysql.log 2>&1
 
 ### Configure
-cp ./configs/my.cnf /etc/mysql/my.cnf
-sed -i '/bind-address*/c\bind-address            = '$LOCALIP /etc/mysql/my.cnf
+	printf " ### Configure Mysql \n"
+		cp ./configs/my.cnf /etc/mysql/my.cnf
+		sed -i '/bind-address*/c\bind-address            = '$LOCALIP /etc/mysql/my.cnf
 
 ### Start MariaDB-Server
-service mysql start >> ./logs/mysql.log 2>&1
+	printf " ### Start mysqld service"
+		if service mysql start >> ./logs/mysql.log 2>&1; then
+			printf $green " --> done"
+		else
+			printf $red " --> Could not start mysqld service - see $(pwd)/logs/mysql.log"
+		fi
 
-printf '### Configure Tables and User \n\n'
-#Keystone
-mysql -u root --password='Password123!' -e "CREATE DATABASE keystone;"
-mysql -u root --password='Password123!' -e "GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY 'Password123\!';"
-mysql -u root --password='Password123!' -e "GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY 'Password123\!';"
-#Glance
-mysql -u root --password='Password123!' -e "CREATE DATABASE glance;"
-mysql -u root --password='Password123!' -e "GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'localhost' IDENTIFIED BY 'Password123\!';"
-mysql -u root --password='Password123!' -e "GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%' IDENTIFIED BY 'Password123\!';"
-#Nova
-mysql -u root --password='Password123!' -e "CREATE DATABASE nova;"
-mysql -u root --password='Password123!' -e "GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'localhost' IDENTIFIED BY 'Password123\!';"
-mysql -u root --password='Password123!' -e "GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'%' IDENTIFIED BY 'Password123\!';"
-#Neutron
-mysql -u root --password='Password123!' -e "CREATE DATABASE neutron;"
-mysql -u root --password='Password123!' -e "GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'localhost' IDENTIFIED BY 'Password123\!';"
-mysql -u root --password='Password123!' -e "GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'%' IDENTIFIED BY 'Password123\!';"
-#Cinder
-mysql -u root --password='Password123!' -e "CREATE DATABASE cinder;"	
-mysql -u root --password='Password123!' -e "GRANT ALL PRIVILEGES ON cinder.* TO 'cinder'@'localhost' IDENTIFIED BY 'Password123\!';"
-mysql -u root --password='Password123!' -e "GRANT ALL PRIVILEGES ON cinder.* TO 'cinder'@'%' IDENTIFIED BY 'Password123\!';" 
-#Flush Privileges
-mysql -u root --password='Password123!' -e "FLUSH PRIVILEGES;"
-
-### Test ####'
-mysql -u root --password='Password123!' -e "SHOW DATABASES;"
-mysql -u root --password='Password123!' -e "SELECT user,host FROM mysql.user;"
-
+	printf ' ### Create Tables'
+	if (mysql -u root --password='Password123!' -e "CREATE DATABASE keystone;") >> ./logs/mysql.log 2>&1; 	then printf " ## Keystone Database created\n"; 	else printf " --> Could not create Keystone Database - see $(pwd)/logs/mysql.log\n"; fi
+	if (mysql -u root --password='Password123!' -e "CREATE DATABASE glance;") >> ./logs/mysql.log 2>&1; 		then printf " ## Glance Database created\n"; 		else printf " --> Could not create Glance Database - see $(pwd)/logs/mysql.log\n"; fi
+	if (mysql -u root --password='Password123!' -e "CREATE DATABASE nova;") >> ./logs/mysql.log 2>&1; 			then printf " ## Nova Database created\n"; 		else printf " --> Could not create Nova Database - see $(pwd)/logs/mysql.log\n"; fi
+	if (mysql -u root --password='Password123!' -e "CREATE DATABASE neutron;") >> ./logs/mysql.log 2>&1; 		then printf " ## Neutron Database created\n"; 	else printf " --> Could not create Neutron Database - see $(pwd)/logs/mysql.log\n"; fi
+	if (mysql -u root --password='Password123!' -e "CREATE DATABASE cinder;") >> ./logs/mysql.log 2>&1; 		then printf " ## Cinder Database created\n"; 		else printf " --> Could not create Cinder Database - see $(pwd)/logs/mysql.log\n"; fi
+			
+	printf " ### Create SQL User and Permissions "	
+		#Keystone
+		mysql -u root --password='Password123!' -e "GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY 'Password123\!';"
+		mysql -u root --password='Password123!' -e "GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY 'Password123\!';"
+		#Glance
+		mysql -u root --password='Password123!' -e "GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'localhost' IDENTIFIED BY 'Password123\!';"
+		mysql -u root --password='Password123!' -e "GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%' IDENTIFIED BY 'Password123\!';"
+		#Nova
+		mysql -u root --password='Password123!' -e "GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'localhost' IDENTIFIED BY 'Password123\!';"
+		mysql -u root --password='Password123!' -e "GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'%' IDENTIFIED BY 'Password123\!';"
+		#Neutron
+		mysql -u root --password='Password123!' -e "GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'localhost' IDENTIFIED BY 'Password123\!';"
+		mysql -u root --password='Password123!' -e "GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'%' IDENTIFIED BY 'Password123\!';"
+		#Cinder
+		mysql -u root --password='Password123!' -e "GRANT ALL PRIVILEGES ON cinder.* TO 'cinder'@'localhost' IDENTIFIED BY 'Password123\!';"
+		mysql -u root --password='Password123!' -e "GRANT ALL PRIVILEGES ON cinder.* TO 'cinder'@'%' IDENTIFIED BY 'Password123\!';" 
+		#Flush Privileges
+		mysql -u root --password='Password123!' -e "FLUSH PRIVILEGES;"
+	printf $green " --> done\n" 
+printf " #### Finished MariaDB Installation \n"
 

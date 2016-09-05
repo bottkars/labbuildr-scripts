@@ -7,38 +7,54 @@ yellow='\e[1;33m%s\e[0m\n'
 
 LOCALHOSTNAME=$1
 LOCALHOSTIP=$2
+SIO_GW=$3
+SIO_PD=$4
+SIO_SP=$5
 
-printf "$green" '############################
-###### Install Cinder #####
-#############################'
-printf '\n'
+printf "\n\n #### Start Cinder Installation \n"
 
 ### Install
-apt-get install cinder-api cinder-scheduler python-cinderclient cinder-volume -y >> ./logs/cinder.log 2>&1
-
+	printf " ### Install Packages "
+		if apt-get install cinder-api cinder-scheduler python-cinderclient cinder-volume -y >> ./logs/cinder.log 2>&1; then
+			printf $green " --> done"
+		else
+			printf $red " --> Could not install Cinder Packages - see $(pwd)/logs/Cinder.log"
+		fi		
+		
 #Copy Predefined Configs
-cp ./configs/cinder.conf /etc/cinder/cinder.conf
+	printf " ### Configure Cinder \n"
+		cp ./configs/cinder.conf /etc/cinder/cinder.conf
 
 #Configure
-echo "[cinder]
+		echo "[cinder]
 os_region_name = RegionOne" >> /etc/nova/nova.conf
-
-sed -i '/my_ip = */c\my_ip = '$LOCALHOSTIP /etc/cinder/cinder.conf
-sed -i '/connection = mysql+pymysql:*/c\connection = mysql+pymysql://cinder:Password123!@'$LOCALHOSTNAME'/cinder' /etc/cinder/cinder.conf
-sed -i '/rabbit_host = */c\rabbit_host = '$LOCALHOSTNAME /etc/cinder/cinder.conf
-sed -i '/auth_uri = */c\auth_uri = http://'$LOCALHOSTNAME':5000' /etc/cinder/cinder.conf
-sed -i '/auth_url = */c\auth_url = http://'$LOCALHOSTNAME':35357' /etc/cinder/cinder.conf
-sed -i '/san_ip = */c\san_ip = '$LOCALHOSTNAME /etc/cinder/cinder.conf
-
+		sed -i '/my_ip = */c\my_ip = '$LOCALHOSTIP /etc/cinder/cinder.conf
+		sed -i '/connection = mysql+pymysql:*/c\connection = mysql+pymysql://cinder:Password123!@'$LOCALHOSTNAME'/cinder' /etc/cinder/cinder.conf
+		sed -i '/rabbit_host = */c\rabbit_host = '$LOCALHOSTNAME /etc/cinder/cinder.conf
+		sed -i '/auth_uri = */c\auth_uri = http://'$LOCALHOSTNAME':5000' /etc/cinder/cinder.conf
+		sed -i '/auth_url = */c\auth_url = http://'$LOCALHOSTNAME':35357' /etc/cinder/cinder.conf
+		sed -i '/san_ip = */c\san_ip = '$SIO_GW /etc/cinder/cinder.conf
+		sed -i '/sio_protection_domain_name = */c\sio_protection_domain_name = '$SIO_PD /etc/cinder/cinder.conf
+		sed -i '/sio_storage_pool_name =*/c\sio_storage_pool_name = '$SIO_SP /etc/cinder/cinder.conf
+		sed -i '/sio_storage_pools = */c\sio_storage_pools = '$SIO_PD':'$SIO_SP /etc/cinder/cinder.conf
+	printf $green " --> done\n"
 
 #Populate Database
-su -s /bin/sh -c "cinder-manage db sync" cinder >> ./logs/cinder.log 2>&1
-
+	printf " ### Populate Cinder Database "
+		if su -s /bin/sh -c "cinder-manage db sync" cinder >> ./logs/cinder.log 2>&1; then
+	printf $green " --> done"
+		else
+			printf $red " --> Could not populate Cinder Database - see $(pwd)/logs/cinder.log"		
+		fi
+		
 #Restart Services
-service nova-api restart >> ./logs/nova.log 2>&1
-service cinder-api restart >> ./logs/cinder.log 2>&1
-service cinder-scheduler restart >> ./logs/cinder.log 2>&1
-service cinder-volume restart >> ./logs/cinder.log 2>&1
+		printf " ### Restart Cinder and Cinder related Services"
+			if service nova-api restart >> ./logs/nova.log 2>&1; 				then printf " --> Restart Nova-api done\n"; 				else printf  " --> Could not restart Nova-api Service - see $(pwd)/logs/cinder.log\n"; fi
+			if service cinder-api restart >> ./logs/cinder.log 2>&1; 				then printf " --> Restart cinder-api done\n"; 				else printf  " --> Could not restart cinder-api Service - see $(pwd)/logs/cinder.log\n"; fi
+			if service cinder-scheduler restart >> ./logs/cinder.log 2>&1; 	then printf " --> Restart cinder-scheduler done\n";	else printf  " --> Could not restart cinder-scheduler Service - see $(pwd)/logs/cinder.log\n"; fi
+			if service cinder-volume restart >> ./logs/cinder.log 2>&1; 		then printf " --> Restart cinder-volume done\n"; 		else printf  " --> Could not restart cinder-volume Service - see $(pwd)/logs/cinder.log\n"; fi
 
 ##Remove cinder dummy database
-rm -f /var/lib/cinder/cinder.sqlite
+	printf " ### Remove Cinder Dummy Database"
+		rm -f /var/lib/cinder/cinder.sqlite
+	printf $green " --> done"	

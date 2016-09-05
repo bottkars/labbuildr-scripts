@@ -9,16 +9,19 @@ LOCALIP=$1
 CONTROLLERIP=$2
 CONTROLLERNAME=$3
 
-printf "$green" '############################
-###### Install Nova #####
-#############################'
-printf '\n'
+printf "\n\n #### Start Nova Installation \n"
 
-### Install
-apt-get install nova-compute -y >> ./logs/nova.log 2>&1
+	### Install
+	printf " ### Install Packages "
+		if apt-get install nova-compute -y >> ./logs/nova.log 2>&1; then
+			printf $green " --> done"
+		else
+			printf $red " --> Could not install Nova Packages - see $(pwd)/logs/nova.log"
+		fi			
 
-# Create new Nova File
-echo "[DEFAULT]
+	printf " ### Configure Nova \n"
+		# Create new Nova File
+		echo "[DEFAULT]
 dhcpbridge_flagfile=/etc/nova/nova.conf
 dhcpbridge=/usr/bin/nova-dhcpbridge
 logdir=/var/log/nova
@@ -61,9 +64,13 @@ host = $CONTROLLERNAME
 [oslo_concurrency]
 lock_path = /var/lib/nova/tmp
 " > /etc/nova/nova.conf	
-
+	printf $green " --> done\n"
+	
 #Restart Services
-service nova-compute restart >> ./logs/nova.log 2>&1
-
-#Remove nova dummy database
-rm -f /var/lib/nova/nova.sqlite
+	printf " ### Restart Nova Services"
+			if service nova-compute restart >> ./logs/nova.log 2>&1; 				then printf " --> Restart Nova-compute done\n"; 				else printf  " --> Could not restart Nova-compute Service - see $(pwd)/logs/nova.log\n";fi
+			
+	#Remove nova dummy database
+	printf " ### Remove Nova Dummy Database"
+		rm -f /var/lib/nova/nova.sqlite
+	printf $green " --> done"

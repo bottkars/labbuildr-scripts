@@ -1,17 +1,22 @@
 #!/bin/bash
-# Openstack Controller with Parameters
+#### Define Colors
+red='\e[1;31m%s\e[0m\n'
+green='\e[1;32m%s\e[0m\n'
+yellow='\e[1;33m%s\e[0m\n'
+
+LOCALHOSTNAME=$(hostname)
+LOCALIP=$(ifconfig eth0 | awk '/inet addr/{print substr($2,6)}')
 
 while [[ $# -gt 1 ]]
 do
 key="$1"
-
 case $key in
     -cip|--controllerip)
-    CONTROLLERIP="$2"
-    shift # past argument
+		CONTROLLERIP="$2"
+		shift # past argument
     ;;
-    -cname|--controller_name)
-    CONTROLLERNAME="$2"
+		-cname|--controller_name)
+		CONTROLLERNAME="$2"
     shift # past argument
     ;;
     *)
@@ -21,68 +26,89 @@ esac
 shift # past argument or value
 done
 
-
-red='\e[1;31m%s\e[0m\n'
-green='\e[1;32m%s\e[0m\n'
-yellow='\e[1;33m%s\e[0m\n'
-
-printf "$green" '############################
-##### System Details ####
-############################'
-printf '\n'
-
-LOCALHOSTNAME=$(hostname)
-LOCALIP=$(ifconfig | grep -v 127.0.0.1 | awk '/inet addr/{print substr($2,6)}')
-printf '### Hostname: '$LOCALHOSTNAME'\n'
-printf '### IP: '$LOCALIP'\n\n'
-
-printf "$green" '############################
-##### Controller Details ####
-############################'
-printf '\n'
-
-#echo -n ' Bitte Controller IP eingeben: '
-#read CONTROLLERIP
-#echo -n ' Bitte Controller Shortname eingeben: '
-#read CONTROLLERNAME
-
-printf '### Controller Name: '$CONTROLLERNAME'\n'
-printf '### Controller IP: '$CONTROLLERIP'\n\n'
-
-echo $CONTROLLERIP' '$CONTROLLERNAME >> /etc/hosts
-printf "$green" '############################
-###### Prepare Install #####
-############################'
-printf '\n'
-
-printf '##### Logs & Permissions #####\n'
-mkdir logs
-touch ./logs/general.log
-touch ./logs/nova.log
-touch ./logs/neutron.log
-chmod +x install_nova.sh
-chmod +x install_neutron.sh
+# Check if controllerip and ist set
+	if [ -z $CONTROLLERIP ]; then 
+		printf "Please set Controller IP
+[-cip | --controllerip] X.X.X.X \n"
+		exit
+	fi
+# Check if controller_name and ist set
+	if [ -z $CONTROLLERNAME ]; then 
+		printf "Please set Controller Name
+[-cname | --controller_name] X.X.X.X \n"
+		exit
+	fi	
+	
+#Switch to script dir
+cd "$( dirname "${BASH_SOURCE[0]}" )"
 
 
-printf '##### Prepare Repos'
-#Openstack Liberty Repo
-apt-get install software-properties-common -y >> ./logs/general.log 2>&1
-add-apt-repository cloud-archive:liberty -y >> ./logs/general.log 2>&1
+### Starting actual Installation Workflow
+printf $yellow "
+ ####################################################
+ #### Start Openstack Compute Node Installation #####
+ ####################################################"
 
-printf ' ---> done. ##### \n\n'
+	printf "\n #### Systemdetails\n"
+		printf " ### Controller IP\t\t\t:$CONTROLLERIP \n"
+		printf " ### Controller Name\t\t\t:$CONTROLLERNAME \n"
+		printf " ### Local IP used\t\t\t:$LOCALIP \n"
+		printf " ### Local Hostname used\t\t:$LOCALHOSTNAME \n"
 
-printf "$green" '#############################
-#### Install Basic Tools ####
-#############################'
-printf '\n'
+printf " #### Prepare Installation\n"
+	printf " ### Check if Node supports hardware acceleration\n"
+		if (( $(egrep -c '(vmx|svm)' /proc/cpuinfo) == 0 )); then
+				printf $red " #### WARNING: Node does not support hardware acceleration ####"
+				printf $red " #### If you are using VMware Workstation - enable \"Virtualize Intel VT-x/EPT or AMD-V/RVI\" "
+			else
+				printf $green " --> OK"
+		fi
 
-printf '##### Update Repos '
-apt-get update >> ./logs/general.log 2>&1
-printf ' --> done\n'
+	printf " ### Create Log Files on $(pwd)/logs\t"
+		if mkdir logs && touch ./logs/general.log ./logs/nova.log ./logs/neutron.log ; then
+			printf $green " --> done"
+	else	
+		printf $red " --> Could not create Log Files"
+	fi
+	
+	printf " ### Make Scripts executable\t"	
+		if chmod +x install_nova.sh install_neutron.sh >> ./logs/general.log 2>&1; then
+			printf $green "--> done"
+	else
+		printf $red " --> Could not set permissions - see $(pwd)/logs/general.log"
+	fi	
 
-printf '##### Install Python MySQL & Openstack client\n'
-apt-get install python-openstackclient python-pymysql -y >> ./logs/general.log 2>&1
 
-printf '###### Basic Install done\n'
+printf " #### Add Repositories\n"
+	printf " ### Openstack Liberty"
+		if (apt-get install software-properties-common -y && add-apt-repository cloud-archive:liberty -y) >> ./logs/general.log 2>&1; then
+			printf $green " --> done"
+		else
+			printf $red " --> Could not add Liberty Repo - see $(pwd)/logs/general.log"
+		fi
+	
+	
+printf " #### Install Basic Tools\n"
+
+	printf " ### Update Package List"
+		apt-get update >> ./logs/general.log 2>&1
+	printf $green " --> done"
+
+	printf " ### Install Python-Pymysql and Python-Openstackclient"
+		if apt-get install python-openstackclient python-pymysql -y >> ./logs/general.log 2>&1; then
+			printf $green " --> done"
+		else
+			printf $red " --> Could not install Packages - see $(pwd)/logs/general.log"
+		fi
+
 ./install_nova.sh $LOCALIP $CONTROLLERIP $CONTROLLERNAME
 ./install_neutron.sh $LOCALIP $CONTROLLERIP $CONTROLLERNAME
+
+
+
+
+
+
+
+
+

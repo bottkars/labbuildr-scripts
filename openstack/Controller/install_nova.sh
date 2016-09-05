@@ -8,16 +8,19 @@ yellow='\e[1;33m%s\e[0m\n'
 LOCALHOSTNAME=$1
 LOCALIP=$2
 
-printf "$green" '############################
-###### Install Nova #####
-#############################'
-printf '\n'
+printf "\n\n #### Start Nova Installation \n"
 
-### Install
-apt-get install nova-api nova-conductor nova-consoleauth nova-novncproxy nova-scheduler python-novaclient -y >> ./logs/nova.log 2>&1
+	### Install
+	printf " ### Install Packages "
+		if apt-get install nova-api nova-conductor nova-consoleauth nova-novncproxy nova-scheduler python-novaclient -y >> ./logs/nova.log 2>&1; then
+					printf $green " --> done"
+		else
+			printf $red " --> Could not install Nova Packages - see $(pwd)/logs/nova.log"
+		fi			
 
-# Create new Nova File
-echo "[DEFAULT]
+	printf " ### Configure Nova \n"
+			# Create new Nova File
+			echo "[DEFAULT]
 dhcpbridge_flagfile=/etc/nova/nova.conf
 dhcpbridge=/usr/bin/nova-dhcpbridge
 logdir=/var/log/nova
@@ -60,21 +63,26 @@ host = $LOCALHOSTNAME
 [oslo_concurrency]
 lock_path = /var/lib/nova/tmp
 " > /etc/nova/nova.conf	
-
+	printf $green " --> done\n"
+	
 #Populate the nova database
-su -s /bin/sh -c "nova-manage db sync" nova >> ./logs/nova.log 2>&1
+	printf " ### Populate Nova Database "
+		if su -s /bin/sh -c "nova-manage db sync" nova >> ./logs/nova.log 2>&1; then
+			printf $green " --> done"
+		else
+			printf $red " --> Could not populate Nova Database - see $(pwd)/logs/nova.log"		
+		fi
 
 #Restart Services
-service nova-api restart >> ./logs/nova.log 2>&1
-service nova-cert restart >> ./logs/nova.log 2>&1
-service nova-consoleauth restart >> ./logs/nova.log 2>&1
-service nova-scheduler restart >> ./logs/nova.log 2>&1
-service nova-conductor restart >> ./logs/nova.log 2>&1
-service nova-novncproxy restart >> ./logs/nova.log 2>&1
+		printf " ### Restart Nova Services"
+			if service nova-api restart >> ./logs/nova.log 2>&1; 				then printf " --> Restart Nova-api done\n"; 				else printf  " --> Could not restart Nova-api Service - see $(pwd)/logs/nova.log\n";fi
+			if service nova-consoleauth restart >> ./logs/nova.log 2>&1; 	then printf " --> Restart Nova-consoleauth done\n"; else printf  " --> Could not restart Nova-consoleauth Service - see $(pwd)/logs/nova.log\n";fi
+			if service nova-scheduler restart >> ./logs/nova.log 2>&1; 		then printf " --> Restart Nova-scheduler done\n"; 	else printf  " --> Could not restart Nova-scheduler Service - see $(pwd)/logs/nova.log\n";fi
+			if service nova-conductor restart >> ./logs/nova.log 2>&1; 		then printf " --> Restart Nova-conductor done\n"; 	else printf  " --> Could not restart Nova-conductor Service - see $(pwd)/logs/nova.log\n";fi
+			if service nova-novncproxy restart >> ./logs/nova.log 2>&1; 	then printf " --> Restart Nova-novncproxy done\n"; 	else printf  " --> Could not restart Nova-novncproxy Service - see $(pwd)/logs/nova.log\n";fi
 
-#Remove nova dummy database
-rm -f /var/lib/nova/nova.sqlite
-
-#Test
-sleep 5
-openstack --os-auth-url http://$LOCALHOSTNAME:35357/v3 --os-project-domain-id default --os-user-domain-id default --os-project-name admin --os-username admin --os-auth-type password --os-password Password123! --os-image-api-version 2 compute service list
+	#Remove nova dummy database
+	printf " ### Remove Nova Dummy Database"
+		rm -f /var/lib/nova/nova.sqlite
+	printf $green " --> done"
+	
