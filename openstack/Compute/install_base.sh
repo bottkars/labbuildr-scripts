@@ -84,16 +84,5 @@ printf '##### Install Python MySQL & Openstack client\n'
 apt-get install python-openstackclient python-pymysql -y >> ./logs/general.log 2>&1
 
 printf '###### Basic Install done\n'
-
-
 ./install_nova.sh $LOCALIP $CONTROLLERIP $CONTROLLERNAME
 ./install_neutron.sh $LOCALIP $CONTROLLERIP $CONTROLLERNAME
-
-
-
-
-
-
-
-
-
