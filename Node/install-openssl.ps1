@@ -9,8 +9,8 @@
 #requires -version 3
 [CmdletBinding()]
 param(    
-    [ValidateSet('1_0_1s','1_0_2h','1_1_0','1_0_1l')]
-    $openssl_ver='1_0_1l',
+    [ValidateSet('1_0_1s','1_0_2h','1_1_0','1_0_1l','1_0_1t','1_0_1u')]
+    $openssl_ver='1_0_1t',
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
     $logpath = "c:\Scripts"
