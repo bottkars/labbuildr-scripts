@@ -12,7 +12,7 @@ LOCALIP=$2
 printf " ####Start MariaDB Installation \n"
 
 ### SET PW
-	printf " ### debconf-set-selections"
+	printf " ### debconf-set-selections "
 		debconf-set-selections <<< "mysql-server mysql-server/root_password password Password123!"
 		debconf-set-selections <<< "mysql-server mysql-server/root_password_again password Password123!"
 		printf $green " --> done"

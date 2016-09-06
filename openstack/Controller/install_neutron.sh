@@ -19,7 +19,7 @@ printf "\n\n #### Start Neutron Installation \n"
 		fi
 
 #Copy Predefined Configs
-	printf " ### Configure Neutron \n"
+	printf " ### Configure Neutron "
 		cp ./configs/neutron.conf /etc/neutron/neutron.conf
 		cp ./configs/ml2_conf.ini /etc/neutron/plugins/ml2/ml2_conf.ini
 		cp ./configs/linuxbridge_agent.ini /etc/neutron/plugins/ml2/linuxbridge_agent.ini

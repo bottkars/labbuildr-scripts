@@ -22,7 +22,7 @@ printf "\n\n #### Start Cinder Installation \n"
 		fi		
 		
 #Copy Predefined Configs
-	printf " ### Configure Cinder \n"
+	printf " ### Configure Cinder "
 		cp ./configs/cinder.conf /etc/cinder/cinder.conf
 
 #Configure
@@ -46,7 +46,7 @@ os_region_name = RegionOne" >> /etc/nova/nova.conf
 		else
 			printf $red " --> Could not populate Cinder Database - see /tmp/os_logs/cinder.log"		
 		fi
-		
+				
 #Restart Services
 		printf " ### Restart Cinder and Cinder related Services"
 			if service nova-api restart >> /tmp/os_logs/nova.log 2>&1; 				then printf " --> Restart Nova-api done\n"; 				else printf  " --> Could not restart Nova-api Service - see /tmp/os_logs/cinder.log\n"; fi
@@ -58,3 +58,31 @@ os_region_name = RegionOne" >> /etc/nova/nova.conf
 	printf " ### Remove Cinder Dummy Database"
 		rm -f /var/lib/cinder/cinder.sqlite
 	printf $green " --> done"	
+	
+# Create Volume Type for Thin Provisioning
+	printf ' ### Create Volume Types for Thin / Thick Provisioning \n'
+		if openstack --os-project-domain-id default --os-user-domain-id default --os-tenant-name admin --os-username admin --os-auth-url http://$LOCALHOSTNAME:35357/v3 --os-password Password123! volume type create thin >> /tmp/os_logs/cinder.log 2>&1; 		then printf " ## Created volume Type thin \n"; else printf " ## Could not create volume Type thin - see /tmp/os_logs/cinder.log\n"; fi
+		if openstack --os-project-domain-id default --os-user-domain-id default --os-tenant-name admin --os-username admin --os-auth-url http://$LOCALHOSTNAME:35357/v3 --os-password Password123! volume type create thick >> /tmp/os_logs/cinder.log 2>&1; 		then printf " ## Created volume Type thick \n "; else printf " ## Could not create volume Type thick - see /tmp/os_logs/cinder.log\n"; fi
+	printf ' ### Set Properties for volume Types Thin / Thick \n'	
+		if openstack --os-project-domain-id default --os-user-domain-id default --os-tenant-name admin --os-username admin --os-auth-url http://$LOCALHOSTNAME:35357/v3 --os-password Password123! volume type set --property sio:provisioning_type=thin thin >> /tmp/os_logs/cinder.log 2>&1; 		then printf " ## Set sio:provisioning_type=thin for volume type thin \n"; 		else printf " ## Could not set sio:provisioning_type=thin for volume type thin - see /tmp/os_logs/cinder.log\n "; fi
+		if openstack --os-project-domain-id default --os-user-domain-id default --os-tenant-name admin --os-username admin --os-auth-url http://$LOCALHOSTNAME:35357/v3 --os-password Password123! volume type set --property sio:provisioning_type=thick thick >> /tmp/os_logs/cinder.log 2>&1; 	then printf " ## Set sio:provisioning_type=thick for volume type thick \n";	else printf " ## Could not set sio:provisioning_type=thick for volume type thick - see /tmp/os_logs/cinder.log\n "; fi
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		

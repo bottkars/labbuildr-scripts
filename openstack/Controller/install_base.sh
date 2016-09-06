@@ -36,17 +36,17 @@ cd "$( dirname "${BASH_SOURCE[0]}" )"
 
 #Check if SIO vars are specified by parameter
 if [ -z $SIO_GW ]; then 
-	printf "No ScaleIO Gateway has been specified. Assuming ScaleIO Gateway is local.\n"
+	printf "No ScaleIO Gateway has been specified. Assuming ScaleIO Gateway is local.\n "
 	SIO_GW=$(hostname)
 fi
 
 if [ -z $SIO_PD ]; then 
-	printf "No ScaleIO Protection Domain has been specified. Setting ScaleIO Protection Domain to \"default\" \n"
+	printf "No ScaleIO Protection Domain has been specified. Setting ScaleIO Protection Domain to \"default\" \n "
 	SIO_PD="default"
 fi
 
 if [ -z $SIO_SP ]; then 
-	printf "No ScaleIO Storage Pool has been specified. Setting ScaleIO Storage Pool to \"defaultSP\" \n"
+	printf "No ScaleIO Storage Pool has been specified. Setting ScaleIO Storage Pool to \"defaultSP\" \n "
 	SIO_SP="defaultSP"
 fi
 
@@ -66,14 +66,14 @@ printf $yellow "
 		
 printf " #### Prepare Installation\n"
 
-	printf " ### Create Log Files on /tmp/os_logs\t"
-		if 	mkdir /tmp/os_logs/logs && touch /tmp/os_logs/general.log /tmp/os_logs/mysql.log /tmp/os_logs/rabbitmq.log /tmp/os_logs/keystone.log /tmp/os_logs/glance.log /tmp/os_logs/nova.log /tmp/os_logs/neutron.log /tmp/os_logs/cinder.log /tmp/os_logs/horizon.log; then
+	printf " ### Create Log Files on /tmp/os_logs\t "
+		if 	mkdir -p /tmp/os_logs && touch /tmp/os_logs/general.log /tmp/os_logs/mysql.log /tmp/os_logs/rabbitmq.log /tmp/os_logs/keystone.log /tmp/os_logs/glance.log /tmp/os_logs/nova.log /tmp/os_logs/neutron.log /tmp/os_logs/cinder.log /tmp/os_logs/horizon.log; then
 			printf $green " --> done"
 		else	
-			printf $red " --> Could not create Log Files"
+			printf $red " --> Could not create Log Files "
 		fi
 
-	printf " ### Make Scripts executable\t"
+	printf " ### Make Scripts executable\t "
 		if (chmod +x install_mysql.sh install_rabbitmq.sh install_keystone.sh install_glance.sh install_nova.sh install_neutron.sh install_cinder.sh install_horizon.sh) >> /tmp/os_logs/general.log 2>&1; then
 			printf $green "--> done"
 		else
@@ -81,14 +81,14 @@ printf " #### Prepare Installation\n"
 		fi
 	
 printf " #### Add Repositories\n"
-	printf " ### MariaDB"
+	printf " ### MariaDB "
 		if (apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db && add-apt-repository 'deb [arch=amd64,i386,ppc64el] http://mirror2.hs-esslingen.de/mariadb/repo/10.1/ubuntu trusty main') >> /tmp/os_logs/general.log 2>&1; then
 			printf $green " --> done"
 		else
 			printf $red " --> Could not add MariaDB Repo - see /tmp/os_logs/general.log"
 		fi
 
-	printf " ### Openstack Liberty"
+	printf " ### Openstack Liberty "
 		if (apt-get install software-properties-common -y && add-apt-repository cloud-archive:liberty -y) >> /tmp/os_logs/general.log 2>&1; then
 			printf $green " --> done"
 		else
@@ -97,11 +97,11 @@ printf " #### Add Repositories\n"
 
 printf " #### Install Basic Tools\n"
 
-	printf " ### Update Package List"
+	printf " ### Update Package List "
 		apt-get update >> /tmp/os_logs/general.log 2>&1
 	printf $green " --> done"
 	
-	printf " ### Install Python-Pymysql and Python-Openstackclient"
+	printf " ### Install Python-Pymysql and Python-Openstackclient "
 		if apt-get install python-openstackclient python-pymysql -y >> /tmp/os_logs/general.log 2>&1; then
 			printf $green " --> done"
 		else
