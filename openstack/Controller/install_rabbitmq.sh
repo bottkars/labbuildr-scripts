@@ -30,7 +30,7 @@ printf " #### Start RabbitMQ Installation \n"
 			printf $red " --> Could not restart rabbitmq-server service - see /tmp/os_logs/rabbitmq.log"
 		fi
 	
-	printf '### Create Users '
+	printf ' ### Create Users \n'
 		if (rabbitmqctl add_user nova_ctrl Password123!) >> /tmp/os_logs/rabbitmq.log 2>&1; 				then printf " ## Created user nova_ctrl \n"; 				else printf " Could not create user nova_ctrl - see /tmp/os_logs/rabbitmq.log\n"; fi
 		if (rabbitmqctl add_user nova_compute Password123!) >> /tmp/os_logs/rabbitmq.log 2>&1; 		then printf " ## Created user nova_compute \n"; 		else printf " Could not create user nova_compute - see /tmp/os_logs/rabbitmq.log\n"; fi
 		if (rabbitmqctl add_user neutron Password123!) >> /tmp/os_logs/rabbitmq.log 2>&1; 				then printf " ## Created user neutron \n"; 					else printf " Could not create user neutron - see /tmp/os_logs/rabbitmq.log\n"; fi
@@ -38,7 +38,7 @@ printf " #### Start RabbitMQ Installation \n"
 		if (rabbitmqctl add_user cinder Password123!) >> /tmp/os_logs/rabbitmq.log 2>&1; 					then printf " ## Created user cinder \n"; 					else printf " Could not create user cinder - see /tmp/os_logs/rabbitmq.log\n"; fi
 		
 		
-	printf '### Configure user permissions '
+	printf '### Configure user permissions \n'
 		#Nova
 		rabbitmqctl set_permissions nova_ctrl ".*" ".*" ".*"
 		rabbitmqctl set_user_tags nova_ctrl administrator 

@@ -59,6 +59,9 @@ os_region_name = RegionOne" >> /etc/nova/nova.conf
 		rm -f /var/lib/cinder/cinder.sqlite
 	printf $green " --> done"	
 	
+	#Sleep to give Service time to start
+		sleep 5
+	
 # Create Volume Type for Thin Provisioning
 	printf ' ### Create Volume Types for Thin / Thick Provisioning \n'
 		if openstack --os-project-domain-id default --os-user-domain-id default --os-tenant-name admin --os-username admin --os-auth-url http://$LOCALHOSTNAME:35357/v3 --os-password Password123! volume type create thin >> /tmp/os_logs/cinder.log 2>&1; 		then printf " ## Created volume Type thin \n"; else printf " ## Could not create volume Type thin - see /tmp/os_logs/cinder.log\n"; fi

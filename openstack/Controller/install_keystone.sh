@@ -67,7 +67,7 @@ printf "\n\n #### Start Keystone Installation \n"
 		if openstack --os-url $os_url --os-token=$os_token --os-identity-api-version 3 service create --name neutron --description "OpenStack Networking" network >> /tmp/os_logs/keystone.log 2>&1; 		then printf " ## Created Keystone Service Neutron (network) \n"; 	else printf " ## Could not create Keystone Service Neutron (network) - see /tmp/os_logs/keystone.log\n"; fi
 		if openstack --os-url $os_url --os-token=$os_token --os-identity-api-version 3 service create --name cinder --description "OpenStack Block Storage" volume >> /tmp/os_logs/keystone.log 2>&1; 		then printf " ## Created Keystone Service Cinder (volume) \n"; 		else printf " ## Could not create Keystone Service Cinder (volume) - see /tmp/os_logs/keystone.log\n"; fi
 		if openstack --os-url $os_url --os-token=$os_token --os-identity-api-version 3 service create --name cinderv2 --description "OpenStack Block Storage" volumev2 >> /tmp/os_logs/keystone.log 2>&1; then printf " ## Created Keystone Service Cinder (volumev2) \n"; 	else printf " ## Could not create Keystone Service Cinder (volumev2) - see /tmp/os_logs/keystone.log\n"; fi
-	printf " ### Create Endpoints "
+	printf " ### Create Endpoints \n"
 		#Keystone
 		if openstack --os-url $os_url --os-token=$os_token --os-identity-api-version 3 endpoint create --region RegionOne identity public http://$LOCALHOSTNAME:5000/v2.0 >> /tmp/os_logs/keystone.log 2>&1; 		then printf " ## Created Keystone public endpoint\n"; 	else printf "Could not create Keystone public endpoint\n"; fi
 		if openstack --os-url $os_url --os-token=$os_token --os-identity-api-version 3 endpoint create --region RegionOne identity internal http://$LOCALHOSTNAME:5000/v2.0 >> /tmp/os_logs/keystone.log 2>&1; 		then printf " ## Created Keystone internal endpoint\n"; 	else printf "Could not create Keystone internal endpoint\n"; fi
@@ -91,18 +91,19 @@ printf "\n\n #### Start Keystone Installation \n"
 		if openstack --os-url $os_url --os-token=$os_token --os-identity-api-version 3 endpoint create --region RegionOne volumev2 public http://$LOCALHOSTNAME:8776/v2/%\(tenant_id\)s >> /tmp/os_logs/keystone.log 2>&1; 		then printf " ## Created Cinderv2 public endpoint\n"; 	else printf "Could not create Cinderv2 public endpoint\n"; fi
 		if openstack --os-url $os_url --os-token=$os_token --os-identity-api-version 3 endpoint create --region RegionOne volumev2 internal http://$LOCALHOSTNAME:8776/v2/%\(tenant_id\)s >> /tmp/os_logs/keystone.log 2>&1;	then printf " ## Created Cinderv2 internal endpoint\n"; else printf "Could not create Cinderv2 internal endpoint\n"; fi
 		if openstack --os-url $os_url --os-token=$os_token --os-identity-api-version 3 endpoint create --region RegionOne volumev2 admin http://$LOCALHOSTNAME:8776/v2/%\(tenant_id\)s >> /tmp/os_logs/keystone.log 2>&1; 	then printf " ## Created Cinderv2 admin endpoint\n"; 	else printf "Could not create Cinderv2 admin endpoint\n"; fi
-	printf " ### Create Projects "		
+	printf " ### Create Projects \n"		
 		if openstack --os-url $os_url --os-token=$os_token --os-identity-api-version 3 project create --domain default --description "Admin Project" admin >> /tmp/os_logs/keystone.log 2>&1; 	then printf " ## Created Project admin\n"; 	else printf "Could not create Project admin \n"; fi
 		if openstack --os-url $os_url --os-token=$os_token --os-identity-api-version 3 project create --domain default --description "Service Project" service >> /tmp/os_logs/keystone.log 2>&1; 	then printf " ## Created Project service\n"; 	else printf "Could not create Project service \n"; fi
-	printf " ### Create Roles "
+	printf " ### Create Roles \n"
 		if openstack --os-url $os_url --os-token=$os_token --os-identity-api-version 3 role create admin  >> /tmp/os_logs/keystone.log 2>&1; 	then printf " ## Created Role admin\n"; 	else printf "Could not create role admin \n"; fi
-	printf " ### Create Users "		
+		if openstack --os-url $os_url --os-token=$os_token --os-identity-api-version 3 role create user  >> /tmp/os_logs/keystone.log 2>&1; 	then printf " ## Created Role user\n"; 	else printf "Could not create role user \n"; fi
+	printf " ### Create Users \n"		
 		if openstack --os-url $os_url --os-token=$os_token --os-identity-api-version 3 user create --domain default --password Password123! admin  >> /tmp/os_logs/keystone.log 2>&1; 		then printf " ## Created User  admin\n"; 		else printf "Could not create User admin \n"; fi
 		if openstack --os-url $os_url --os-token=$os_token --os-identity-api-version 3 user create --domain default --password Password123! glance  >> /tmp/os_logs/keystone.log 2>&1; 		then printf " ## Created User  glance\n"; 		else printf "Could not create User glance \n"; fi
 		if openstack --os-url $os_url --os-token=$os_token --os-identity-api-version 3 user create --domain default --password Password123! nova  >> /tmp/os_logs/keystone.log 2>&1; 		then printf " ## Created User  nova\n"; 		else printf "Could not create User nova \n"; fi
 		if openstack --os-url $os_url --os-token=$os_token --os-identity-api-version 3 user create --domain default --password Password123! neutron  >> /tmp/os_logs/keystone.log 2>&1; 	then printf " ## Created User  neutron\n"; 	else printf "Could not create User neutron \n"; fi
 		if openstack --os-url $os_url --os-token=$os_token --os-identity-api-version 3 user create --domain default --password Password123! cinder  >> /tmp/os_logs/keystone.log 2>&1; 		then printf " ## Created User  cinder\n"; 		else printf "Could not create User cinder \n"; fi
-	printf " ### Map User to Role and Project "
+	printf " ### Map User to Role and Project \n"
 		if openstack --os-url $os_url --os-token=$os_token --os-identity-api-version 3 role add --project admin --user admin admin >> /tmp/os_logs/keystone.log 2>&1; 		then printf " ## Map user admin to project admin and role admin \n"; 		else printf "Could not map user admin to project admin and role admin  \n"; fi
 		if openstack --os-url $os_url --os-token=$os_token --os-identity-api-version 3 role add --project service --user glance admin >> /tmp/os_logs/keystone.log 2>&1; 	then printf " ## Map user glance to project service and role admin \n"; 	else printf "Could not map user glance to project service and role admin  \n"; fi
 		if openstack --os-url $os_url --os-token=$os_token --os-identity-api-version 3 role add --project service --user nova admin >> /tmp/os_logs/keystone.log 2>&1; 		then printf " ## Map user nova to project service and role admin \n"; 		else printf "Could not map user nova to project service and role admin  \n"; fi

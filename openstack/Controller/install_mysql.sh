@@ -27,7 +27,7 @@ printf " ####Start MariaDB Installation \n"
 
 
 ### Stop Service
-	printf "### Stop mysqld service \n"
+	printf " ### Stop mysqld service \n"
 		service mysql stop >> /tmp/os_logs/mysql.log 2>&1
 
 ### Configure
