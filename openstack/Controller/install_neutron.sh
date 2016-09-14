@@ -37,7 +37,7 @@ printf "\n\n #### Start Neutron Installation \n"
 		sed -i '/local_ip = */c\local_ip = '$LOCALIP /etc/neutron/plugins/ml2/linuxbridge_agent.ini
 		sed -i '/auth_uri = */c\auth_uri = http://'$LOCALHOSTNAME':5000' /etc/neutron/metadata_agent.ini
 		sed -i '/auth_url = */c\auth_url = http://'$LOCALHOSTNAME':35357' /etc/neutron/metadata_agent.ini
-	printf $green " --> done\n"
+	printf $green " --> done"
 	
 	#Add neutron section to nova.conf
 		echo "
@@ -64,7 +64,7 @@ metadata_proxy_shared_secret = Password123!
 		fi
 
 #Restart Services
-		printf " ### Restart Neutron and Neutron related Services"
+		printf " ### Restart Neutron and Neutron related Services\n"
 			if service nova-api restart >> /tmp/os_logs/neutron.log 2>&1; 										then printf " --> Restart Nova-api Service done\n"; 							else printf  " --> Could not restart Nova-api Service - see /tmp/os_logs/neutron.log\n"; fi
 			if service neutron-server restart >> /tmp/os_logs/neutron.log 2>&1; 								then printf " --> Restart neutron-server done\n"; 								else printf  " --> Could not restart neutron-server Service - see /tmp/os_logs/neutron.log\n"; fi
 			if service neutron-plugin-linuxbridge-agent restart >> /tmp/os_logs/neutron.log 2>&1; 	then printf " --> Restart neutron-plugin-linuxbridge-agent done\n"; 	else printf  " --> Could not restart neutron-plugin-linuxbridge-agent Service - see /tmp/os_logs/neutron.log\n"; fi

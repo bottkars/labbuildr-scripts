@@ -9,7 +9,7 @@ LOCALHOSTNAME=$1
 LOCALIP=$2
 
 
-printf " ####Start MariaDB Installation \n"
+printf " #### Start MariaDB Installation \n"
 
 ### SET PW
 	printf " ### debconf-set-selections "

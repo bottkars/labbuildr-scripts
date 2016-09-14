@@ -6,6 +6,7 @@ yellow='\e[1;33m%s\e[0m\n'
 
 CONTROLLERNAME=$(hostname)
 CONTROLLERIP=$(ifconfig eth0 | awk '/inet addr/{print substr($2,6)}')
+CONFIG="true"
 
 #Parameter Handling
 while [ $# -gt 1 ]
@@ -24,9 +25,23 @@ case $key in
         SIO_GW="$2"
         shift # past argument
     ;;
-    *)
-            # unknown option
+    -d | --domain)
+        LABDOMAIN="$2"
+        shift # past argument
     ;;
+    -c | --config)
+        CONFIG="$2"
+        shift # past argument
+    ;;
+    *)
+	printf "usage: install_base.sh
+		\t [ --scaleio_protection_domain | -spd ] <ScaleIO Protection Domain Name>
+		\t [ scaleio_storage_pool | -ssp ] <ScaleIO Storage Pool Name>
+		\t [ --scaleio_gateway | -sgw ] < ScaleIO Gateway IP | ScaleIO Gateway Hostname>
+		\t [ --domain | -d ] <Labbuildr Domain Name>
+		\t [ --config | -c ] <true | false>
+	"
+	;;
 esac
 shift # past argument or value
 done
@@ -36,19 +51,33 @@ cd "$( dirname "${BASH_SOURCE[0]}" )"
 
 #Check if SIO vars are specified by parameter
 if [ -z $SIO_GW ]; then 
-	printf "No ScaleIO Gateway has been specified. Assuming ScaleIO Gateway is local.\n "
+	printf " !!! No ScaleIO Gateway has been specified. Assuming ScaleIO Gateway is local.\n "
 	SIO_GW=$(hostname)
 fi
 
 if [ -z $SIO_PD ]; then 
-	printf "No ScaleIO Protection Domain has been specified. Setting ScaleIO Protection Domain to \"default\" \n "
+	printf " !!! No ScaleIO Protection Domain has been specified. Setting ScaleIO Protection Domain to \"default\" \n "
 	SIO_PD="default"
 fi
 
 if [ -z $SIO_SP ]; then 
-	printf "No ScaleIO Storage Pool has been specified. Setting ScaleIO Storage Pool to \"defaultSP\" \n "
+	printf " !!! No ScaleIO Storage Pool has been specified. Setting ScaleIO Storage Pool to \"defaultSP\" \n "
 	SIO_SP="defaultSP"
 fi
+if [ -z $LABDOMAIN ]; then 
+	printf " !!! No Labdomain has been specified. Setting Labdomain do  \"labbuildr\" \n "
+	LABDOMAIN="labbuildr"
+fi
+
+if [ $CONFIG == "true" ] || [ $CONFIG == "false" ]; then
+	printf "\n"
+else
+	printf " !!! Config parameter has not been recognized. Setting it to true\n"
+	CONFIG="true"
+	printf " !!! Openstack will be installed with base config.\n"
+fi
+
+
 
 ### Starting actual Installation Workflow
 printf $yellow "
@@ -62,19 +91,19 @@ printf $yellow "
 		printf " ### ScaleIO Gateway\t\t\t:$SIO_GW \n"
 		printf " ### ScaleIO Protection Domain\t\t:$SIO_PD \n"
 		printf " ### ScaleIO Storage Pool\t\t:$SIO_SP \n"
-		
+		if [ $CONFIG == "true" ]; then printf " ### Openstack will be installed with base config.\n"; else printf " ### Openstack will be installed without base config.\n"; fi
 		
 printf " #### Prepare Installation\n"
 
 	printf " ### Create Log Files on /tmp/os_logs\t "
-		if 	mkdir -p /tmp/os_logs && touch /tmp/os_logs/general.log /tmp/os_logs/mysql.log /tmp/os_logs/rabbitmq.log /tmp/os_logs/keystone.log /tmp/os_logs/glance.log /tmp/os_logs/nova.log /tmp/os_logs/neutron.log /tmp/os_logs/cinder.log /tmp/os_logs/horizon.log; then
+		if 	mkdir -p /tmp/os_logs && touch /tmp/os_logs/general.log /tmp/os_logs/mysql.log /tmp/os_logs/rabbitmq.log /tmp/os_logs/keystone.log /tmp/os_logs/glance.log /tmp/os_logs/nova.log /tmp/os_logs/neutron.log /tmp/os_logs/cinder.log /tmp/os_logs/horizon.log /tmp/os_logs/conf_env.log; then
 			printf $green " --> done"
 		else	
 			printf $red " --> Could not create Log Files "
 		fi
 
 	printf " ### Make Scripts executable\t "
-		if (chmod +x install_mysql.sh install_rabbitmq.sh install_keystone.sh install_glance.sh install_nova.sh install_neutron.sh install_cinder.sh install_horizon.sh) >> /tmp/os_logs/general.log 2>&1; then
+		if (chmod +x install_mysql.sh install_rabbitmq.sh install_keystone.sh install_glance.sh install_nova.sh install_neutron.sh install_cinder.sh install_horizon.sh configure_environment.sh) >> /tmp/os_logs/general.log 2>&1; then
 			printf $green "--> done"
 		else
 			printf $red " --> Could not set permissions - see /tmp/os_logs/general.log"
@@ -116,6 +145,7 @@ printf " #### Install Basic Tools\n"
 ./install_neutron.sh $CONTROLLERNAME $CONTROLLERIP
 ./install_cinder.sh $CONTROLLERNAME $CONTROLLERIP $SIO_GW $SIO_PD $SIO_SP
 ./install_horizon.sh $CONTROLLERNAME $CONTROLLERIP
+if [ $CONFIG == "true" ]; then ./configure_environment.sh $LABDOMAIN; fi
 
 
 

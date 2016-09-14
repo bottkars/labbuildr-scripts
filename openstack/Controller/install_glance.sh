@@ -18,7 +18,7 @@ printf "\n\n #### Start Glance Installation \n"
 		fi				
 
 #Copy Predefined Configs
-	printf " ### Configure Glance \n"
+	printf " ### Configure Glance "
 		cp ./configs/glance-api.conf /etc/glance/glance-api.conf
 		cp ./configs/glance-registry.conf /etc/glance/glance-registry.conf
 
@@ -34,7 +34,7 @@ printf "\n\n #### Start Glance Installation \n"
 	printf $green " --> done\n"
 	
 	### Populate Database
-	printf " ### Populate Glance Database "
+	printf " ### Populate Glance Database"
 		if su -s /bin/sh -c "glance-manage db_sync" glance >> /tmp/os_logs/glance.log 2>&1 >> /tmp/os_logs/glance.log 2>&1; then
 			printf $green " --> done"
 		else
@@ -42,7 +42,7 @@ printf "\n\n #### Start Glance Installation \n"
 		fi
 
 	### Restart Glance-Api
-	printf " ### Restart Glance Services"
+	printf " ### Restart Glance Services \n"
 		if service glance-api restart >> /tmp/os_logs/glance.log 2>&1; 		then printf $green " --> Restart Glance-Api done"; 			else printf $red " --> Could not restart Glance-Api Service - see /tmp/os_logs/glance.log"; fi
 		if service glance-registry restart >> /tmp/os_logs/glance.log 2>&1; then printf $green " --> Restart Glance-Registry done"; 	else printf $red " --> Could not restart Glance-Registry Service - see /tmp/os_logs/glance.log"; fi		
 	

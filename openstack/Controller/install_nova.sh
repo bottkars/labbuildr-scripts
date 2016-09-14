@@ -18,7 +18,7 @@ printf "\n\n #### Start Nova Installation \n"
 			printf $red " --> Could not install Nova Packages - see /tmp/os_logs/nova.log"
 		fi			
 
-	printf " ### Configure Nova \n"
+	printf " ### Configure Nova "
 			# Create new Nova File
 			echo "[DEFAULT]
 dhcpbridge_flagfile=/etc/nova/nova.conf
@@ -74,7 +74,7 @@ lock_path = /var/lib/nova/tmp
 		fi
 
 #Restart Services
-		printf " ### Restart Nova Services"
+		printf " ### Restart Nova Services\n"
 			if service nova-api restart >> /tmp/os_logs/nova.log 2>&1; 				then printf " --> Restart Nova-api done\n"; 				else printf  " --> Could not restart Nova-api Service - see /tmp/os_logs/nova.log\n";fi
 			if service nova-consoleauth restart >> /tmp/os_logs/nova.log 2>&1; 	then printf " --> Restart Nova-consoleauth done\n"; else printf  " --> Could not restart Nova-consoleauth Service - see /tmp/os_logs/nova.log\n";fi
 			if service nova-scheduler restart >> /tmp/os_logs/nova.log 2>&1; 		then printf " --> Restart Nova-scheduler done\n"; 	else printf  " --> Could not restart Nova-scheduler Service - see /tmp/os_logs/nova.log\n";fi
