@@ -131,7 +131,7 @@ printf " ### Configure Admin related Network Settings \n"
 		fi
 
 	if (neutron --os-project-domain-id $PROJECTDOMAIN  --os-project-name admin --os-user-domain-id $USERDOMAIN --os-username admin --os-password Password123! --os-auth-url $AUTHURL  \
-		subnet-create  --gateway 192.168.2.4 --allocation-pool start=192.168.2.210,end=192.168.2.219 --dns-nameserver 192.168.2.4 --name Internet_SN Internet 192.168.2.0/24) >> /tmp/os_logs/conf_env.log 2>&1; then
+		subnet-create --disable-dhcp --gateway 192.168.2.4 --allocation-pool start=192.168.2.210,end=192.168.2.219 --dns-nameserver 192.168.2.4 --name Internet_SN Internet 192.168.2.0/24) >> /tmp/os_logs/conf_env.log 2>&1; then
 			printf " --> Gave some IPs to the Internet. Created subnet Internet_SN on Network Internet \n"
 	else
 			printf " --> Could not create Subnet Internet_SN on Network Internet - see /tmp/os_logs/conf_env.log \n"
