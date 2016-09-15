@@ -44,7 +44,8 @@ if ($Acro_Setup)
     Start-Process -FilePath "msiexec.exe" -ArgumentList $argumentList  -Wait -PassThru
     if ($Acro_PATCH)
         {
-        $Acro_PATCH = $Acro_PATCH | Sort-Object -Descending
+        $Acro_PATCH = $Acro_PATCH | Sort-Object -Descending | Select-Object -First 1
+		Write-Verbose "using patch $Acro_PATCH"
         $argumentList = "/p `"$Acro_PATCH`" /qb"
         Write-Host -ForegroundColor Magenta "Starting Acrobat Reader DC Patch"
         Start-Process -FilePath "msiexec.exe" -ArgumentList $argumentList  -Wait -PassThru

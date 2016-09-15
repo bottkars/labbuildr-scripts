@@ -49,6 +49,7 @@ printf " #### Start MariaDB Installation \n"
 	if (mysql -u root --password='Password123!' -e "CREATE DATABASE nova;") >> /tmp/os_logs/mysql.log 2>&1; 			then printf " ## Nova Database created\n"; 		else printf " --> Could not create Nova Database - see /tmp/os_logs/mysql.log\n"; fi
 	if (mysql -u root --password='Password123!' -e "CREATE DATABASE neutron;") >> /tmp/os_logs/mysql.log 2>&1; 		then printf " ## Neutron Database created\n"; 	else printf " --> Could not create Neutron Database - see /tmp/os_logs/mysql.log\n"; fi
 	if (mysql -u root --password='Password123!' -e "CREATE DATABASE cinder;") >> /tmp/os_logs/mysql.log 2>&1; 		then printf " ## Cinder Database created\n"; 		else printf " --> Could not create Cinder Database - see /tmp/os_logs/mysql.log\n"; fi
+	if (mysql -u root --password='Password123!' -e "CREATE DATABASE heat;") >> /tmp/os_logs/mysql.log 2>&1; 		then printf " ## Heat Database created\n"; 		else printf " --> Could not create Heat Database - see /tmp/os_logs/mysql.log\n"; fi
 			
 	printf " ### Create SQL User and Permissions "	
 		#Keystone
@@ -66,8 +67,10 @@ printf " #### Start MariaDB Installation \n"
 		#Cinder
 		mysql -u root --password='Password123!' -e "GRANT ALL PRIVILEGES ON cinder.* TO 'cinder'@'localhost' IDENTIFIED BY 'Password123\!';"
 		mysql -u root --password='Password123!' -e "GRANT ALL PRIVILEGES ON cinder.* TO 'cinder'@'%' IDENTIFIED BY 'Password123\!';" 
-		#Flush Privileges
+		#Heat
+		mysql -u root --password='Password123!' -e "GRANT ALL PRIVILEGES ON heat.* TO 'heat'@'localhost' IDENTIFIED BY 'Password123\!';"
+		mysql -u root --password='Password123!' -e "GRANT ALL PRIVILEGES ON heat.* TO 'heat'@'%' IDENTIFIED BY 'Password123\!';" 
+		#Flush PRIVILEGES
 		mysql -u root --password='Password123!' -e "FLUSH PRIVILEGES;"
 	printf $green " --> done\n" 
 printf " #### Finished MariaDB Installation \n"
-

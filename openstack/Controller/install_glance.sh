@@ -11,7 +11,7 @@ printf "\n\n #### Start Glance Installation \n"
 
 ### Install
 	printf " ### Install Packages "
-		if apt-get install glance python-glanceclient -y >> /tmp/os_logs/glance.log 2>&1 >> /tmp/os_logs/glance.log 2>&1; then
+		if apt-get install glance python-glanceclient -y >> /tmp/os_logs/glance.log 2>&1; then
 					printf $green " --> done"
 		else
 			printf $red " --> Could not install Glance Packages - see /tmp/os_logs/glance.log"

@@ -35,8 +35,8 @@ printf " #### Start RabbitMQ Installation \n"
 		if (rabbitmqctl add_user nova_compute Password123!) >> /tmp/os_logs/rabbitmq.log 2>&1; 		then printf " ## Created user nova_compute \n"; 		else printf " Could not create user nova_compute - see /tmp/os_logs/rabbitmq.log\n"; fi
 		if (rabbitmqctl add_user neutron Password123!) >> /tmp/os_logs/rabbitmq.log 2>&1; 				then printf " ## Created user neutron \n"; 					else printf " Could not create user neutron - see /tmp/os_logs/rabbitmq.log\n"; fi
 		if (rabbitmqctl add_user neutron_compute Password123!) >> /tmp/os_logs/rabbitmq.log 2>&1; 	then printf " ## Created user neutron_compute \n";	else printf " Could not create user neutron_compute - see /tmp/os_logs/rabbitmq.log\n"; fi
-		if (rabbitmqctl add_user cinder Password123!) >> /tmp/os_logs/rabbitmq.log 2>&1; 					then printf " ## Created user cinder \n"; 					else printf " Could not create user cinder - see /tmp/os_logs/rabbitmq.log\n"; fi
-		
+		if (rabbitmqctl add_user cinder Password123!) >> /tmp/os_logs/rabbitmq.log 2>&1; 					then printf " ## Created user cinder \n"; 						else printf " Could not create user cinder - see /tmp/os_logs/rabbitmq.log\n"; fi
+		if (rabbitmqctl add_user heat Password123!) >> /tmp/os_logs/rabbitmq.log 2>&1; 						then printf " ## Created user heat \n"; 						else printf " Could not create user heat - see /tmp/os_logs/rabbitmq.log\n"; fi
 		
 	printf '### Configure user permissions \n'
 		#Nova
@@ -52,6 +52,9 @@ printf " #### Start RabbitMQ Installation \n"
 		#Cinder 
 		rabbitmqctl set_permissions cinder ".*" ".*" ".*"
 		rabbitmqctl set_user_tags cinder administrator 
+		#Heat
+		rabbitmqctl set_permissions heat ".*" ".*" ".*"
+		rabbitmqctl set_user_tags heat administrator 
 		printf $green " --> done\n"		
 		
 printf " #### Finished RabbitMQ Installation \n"

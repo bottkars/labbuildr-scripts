@@ -50,19 +50,20 @@ done
 cd "$( dirname "${BASH_SOURCE[0]}" )"
 
 #Check if SIO vars are specified by parameter
+printf "\n\n\n"
 if [ -z $SIO_GW ]; then 
 	printf " !!! No ScaleIO Gateway has been specified. Assuming ScaleIO Gateway is local.\n "
 	SIO_GW=$(hostname)
 fi
 
 if [ -z $SIO_PD ]; then 
-	printf " !!! No ScaleIO Protection Domain has been specified. Setting ScaleIO Protection Domain to \"default\" \n "
-	SIO_PD="default"
+	printf " !!! No ScaleIO Protection Domain has been specified. Setting ScaleIO Protection Domain to \"PD_labbuildr\" \n "
+	SIO_PD="PD_labbuildr"
 fi
 
 if [ -z $SIO_SP ]; then 
-	printf " !!! No ScaleIO Storage Pool has been specified. Setting ScaleIO Storage Pool to \"defaultSP\" \n "
-	SIO_SP="defaultSP"
+	printf " !!! No ScaleIO Storage Pool has been specified. Setting ScaleIO Storage Pool to \"SP_labbuildr\" \n "
+	SIO_SP="SP_labbuildr"
 fi
 if [ -z $LABDOMAIN ]; then 
 	printf " !!! No Labdomain has been specified. Setting Labdomain do  \"labbuildr\" \n "
@@ -96,14 +97,14 @@ printf $yellow "
 printf " #### Prepare Installation\n"
 
 	printf " ### Create Log Files on /tmp/os_logs\t "
-		if 	mkdir -p /tmp/os_logs && touch /tmp/os_logs/general.log /tmp/os_logs/mysql.log /tmp/os_logs/rabbitmq.log /tmp/os_logs/keystone.log /tmp/os_logs/glance.log /tmp/os_logs/nova.log /tmp/os_logs/neutron.log /tmp/os_logs/cinder.log /tmp/os_logs/horizon.log /tmp/os_logs/conf_env.log; then
+		if 	mkdir -p /tmp/os_logs && touch /tmp/os_logs/general.log /tmp/os_logs/mysql.log /tmp/os_logs/rabbitmq.log /tmp/os_logs/keystone.log /tmp/os_logs/glance.log /tmp/os_logs/nova.log /tmp/os_logs/neutron.log /tmp/os_logs/cinder.log /tmp/os_logs/horizon.log /tmp/os_logs/heat.log /tmp/os_logs/conf_env.log; then
 			printf $green " --> done"
 		else	
 			printf $red " --> Could not create Log Files "
 		fi
 
 	printf " ### Make Scripts executable\t "
-		if (chmod +x install_mysql.sh install_rabbitmq.sh install_keystone.sh install_glance.sh install_nova.sh install_neutron.sh install_cinder.sh install_horizon.sh configure_environment.sh) >> /tmp/os_logs/general.log 2>&1; then
+		if (chmod +x install_mysql.sh install_rabbitmq.sh install_keystone.sh install_glance.sh install_nova.sh install_neutron.sh install_cinder.sh install_horizon.sh configure_environment.sh install_heat.sh) >> /tmp/os_logs/general.log 2>&1; then
 			printf $green "--> done"
 		else
 			printf $red " --> Could not set permissions - see /tmp/os_logs/general.log"
@@ -145,13 +146,6 @@ printf " #### Install Basic Tools\n"
 ./install_neutron.sh $CONTROLLERNAME $CONTROLLERIP
 ./install_cinder.sh $CONTROLLERNAME $CONTROLLERIP $SIO_GW $SIO_PD $SIO_SP
 ./install_horizon.sh $CONTROLLERNAME $CONTROLLERIP
+./install_heat.sh $CONTROLLERNAME
 if [ $CONFIG == "true" ]; then ./configure_environment.sh $LABDOMAIN; fi
-
-
-
-
-
-
-
-
 
