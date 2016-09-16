@@ -32,10 +32,10 @@ printf "\n\n #### Start Horizon Installation \n"
 			sed -i '/OPENSTACK_HOST = */c\OPENSTACK_HOST = \"'$LOCALHOSTNAME'\"'  /etc/openstack-dashboard/local_settings.py
 	printf $green " --> done\n"
 
-##Doing something else
-wget -A jpg -nd http://www.seycron.de/logo-splash.png >> /dev/null 2>&1
-cp logo-splash.png /usr/share/openstack-dashboard/openstack_dashboard/static/dashboard/img/logo-splash.png >> /dev/null 2>&1
-rm logo-splash.png >> /dev/null 2>&1	
+# Replace Splash Logo
+	printf " ## Taking over Identity ..."
+	cp ./configs/logo-splash.png /usr/share/openstack-dashboard/openstack_dashboard/static/dashboard/img/logo-splash.png
+	printf " --> done."
 	
 #Restart Service
 	printf " ### Restart Apache2 Service"
