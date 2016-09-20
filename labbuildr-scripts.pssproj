@@ -27,49 +27,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="openstack4labbuildr\" />
-    <Folder Include="openstack4labbuildr\Compute\" />
-    <Folder Include="openstack4labbuildr\Compute\configs\" />
-    <Folder Include="openstack4labbuildr\Controller\" />
-    <Folder Include="openstack4labbuildr\Controller\configs\" />
     <Folder Include="openstack\" />
     <Folder Include="openstack\Controller\" />
     <Folder Include="openstack\Controller\logs\" />
     <Folder Include="viprmaster\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="openstack4labbuildr\Compute\configs\linuxbridge_agent.ini" />
-    <Compile Include="openstack4labbuildr\Compute\configs\neutron.conf" />
-    <Compile Include="openstack4labbuildr\Compute\configs\nova.conf" />
-    <Compile Include="openstack4labbuildr\Compute\install_base.sh" />
-    <Compile Include="openstack4labbuildr\Compute\install_neutron.sh" />
-    <Compile Include="openstack4labbuildr\Compute\install_nova.sh" />
-    <Compile Include="openstack4labbuildr\Controller\configs\apache2.conf" />
-    <Compile Include="openstack4labbuildr\Controller\configs\cinder.conf" />
-    <Compile Include="openstack4labbuildr\Controller\configs\dhcp_agent.ini" />
-    <Compile Include="openstack4labbuildr\Controller\configs\dnsmasq-neutron.conf" />
-    <Compile Include="openstack4labbuildr\Controller\configs\glance-api.conf" />
-    <Compile Include="openstack4labbuildr\Controller\configs\glance-registry.conf" />
-    <Compile Include="openstack4labbuildr\Controller\configs\keystone.conf" />
-    <Compile Include="openstack4labbuildr\Controller\configs\l3_agent.ini" />
-    <Compile Include="openstack4labbuildr\Controller\configs\linuxbridge_agent.ini" />
-    <Compile Include="openstack4labbuildr\Controller\configs\local_settings.py" />
-    <Compile Include="openstack4labbuildr\Controller\configs\metadata_agent.ini" />
-    <Compile Include="openstack4labbuildr\Controller\configs\ml2_conf.ini" />
-    <Compile Include="openstack4labbuildr\Controller\configs\my.cnf" />
-    <Compile Include="openstack4labbuildr\Controller\configs\neutron.conf" />
-    <Compile Include="openstack4labbuildr\Controller\configs\nova.conf" />
-    <Compile Include="openstack4labbuildr\Controller\configs\wsgi-keystone.conf" />
-    <Compile Include="openstack4labbuildr\Controller\env_var.sh" />
-    <Compile Include="openstack4labbuildr\Controller\install_base.sh" />
-    <Compile Include="openstack4labbuildr\Controller\install_cinder.sh" />
-    <Compile Include="openstack4labbuildr\Controller\install_glance.sh" />
-    <Compile Include="openstack4labbuildr\Controller\install_horizon.sh" />
-    <Compile Include="openstack4labbuildr\Controller\install_keystone.sh" />
-    <Compile Include="openstack4labbuildr\Controller\install_mysql.sh" />
-    <Compile Include="openstack4labbuildr\Controller\install_neutron.sh" />
-    <Compile Include="openstack4labbuildr\Controller\install_nova.sh" />
-    <Compile Include="openstack4labbuildr\Controller\install_rabbitmq.sh" />
     <Compile Include="Script.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
