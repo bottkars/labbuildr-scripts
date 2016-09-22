@@ -7,8 +7,6 @@ yellow='\e[1;33m%s\e[0m\n'
 
 LOCALHOSTNAME=$1
 LOCALIP=$2
-LABDOMAIN=$3
-SUFFIX=$4
 
 printf "\n\n #### Start Neutron Installation \n"
 
@@ -40,7 +38,7 @@ printf "\n\n #### Start Neutron Installation \n"
 		sed -i '/auth_uri = */c\auth_uri = http://'$LOCALHOSTNAME':5000' /etc/neutron/metadata_agent.ini
 		sed -i '/auth_url = */c\auth_url = http://'$LOCALHOSTNAME':35357' /etc/neutron/metadata_agent.ini
 		sed -i '/nova_metadata_ip = */c\nova_metadata_ip = '$LOCALHOSTNAME /etc/neutron/metadata_agent.ini
-		sed -i '/dhcp_domain = */c\dhcp_domain = '$LABDOMAIN'.'$SUFFIX /etc/neutron/dhcp_agent.ini
+		
 	printf $green " --> done"
 	
 	#Add neutron section to nova.conf

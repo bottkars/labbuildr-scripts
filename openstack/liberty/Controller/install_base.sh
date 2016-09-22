@@ -7,8 +7,6 @@ yellow='\e[1;33m%s\e[0m\n'
 CONTROLLERNAME=$(hostname)
 CONTROLLERIP=$(ifconfig eth0 | awk '/inet addr/{print substr($2,6)}')
 CONFIG="true"
-SUFFIX="local"
-LABDOMAIN="labbuildr"
 
 #Parameter Handling
 while [ $# -gt 1 ]
@@ -34,10 +32,6 @@ case $key in
     -c | --config)
         CONFIG="$2"
         shift # past argument
-	;;
-		-s | --suffix)
-        CONFIG="$2"
-        shift # past argument
     ;;
     *)
 	printf "usage: install_base.sh
@@ -45,7 +39,6 @@ case $key in
 		\t [ scaleio_storage_pool | -ssp ] <ScaleIO Storage Pool Name>
 		\t [ --scaleio_gateway | -sgw ] < ScaleIO Gateway IP | ScaleIO Gateway Hostname>
 		\t [ --domain | -d ] <Labbuildr Domain Name>
-		\t [ --suffix | -s <domain suffix>]
 		\t [ --config | -c ] <true | false>
 	"
 	;;
@@ -150,7 +143,7 @@ printf " #### Install Basic Tools\n"
 ./install_keystone.sh $CONTROLLERNAME
 ./install_glance.sh $CONTROLLERNAME $CONTROLLERIP
 ./install_nova.sh $CONTROLLERNAME $CONTROLLERIP
-./install_neutron.sh $CONTROLLERNAME $CONTROLLERIP $LABDOMAIN $SUFFIX
+./install_neutron.sh $CONTROLLERNAME $CONTROLLERIP
 ./install_cinder.sh $CONTROLLERNAME $CONTROLLERIP $SIO_GW $SIO_PD $SIO_SP
 ./install_horizon.sh $CONTROLLERNAME $CONTROLLERIP
 ./install_heat.sh $CONTROLLERNAME

@@ -6,7 +6,6 @@ yellow='\e[1;33m%s\e[0m\n'
 
 LOCALHOSTNAME=$(hostname)
 LOCALIP=$(ifconfig eth0 | awk '/inet addr/{print substr($2,6)}')
-DOCKER="false"
 
 while [ $# -gt 1 ]
 do
@@ -19,10 +18,6 @@ case $key in
 		-cname|--controller_name)
 		CONTROLLERNAME="$2"
     shift # past argument
-    ;;
-   -d | --docker)
-        DOCKER="$2"
-        shift # past argument
     ;;
     *)
             # unknown option
@@ -59,8 +54,7 @@ printf $yellow "
 		printf " ### Controller Name\t\t\t:$CONTROLLERNAME \n"
 		printf " ### Local IP used\t\t\t:$LOCALIP \n"
 		printf " ### Local Hostname used\t\t:$LOCALHOSTNAME \n"
-		if [ $DOCKER == "true" ]; then printf " ### This Host will become a Docker Host.\n"; else printf " ### This Host will become a libvirt Host.\n"; fi
-	
+
 printf " #### Prepare Installation\n"
 	printf " ### Check if Node supports hardware acceleration\n"
 		if (( $(egrep -c '(vmx|svm)' /proc/cpuinfo) == 0 )); then
@@ -71,14 +65,14 @@ printf " #### Prepare Installation\n"
 		fi
 
 	printf " ### Create Log Files on /tmp/os_logs\t"
-		if mkdir /tmp/os_logs && touch /tmp/os_logs/{general.log,nova.log,neutron.log,nova_docker.log} ; then
+		if mkdir /tmp/os_logs && touch /tmp/os_logs/general.log /tmp/os_logs/nova.log /tmp/os_logs/neutron.log ; then
 			printf $green " --> done"
 	else	
 		printf $red " ERROR --> Could not create Log Files"
 	fi
 	
 	printf " ### Make Scripts executable\t"	
-		if chmod +x * >> /tmp/os_logs/general.log 2>&1; then
+		if chmod +x install_nova.sh install_neutron.sh >> /tmp/os_logs/general.log 2>&1; then
 			printf $green "--> done"
 	else
 		printf $red " ERROR --> Could not set permissions - see /tmp/os_logs/general.log"
@@ -109,7 +103,6 @@ printf " #### Install Basic Tools\n"
 
 ./install_nova.sh $LOCALIP $CONTROLLERIP $CONTROLLERNAME
 ./install_neutron.sh $LOCALIP $CONTROLLERIP $CONTROLLERNAME
-if [ $DOCKER == "true" ]; then ./install_docker.sh; fi
 
 
 
