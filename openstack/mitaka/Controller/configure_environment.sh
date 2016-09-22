@@ -33,28 +33,28 @@ printf " ### Create Additional Tenants \n"
 
 printf " ### Create Additional Users \n"
 		if (openstack --os-username admin --os-password Password123! --os-project-name admin --os-domain-name default --os-identity-api-version 3 --os-auth-url $AUTHURL \
-		 user create --domain default --project $TENDEV --password Password123! --enable Dev_Admin)  >> /tmp/os_logs/conf_env.log 2>&1; then 
+		 user create --domain default --password Password123! --enable Dev_Admin)  >> /tmp/os_logs/conf_env.log 2>&1; then 
 			printf " --> Created User Dev_Admin\n"
 		else 
 			printf " ERROR --> Could not create User Dev_Admin \n"
 		fi
 		
 		if (openstack --os-username admin --os-password Password123! --os-project-name admin --os-domain-name default --os-identity-api-version 3 --os-auth-url $AUTHURL \
-		 user create --domain default --project $TENDEV --password Password123! --enable Dev_User)  >> /tmp/os_logs/conf_env.log 2>&1; then 
+		 user create --domain default --password Password123! --enable Dev_User)  >> /tmp/os_logs/conf_env.log 2>&1; then 
 			printf " --> Created User Dev_User\n"
 		else 
 			printf " ERROR --> Could not create User Dev_User\n"
 		fi
 
 		if (openstack --os-username admin --os-password Password123! --os-project-name admin --os-domain-name default --os-identity-api-version 3 --os-auth-url $AUTHURL \
-		 user create --domain default --project $TENPROD --password Password123! --enable Prod_Admin)  >> /tmp/os_logs/conf_env.log 2>&1; then 
+		 user create --domain default --password Password123! --enable Prod_Admin)  >> /tmp/os_logs/conf_env.log 2>&1; then 
 			printf " --> Created User Prod_Admin\n"
 		else 
 			printf " ERROR --> Could not create User Prod_Admin \n"
 		fi
 		
 		if (openstack --os-username admin --os-password Password123! --os-project-name admin --os-domain-name default --os-identity-api-version 3 --os-auth-url $AUTHURL \
-		 user create --domain default --project $TENPROD --password Password123! --enable Prod_User)  >> /tmp/os_logs/conf_env.log 2>&1; then 
+		 user create --domain default --password Password123! --enable Prod_User)  >> /tmp/os_logs/conf_env.log 2>&1; then 
 			printf " --> Created User Prod_User\n"
 		else 
 			printf " ERROR --> Could not create User Prod_User\n"		

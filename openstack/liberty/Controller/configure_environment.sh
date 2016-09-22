@@ -35,28 +35,28 @@ printf " ### Create Additional Tenants \n"
 
 printf " ### Create Additional Users \n"
 		if (openstack --os-project-domain-id $PROJECTDOMAIN --os-user-domain-id $USERDOMAIN --os-project-name admin --os-username admin --os-password Password123! --os-auth-url  $AUTHURL \
-		 user create --project $TENDEV --password Password123! --enable Dev_Admin)  >> /tmp/os_logs/conf_env.log 2>&1; then 
+		 user  create --password Password123! --enable Dev_Admin)  >> /tmp/os_logs/conf_env.log 2>&1; then 
 			printf " --> Created User Dev_Admin\n"
 		else 
 			printf " --> Could not create User Dev_Admin \n"
 		fi
 		
 if (openstack --os-project-domain-id $PROJECTDOMAIN --os-user-domain-id $USERDOMAIN --os-project-name admin --os-username admin --os-password Password123! --os-auth-url  $AUTHURL \
-		 user create --project $TENDEV --password Password123! --enable Dev_User)  >> /tmp/os_logs/conf_env.log 2>&1; then 
+		 user create --password Password123! --enable Dev_User)  >> /tmp/os_logs/conf_env.log 2>&1; then 
 			printf " --> Created User Dev_User\n"
 		else 
 			printf " --> Could not create User Dev_User\n"
 		fi
 
 		if (openstack --os-project-domain-id $PROJECTDOMAIN --os-user-domain-id $USERDOMAIN --os-project-name admin --os-username admin --os-password Password123! --os-auth-url  $AUTHURL \
-		 user create --project $TENPROD --password Password123! --enable Prod_Admin)  >> /tmp/os_logs/conf_env.log 2>&1; then 
+		 user  create --password Password123! --enable Prod_Admin)  >> /tmp/os_logs/conf_env.log 2>&1; then 
 			printf " --> Created User Prod_Admin\n"
 		else 
 			printf " --> Could not create User Prod_Admin \n"
 		fi
 		
 if (openstack --os-project-domain-id $PROJECTDOMAIN --os-user-domain-id $USERDOMAIN --os-project-name admin --os-username admin --os-password Password123! --os-auth-url  $AUTHURL \
-		 user create --project $TENPROD --password Password123! --enable Prod_User)  >> /tmp/os_logs/conf_env.log 2>&1; then 
+		 user create --password Password123! --enable Prod_User)  >> /tmp/os_logs/conf_env.log 2>&1; then 
 			printf " --> Created User Prod_User\n"
 		else 
 			printf " --> Could not create User Prod_User\n"		
