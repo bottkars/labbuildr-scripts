@@ -40,6 +40,7 @@ firewall_driver = nova.virt.firewall.NoopFirewallDriver
 verbose = True
 rpc_backend = rabbit
 auth_strategy = keystone
+metadata_host = $LOCALHOSTNAME
 [database]
 connection = mysql+pymysql://nova:Password123!@$LOCALHOSTNAME/nova
 [oslo_messaging_rabbit]
