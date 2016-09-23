@@ -28,8 +28,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="openstack\" />
-    <Folder Include="openstack\Controller\" />
-    <Folder Include="openstack\Controller\logs\" />
     <Folder Include="viprmaster\" />
   </ItemGroup>
   <ItemGroup>
