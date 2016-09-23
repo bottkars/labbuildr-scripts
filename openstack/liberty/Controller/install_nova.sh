@@ -40,13 +40,15 @@ firewall_driver = nova.virt.firewall.NoopFirewallDriver
 verbose = True
 rpc_backend = rabbit
 auth_strategy = keystone
-metadata_host = $LOCALHOSTNAME
+metadata_host = \$my_ip
+
 [database]
 connection = mysql+pymysql://nova:Password123!@$LOCALHOSTNAME/nova
 [oslo_messaging_rabbit]
 rabbit_host = $LOCALHOSTNAME
 rabbit_userid = nova_ctrl
 rabbit_password = Password123!
+
 [keystone_authtoken]
 auth_uri = http://$LOCALHOSTNAME:5000
 auth_url = http://$LOCALHOSTNAME:35357
@@ -56,11 +58,14 @@ user_domain_id = default
 project_name = service
 username = nova
 password = Password123!
+
 [vnc]
 vncserver_listen = \$my_ip
 vncserver_proxyclient_address = \$my_ip
+
 [glance]
 host = $LOCALHOSTNAME
+
 [oslo_concurrency]
 lock_path = /var/lib/nova/tmp
 " > /etc/nova/nova.conf	

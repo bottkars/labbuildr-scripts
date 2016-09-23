@@ -37,7 +37,7 @@ auth_strategy = keystone
 my_ip = $LOCALIP
 use_neutron = True
 firewall_driver = nova.virt.firewall.NoopFirewallDriver
-metadata_host = $LOCALHOSTNAME
+metadata_host = \$my_ip
 
 [api_database]
 connection = mysql+pymysql://nova:Password123!@$LOCALHOSTNAME/nova_api
@@ -49,7 +49,6 @@ connection = mysql+pymysql://nova:Password123!@$LOCALHOSTNAME/nova
 rabbit_host = $LOCALHOSTNAME
 rabbit_userid = nova_compute
 rabbit_password = Password123!
-
 
 [keystone_authtoken]
 auth_uri = http://$LOCALHOSTNAME:5000

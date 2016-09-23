@@ -39,7 +39,7 @@ printf "\n\n #### Start Neutron Installation \n"
 		sed -i '/local_ip = */c\local_ip = '$LOCALIP /etc/neutron/plugins/ml2/linuxbridge_agent.ini
 		sed -i '/auth_uri = */c\auth_uri = http://'$LOCALHOSTNAME':5000' /etc/neutron/metadata_agent.ini
 		sed -i '/auth_url = */c\auth_url = http://'$LOCALHOSTNAME':35357' /etc/neutron/metadata_agent.ini
-		sed -i '/nova_metadata_ip = */c\nova_metadata_ip = '$LOCALHOSTNAME /etc/neutron/metadata_agent.ini
+		sed -i '/nova_metadata_ip = */c\nova_metadata_ip = '$LOCALIP /etc/neutron/metadata_agent.ini
 		sed -i '/dhcp_domain = */c\dhcp_domain = '$LABDOMAIN'.'$SUFFIX /etc/neutron/dhcp_agent.ini
 	printf $green " --> done"
 	
