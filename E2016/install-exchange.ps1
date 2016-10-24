@@ -9,16 +9,16 @@
 #requires -version 3
 [CmdletBinding()]
 param(
-[Parameter(Mandatory=$true)]
-[ValidateSet('cu2','cu1','final')]
-$ex_cu,
-$ExDatabasesBase = "C:\ExchangeDatabases",
-[ValidateSet('exe','iso')]$install_from,
-$Scriptdir = "\\vmware-host\Shared Folders\Scripts",
-$SourcePath = "\\vmware-host\Shared Folders\Sources",
-$logpath = "c:\Scripts",
-$ex_version= "E2016",
-$Prereq ="Prereq" 
+	[Parameter(Mandatory=$true)]
+    [ValidateSet('cu3','cu2','cu1','final')]
+	$ex_cu,
+	$ExDatabasesBase = "C:\ExchangeDatabases",
+	[ValidateSet('exe','iso')]$install_from,
+	$Scriptdir = "\\vmware-host\Shared Folders\Scripts",
+	$SourcePath = "\\vmware-host\Shared Folders\Sources",
+	$logpath = "c:\Scripts",
+	$ex_version= "E2016",
+	$Prereq ="Prereq" 
 )
 $Nodescriptdir = "$Scriptdir\NODE"
 $ScriptName = $MyInvocation.MyCommand.Name
