@@ -13,7 +13,7 @@ param(
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
     $logpath = "c:\Scripts",
     [ValidateSet(
-    '3.0.0','3.0.1','3.0.2'#
+    '3.0.0','3.0.1','3.0.2.0'#
     )]
     $APPSYNC_VER='3.0.2'
     )
