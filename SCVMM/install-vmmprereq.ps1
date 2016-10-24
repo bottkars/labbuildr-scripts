@@ -39,7 +39,7 @@ switch ($SC_VERSION)
         }
     default
         {
-        $WAIK = "WAIK_10"
+        $WAIK = "WAIK_10_1607"
         }
     }
 $Setupcmd = "adksetup.exe"
