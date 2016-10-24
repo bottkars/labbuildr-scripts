@@ -9,7 +9,7 @@
 #requires -version 3
 [CmdletBinding()]
 param(
-    [ValidateSet('SC2012_R2','SCTP3','SCTP4','SCTP5')]
+    [ValidateSet('SC2012_R2','SC2016')]
     $SC_VERSION = "SC2012_R2",
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
