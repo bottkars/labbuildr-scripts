@@ -13,7 +13,7 @@ param(
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
     $logpath = "c:\Scripts",
     [ValidateSet(
-    '4.0.0.0',
+    '4.0.0.0','4.0.1.0',#
     '3.7.1.0','3.7.0.0',
     '3.6.0.3'
     )]
