@@ -110,7 +110,7 @@ printf " #### Prepare Installation\n"
 			printf $red " --> Could not create Log Files "
 		fi
 
-	printf " ### Make Scripts executable\t "
+	
 		if (chmod +x install_mysql.sh install_rabbitmq.sh install_keystone.sh install_glance.sh install_nova.sh install_neutron.sh install_cinder.sh install_horizon.sh configure_environment.sh install_heat.sh) >> /tmp/os_logs/general.log 2>&1; then
 			printf $green "--> done"
 		else
