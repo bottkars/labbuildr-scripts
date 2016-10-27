@@ -28,23 +28,22 @@ printf " # Systemdetails
  ### Version:\t\t\t $OSVERSION
 " | tee -a $LOGFILE
 
-printf " ## Prepare Environment\n"  | tee -a $LOGFILE
-
 printf " ### Check if Node supports hardware acceleration\n"
 		if (( $(egrep -c '(vmx|svm)' /proc/cpuinfo) == 0 )); then
 				printf " #### WARNING: Node does not support hardware acceleration #### \n"
-				printf " #### If you are using VMware Workstation - enable \"Virtualize Intel VT-x/EPT or AMD-V/RVI\" \n"
+				printf " #### If you are using VMware Workstation - enable \"Virtualize Intel VT-x/EPT or AMD-V/RVI\" \n\n"
 			else
 				printf " --> SUCCESSFUL - This Node does support hardware acceleration. \n"
 		fi
 
-if (find $INSTALLPATH -name *.sh -exec chmod +x {} \;) >> $LOGFILE 2>&1; then 
-	printf " --> SUCCESSFUL made scripts executable\n"; else printf " --> ERROR - could not make scripts executable - Logfile: $LOGFILE \n"; fi
+printf " ## Prepare Environment\n"  | tee -a $LOGFILE
+	if (find $INSTALLPATH -name *.sh -exec chmod +x {} \;) >> $LOGFILE 2>&1; then 
+		printf " --> SUCCESSFUL made scripts executable\n"; else printf " --> ERROR - could not make scripts executable - Logfile: $LOGFILE \n"; fi
 
-if (apt-get install software-properties-common -y && add-apt-repository cloud-archive:$OSVERSION -y ) >> $LOGFILE 2>&1; then
-	printf " --> SUCCESSFUL added $OSVERSION Repository \n"; else printf " --> ERROR - could not add $OSVERSION Repository - Logfile: $LOGFILE \n" | tee -a $LOGFILE; fi
+	if (apt-get install software-properties-common -y && add-apt-repository cloud-archive:$OSVERSION -y ) >> $LOGFILE 2>&1; then
+		printf " --> SUCCESSFUL added $OSVERSION Repository \n"; else printf " --> ERROR - could not add $OSVERSION Repository - Logfile: $LOGFILE \n" | tee -a $LOGFILE; fi
 
-if (apt-get update) >> $LOGFILE 2>&1; then printf " --> SUCCESSFUL updated Package list \n"; else printf " --> ERROR - could not update Package list - Logfile: $LOGFILE \n" | tee -a $LOGFILE; fi
+	if (apt-get update) >> $LOGFILE 2>&1; then printf " --> SUCCESSFUL updated Package list \n"; else printf " --> ERROR - could not update Package list - Logfile: $LOGFILE \n" | tee -a $LOGFILE; fi
 
 printf "
   -----------------------------------

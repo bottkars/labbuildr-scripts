@@ -9,6 +9,9 @@ CONTROLLERIP=$(ifconfig eth0 | awk '/inet addr/{print substr($2,6)}')
 CONFIG="true"
 SUFFIX="local"
 LABDOMAIN="labbuildr"
+UNITYIP="192.168.2.171"
+UNITYPOOL="vPool"
+CINDERBACKENDS="scaleio"
 
 #Parameter Handling
 while [ $# -gt 1 ]
@@ -31,22 +34,37 @@ case $key in
         LABDOMAIN="$2"
         shift # past argument
     ;;
-    -c | --config)
-        CONFIG="$2"
-        shift # past argument
-	;;
 		-s | --suffix)
         CONFIG="$2"
         shift # past argument
+	;;
+    -c | --config)
+        CONFIG="$2"
+        shift # past argument
     ;;
+		-up | --unitypool)
+        UNITYPOOL="$2"
+        shift # past argument
+	;;
+		-cb | --cinderbackends)
+        CINDERBACKENDS="$2"
+        shift # past argument
+	;;
+		-uip | --unityip)
+        UNITYIP="$2"
+        shift # past argument
+	;;
     *)
 	printf "usage: install_base.sh
 		\t [ --scaleio_protection_domain | -spd ] <ScaleIO Protection Domain Name>
-		\t [ scaleio_storage_pool | -ssp ] <ScaleIO Storage Pool Name>
+		\t [ --scaleio_storage_pool | -ssp ] <ScaleIO Storage Pool Name>
 		\t [ --scaleio_gateway | -sgw ] < ScaleIO Gateway IP | ScaleIO Gateway Hostname>
 		\t [ --domain | -d ] <Labbuildr Domain Name>
 		\t [ --suffix | -s <domain suffix>]
 		\t [ --config | -c ] <true | false>
+		\t [ --unitypool | -up ] <Unity Pool Name>
+		\t [ --cinderbackends | -cb ] <scaleio,unity>
+		\t [ --unityip | -uip ] <192.168.2.171>
 	"
 	;;
 esac
@@ -85,7 +103,9 @@ else
 	printf " !!! Openstack will be installed with base config.\n"
 fi
 
-
+printf "CINDERBACKENDS = "$CINDERBACKENDS"\n"
+printf "UNITYIP = "$UNITYIP"\n"
+printf "UNITYPOOL = "$UNITYPOOL"\n"
 
 ### Starting actual Installation Workflow
 printf $yellow "
@@ -151,8 +171,8 @@ printf " #### Install Basic Tools\n"
 ./install_glance.sh $CONTROLLERNAME $CONTROLLERIP
 ./install_nova.sh $CONTROLLERNAME $CONTROLLERIP
 ./install_neutron.sh $CONTROLLERNAME $CONTROLLERIP $LABDOMAIN $SUFFIX
-./install_cinder.sh $CONTROLLERNAME $CONTROLLERIP $SIO_GW $SIO_PD $SIO_SP
+./install_cinder.sh $CONTROLLERNAME $CONTROLLERIP $SIO_GW $SIO_PD $SIO_SP $UNITYIP $UNITYPOOL $CINDERBACKENDS
 ./install_horizon.sh $CONTROLLERNAME $CONTROLLERIP
 ./install_heat.sh $CONTROLLERNAME
-if [ $CONFIG == "true" ]; then ./configure_environment.sh $LABDOMAIN; fi
+if [ $CONFIG == "true" ]; then ./configure_environment.sh $LABDOMAIN $CINDERBACKENDS; fi
 

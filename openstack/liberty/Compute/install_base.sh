@@ -19,11 +19,6 @@ case $key in
 		CONTROLLERNAME="$2"
     shift # past argument
 	;;
-	   -d | --docker)
-        DOCKER="$2"
-        shift # past argument
- 
-    ;;
     *)
             # unknown option
     ;;
@@ -59,7 +54,6 @@ printf $yellow "
 		printf " ### Controller Name\t\t\t:$CONTROLLERNAME \n"
 		printf " ### Local IP used\t\t\t:$LOCALIP \n"
 		printf " ### Local Hostname used\t\t:$LOCALHOSTNAME \n"
-		if [ $DOCKER == "true" ]; then printf " ### This Host will become a Docker Host.\n"; else printf " ### This Host will become a libvirt Host.\n"; fi
 		
 printf " #### Prepare Installation\n"
 	printf " ### Check if Node supports hardware acceleration\n"
@@ -71,7 +65,7 @@ printf " #### Prepare Installation\n"
 		fi
 
 	printf " ### Create Log Files on /tmp/os_logs\t"
-		if mkdir /tmp/os_logs && touch /tmp/os_logs/{general.log,nova.log,neutron.log,nova_docker.log} ; then
+		if mkdir /tmp/os_logs && touch /tmp/os_logs/{general.log,nova.log,neutron.log} ; then
 			printf $green " --> done"
 	else	
 		printf $red " --> Could not create Log Files"
@@ -109,7 +103,7 @@ printf " #### Install Basic Tools\n"
 
 ./install_nova.sh $LOCALIP $CONTROLLERIP $CONTROLLERNAME
 ./install_neutron.sh $LOCALIP $CONTROLLERIP $CONTROLLERNAME
-if [ $DOCKER == "true" ]; then ./install_docker.sh; fi
+
 
 
 
