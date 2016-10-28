@@ -47,7 +47,11 @@ san_login = admin
 san_password = Password123!
 san_thin_provision = true
 volume_driver=cinder.volume.drivers.emc.scaleio.ScaleIODriver
-volume_backend_name=scaleio" >> /etc/cinder/cinder.conf
+volume_backend_name=scaleio
+" >> /etc/cinder/cinder.conf
+			sed -i '/default_volume_type=*/c\default_volume_type=ScaleIO_Thin' /etc/cinder/cinder.conf
+		else
+			sed -i '/default_volume_type=*/c\default_volume_type=Unity_iSCSI_Thin' /etc/cinder/cinder.conf
 		fi
 		
 	if [[ $CINDERBACKENDS == *"unity"* ]]
@@ -59,13 +63,12 @@ san_ip = $UNITY_IP
 san_login = Local/admin
 san_password = Password123!
 volume_driver = cinder.volume.drivers.emc.emc_unity.EMCUnityDriver
-volume_backend_name = unity" >> /etc/cinder/cinder.conf
+volume_backend_name = unity
+" >> /etc/cinder/cinder.conf
+			printf " ### Get Unity Driver " 
+				curl -o /usr/lib/python2.7/dist-packages/cinder/volume/drivers/emc/emc_unity.py https://raw.githubusercontent.com/emc-openstack/unity-cinder-driver/liberty/emc_unity.py >> /tmp/os_logs/cinder.log 2>&1; 
+	
 		fi
-	
-	
-	
-	
-	
 	
 #Populate Database
 	printf " ### Populate Cinder Database "
@@ -75,9 +78,7 @@ volume_backend_name = unity" >> /etc/cinder/cinder.conf
 			printf $red " --> Could not populate Cinder Database - see /tmp/os_logs/cinder.log"		
 		fi
 
-printf " ### Get Unity Driver " 
-	curl -o /usr/lib/python2.7/dist-packages/cinder/volume/drivers/emc/emc_unity.py https://raw.githubusercontent.com/emc-openstack/unity-cinder-driver/liberty/emc_unity.py >> /tmp/os_logs/cinder.log 2>&1; 
-	
+
 #Restart Services
 		printf " ### Restart Cinder and Cinder related Services\n"
 			if service nova-api restart >> /tmp/os_logs/nova.log 2>&1; 				then printf " --> Restart Nova-api done\n"; 				else printf  " --> Could not restart Nova-api Service - see /tmp/os_logs/cinder.log\n"; fi

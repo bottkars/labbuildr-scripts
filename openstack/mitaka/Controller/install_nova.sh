@@ -76,13 +76,13 @@ lock_path = /var/lib/nova/tmp
 #Populate the nova database
 	printf " ### Populate Nova Databases \n"
 		if su -s /bin/sh -c "nova-manage db sync" nova >> /tmp/os_logs/nova.log 2>&1; then
-			printf " --> Populated Nova Database."
+			printf " --> Populated Nova Database.\n"
 		else
 			printf $red " ERROR --> Could not populate Nova Database - see /tmp/os_logs/nova.log"		
 		fi
 		
 		if su -s /bin/sh -c "nova-manage api_db sync" nova >> /tmp/os_logs/nova.log 2>&1; then
-			printf " --> Populated Nova-Api Database."
+			printf " --> Populated Nova-Api Database.\n"
 		else
 			printf " ERROR --> Could not populate Nova-Api Database - see /tmp/os_logs/nova.log"		
 		fi

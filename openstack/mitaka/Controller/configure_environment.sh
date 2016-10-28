@@ -7,10 +7,12 @@ PROJECTDOMAIN="default"
 USERDOMAIN="default"
 AUTHURL="http://$(hostname):35357/v3"
 LABDOMAIN=$1
+CINDERBACKENDS=$2
 TENDEV="" #will get the developement tenent id later on
 TENPROD="" #will get the production tenent id later on
 
 printf " #### Start Configuring the environment \n"
+
 printf " ### Create Additional Tenants \n"
 
 	if (openstack --os-username admin --os-password Password123! --os-project-name admin --os-domain-name default --os-identity-api-version 3 --os-auth-url $AUTHURL \
@@ -212,34 +214,116 @@ printf " ### Add Entries to Security Groups \n"
 	else
 		printf " ERROR --> Could not allow SSH in default Security Group in Tenant "$LABDOMAIN"_Production \n"
 	fi
+
+if [[ $CINDERBACKENDS == *"scaleio"* ]]
+		then
+			printf ' ### Create Volume Types for ScaleIO_Thin / ScaleIO_Thick Provisioning \n'
+					if openstack --os-project-domain-name default --os-user-domain-name default --os-project-name admin --os-username admin --os-password Password123! --os-auth-url  $AUTHURL \
+						volume type create ScaleIO_Thin >> /tmp/os_logs/conf_env.log 2>&1; then
+							printf " --> Created volume Type ScaleIO_Thin \n"
+					else 
+						printf " --> Could not create volume Type ScaleIO_Thin - see /tmp/os_logs/conf_env.log\n"
+					fi
+					
+					if openstack --os-project-domain-name default --os-user-domain-name default --os-project-name admin --os-username admin --os-password Password123! --os-auth-url  $AUTHURL \
+						volume type create ScaleIO_Thick >> /tmp/os_logs/conf_env.log 2>&1; then
+							printf " --> Created volume Type ScaleIO_Thick \n "
+					else
+						printf " --> Could not create volume Type ScaleIO_Thick - see /tmp/os_logs/conf_env.log\n"
+					fi
+				
+				printf ' ### Set Properties for volume Types ScaleIO_Thin / ScaleIO_Thick \n'
+					if openstack --os-project-domain-name default --os-user-domain-name default --os-project-name admin --os-username admin --os-password Password123! --os-auth-url  $AUTHURL \
+						volume type set --property sio:provisioning_type=thin ScaleIO_Thin >> /tmp/os_logs/conf_env.log 2>&1; then
+							printf " --> Set sio:provisioning_type=thin for volume type ScaleIO_Thin \n"
+					else
+							printf " --> Could not set sio:provisioning_type=thin for volume type ScaleIO_Thin - see /tmp/os_logs/conf_env.log\n "
+					fi
+					
+					if openstack --os-project-domain-name default --os-user-domain-name default --os-project-name admin --os-username admin --os-password Password123! --os-auth-url  $AUTHURL \
+						volume type set --property volume_backend_name=scaleio ScaleIO_Thin >> /tmp/os_logs/conf_env.log 2>&1; then
+							printf " --> Set olume_backend_name=scaleio for volume type ScaleIO_Thin \n"
+					else
+							printf " --> Could not set olume_backend_name=scaleio for volume type ScaleIO_Thin - see /tmp/os_logs/conf_env.log\n "
+					fi
+						
+					if openstack --os-project-domain-name default --os-user-domain-name default --os-project-name admin --os-username admin --os-password Password123! --os-auth-url  $AUTHURL \
+						volume type set --property sio:provisioning_type=thick ScaleIO_Thick >> /tmp/os_logs/conf_env.log 2>&1; then
+							printf " --> Set sio:provisioning_type=thick for volume type ScaleIO_Thick \n"
+					else
+							printf " --> Could not set sio:provisioning_type=thick for volume type ScaleIO_Thick - see /tmp/os_logs/conf_env.log\n "
+					fi
+					
+					if openstack --os-project-domain-name default --os-user-domain-name default --os-project-name admin --os-username admin --os-password Password123! --os-auth-url  $AUTHURL \
+						volume type set --property volume_backend_name=scaleio ScaleIO_Thick >> /tmp/os_logs/conf_env.log 2>&1; then
+							printf " --> Set volume_backend_name=scaleio for volume type ScaleIO_Thick \n"
+					else
+							printf " --> Could not set volume_backend_name=scaleio for volume type ScaleIO_Thick - see /tmp/os_logs/conf_env.log\n "
+					fi
+		fi
+
+if [[ $CINDERBACKENDS == *"unity"* ]]
+		then
+			printf ' ### Create Volume Types for Unity_iSCSI_Thin / Unity_iSCSI_Thick Provisioning \n'
+					if openstack --os-project-domain-name default --os-user-domain-name default --os-project-name admin --os-username admin --os-password Password123! --os-auth-url  $AUTHURL \
+						volume type create Unity_iSCSI_Thin >> /tmp/os_logs/conf_env.log 2>&1; then
+							printf " --> Created volume Type Unity_iSCSI_Thin \n"
+					else 
+						printf " --> Could not create volume Type Unity_iSCSI_Thin - see /tmp/os_logs/conf_env.log\n"
+					fi
+					
+					#if openstack --os-project-domain-name default --os-user-domain-name default --os-project-name admin --os-username admin --os-password Password123! --os-auth-url  $AUTHURL \
+					#	volume type create Unity_iSCSI_Thick >> /tmp/os_logs/conf_env.log 2>&1; then
+					#		printf " --> Created volume Type Unity_iSCSI_Thick \n "
+					#else
+					#	printf " --> Could not create volume Type Unity_iSCSI_Thick - see /tmp/os_logs/conf_env.log\n"
+					#fi
+				
+				printf ' ### Set Properties for volume Types Unity_iSCSI_Thin / Unity_iSCSI_Thicn \n'
+					if openstack --os-project-domain-name default --os-user-domain-name default --os-project-name admin --os-username admin --os-password Password123! --os-auth-url  $AUTHURL \
+						volume type set --property storagetype:provisioning=thin Unity_iSCSI_Thin >> /tmp/os_logs/conf_env.log 2>&1; then
+							printf " --> Set  storagetype:provisioning=thin for volume type Unity_iSCSI_Thin \n"
+					else
+							printf " --> Could not set storagetype:provisioning=thin for volume type Unity_iSCSI_Thin - see /tmp/os_logs/conf_env.log\n "
+					fi
+					
+					if openstack --os-project-domain-name default --os-user-domain-name default --os-project-name admin --os-username admin --os-password Password123! --os-auth-url  $AUTHURL \
+						volume type set --property volume_backend_name=unity Unity_iSCSI_Thin >> /tmp/os_logs/conf_env.log 2>&1; then
+							printf " --> Set  volume_backend_name=unity for volume type Unity_iSCSI_Thin \n"
+					else
+							printf " --> Could not set storagetype:provisioning=thin for volume type Unity_iSCSI_Thin - see /tmp/os_logs/conf_env.log\n "
+					fi
+						
+					#if openstack --os-project-domain-name default --os-user-domain-name default --os-project-name admin --os-username admin --os-password Password123! --os-auth-url  $AUTHURL \
+					#	volume type set --property storagetype:provisioning=thick Unity_iSCSI_Thick >> /tmp/os_logs/conf_env.log 2>&1; then
+					#		printf " --> Set storagetype:provisioning=thick for volume type Unity_iSCSI_Thick \n"
+					#else
+					#		printf " --> Could not set storagetype:provisioning=thick for volume type Unity_iSCSI_Thick - see /tmp/os_logs/conf_env.log\n "
+					#fi	
+					
+					#if openstack --os-project-domain-name default --os-user-domain-name default --os-project-name admin --os-username admin --os-password Password123! --os-auth-url  $AUTHURL \
+					#	volume type set --property volume_backend_name=unity Unity_iSCSI_Thick >> /tmp/os_logs/conf_env.log 2>&1; then
+					#		printf " --> Set volume_backend_name=unity for volume type Unity_iSCSI_Thick \n"
+					#else
+					#		printf " --> Could not set volume_backend_name=unity for volume type Unity_iSCSI_Thick - see /tmp/os_logs/conf_env.log\n "
+					#fi	
+		fi		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	
-printf ' ### Create Volume Types for Thin / Thick Provisioning \n'
-		if openstack --os-project-domain-name default --os-user-domain-name default --os-project-name admin --os-username admin --os-password Password123! --os-auth-url  $AUTHURL \
-			volume type create thin >> /tmp/os_logs/conf_env.log 2>&1; then
-				printf " --> Created volume Type thin \n"
-		else 
-			printf " ERROR --> Could not create volume Type thin - see /tmp/os_logs/conf_env.log\n"
-		fi
-		
-		if openstack --os-project-domain-name default --os-user-domain-name default --os-project-name admin --os-username admin --os-password Password123! --os-auth-url  $AUTHURL \
-			volume type create thick >> /tmp/os_logs/conf_env.log 2>&1; then
-				printf " --> Created volume Type thick \n "
-		else
-			printf " ERROR --> Could not create volume Type thick - see /tmp/os_logs/conf_env.log\n"
-		fi
-	
-	printf ' ### Set Properties for volume Types Thin / Thick \n'
-		if openstack --os-project-domain-name default --os-user-domain-name default --os-project-name admin --os-username admin --os-password Password123! --os-auth-url  $AUTHURL \
-			volume type set --property sio:provisioning_type=thin thin >> /tmp/os_logs/conf_env.log 2>&1; then
-				printf " --> Set sio:provisioning_type=thin for volume type thin \n"
-		else
-				printf " ERROR --> Could not set sio:provisioning_type=thin for volume type thin - see /tmp/os_logs/conf_env.log\n "
-		fi
-			
-		if openstack --os-project-domain-name default --os-user-domain-name default --os-project-name admin --os-username admin --os-password Password123! --os-auth-url  $AUTHURL \
-			volume type set --property sio:provisioning_type=thick thick >> /tmp/os_logs/conf_env.log 2>&1; then
-				printf " --> Set sio:provisioning_type=thick for volume type thick \n"
-		else
-				printf " ERROR --> Could not set sio:provisioning_type=thick for volume type thick - see /tmp/os_logs/conf_env.log\n "
-		fi
-		

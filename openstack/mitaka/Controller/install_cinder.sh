@@ -10,6 +10,9 @@ LOCALHOSTIP=$2
 SIO_GW=$3
 SIO_PD=$4
 SIO_SP=$5
+UNITY_IP=$6
+UNITY_POOL=$7
+CINDERBACKENDS=$8
 
 printf "\n\n #### Start Cinder Installation \n"
 
@@ -33,12 +36,43 @@ os_region_name = RegionOne" >> /etc/nova/nova.conf
 		sed -i '/rabbit_host = */c\rabbit_host = '$LOCALHOSTNAME /etc/cinder/cinder.conf
 		sed -i '/auth_uri = */c\auth_uri = http://'$LOCALHOSTNAME':5000' /etc/cinder/cinder.conf
 		sed -i '/auth_url = */c\auth_url = http://'$LOCALHOSTNAME':35357' /etc/cinder/cinder.conf
-		sed -i '/san_ip = */c\san_ip = '$SIO_GW /etc/cinder/cinder.conf
-		sed -i '/sio_protection_domain_name = */c\sio_protection_domain_name = '$SIO_PD /etc/cinder/cinder.conf
-		sed -i '/sio_storage_pool_name =*/c\sio_storage_pool_name = '$SIO_SP /etc/cinder/cinder.conf
-		sed -i '/sio_storage_pools = */c\sio_storage_pools = '$SIO_PD':'$SIO_SP /etc/cinder/cinder.conf
+		sed -i '/enabled_backends=*/c\enabled_backends='$CINDERBACKENDS /etc/cinder/cinder.conf
 	printf $green " --> done"
-
+	
+	if [[ $CINDERBACKENDS == *"scaleio"* ]]
+		then
+		echo "[scaleio]
+san_ip = $SIO_GW
+sio_protection_domain_name = $SIO_PD
+sio_storage_pool_name = $SIO_SP
+sio_storage_pools = $SIO_PD:$SIO_SP
+san_login = admin
+san_password = Password123!
+san_thin_provision = true
+volume_driver=cinder.volume.drivers.emc.scaleio.ScaleIODriver
+volume_backend_name=scaleio
+" >> /etc/cinder/cinder.conf
+			sed -i '/default_volume_type=*/c\default_volume_type=ScaleIO_Thin' /etc/cinder/cinder.conf
+		else
+			sed -i '/default_volume_type=*/c\default_volume_type=Unity_iSCSI_Thin' /etc/cinder/cinder.conf
+		fi
+		
+	if [[ $CINDERBACKENDS == *"unity"* ]]
+		then
+			echo "[unity]
+storage_protocol = iSCSI
+storage_pool_names = $UNITY_POOL
+san_ip = $UNITY_IP
+san_login = Local/admin
+san_password = Password123!
+volume_driver = cinder.volume.drivers.emc.emc_unity.EMCUnityDriver
+volume_backend_name = unity
+" >> /etc/cinder/cinder.conf
+			
+			printf " ### Get Unity Driver " 
+				curl -o /usr/lib/python2.7/dist-packages/cinder/volume/drivers/emc/emc_unity.py https://raw.githubusercontent.com/emc-openstack/unity-cinder-driver/mitaka/emc_unity.py >> /tmp/os_logs/cinder.log 2>&1; 
+		fi
+		
 #Populate Database
 	printf " ### Populate Cinder Database "
 		if su -s /bin/sh -c "cinder-manage db sync" cinder >> /tmp/os_logs/cinder.log 2>&1; then
