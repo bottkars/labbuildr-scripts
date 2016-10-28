@@ -27,7 +27,8 @@ if (!(Test-Path $logpath))
 $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ######################################################################
-
+Add-WindowsFeature -Name Multipath-IO -IncludeManagementTools -IncludeAllSubfeature
+Enable-MSDSMAutomaticClaim -BusType iSCSI
 Write-Host -ForegroundColor Gray " ==>Enabling iSCSI"
 Set-Service -Name MSiSCSI -StartupType Automatic
 Start-Service MSiSCSI
