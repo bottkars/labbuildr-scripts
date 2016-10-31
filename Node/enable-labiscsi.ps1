@@ -34,7 +34,7 @@ Set-Service -Name MSiSCSI -StartupType Automatic
 Start-Service MSiSCSI
 Write-Host -ForegroundColor Magenta " ==>Connecting to iSCSI Portal $Target_IP"
 $Portal = New-IscsiTargetPortal –TargetPortalAddress $Target_IP
-Get-IscsiTargetPortal -TargetPortalAddress $Target_IP | Get-IscsiTarget | Connect-IscsiTarget
+Get-IscsiTargetPortal -TargetPortalAddress $Target_IP | Get-IscsiTarget | Connect-IscsiTarget  -IsPersistent $True –IsMultipathEnabled $True
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {
     Pause
