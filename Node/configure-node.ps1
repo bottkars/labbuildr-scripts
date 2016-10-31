@@ -23,7 +23,9 @@ param(
     $domainsuffix = "local",
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
-    $logpath = "c:\Scripts"
+    $logpath = "c:\Scripts",
+	[switch]$iscsi,
+	$Target_IP = "173"
 )
 $Nodescriptdir = "$Scriptdir\Node"
 $ScriptName = $MyInvocation.MyCommand.Name
@@ -139,7 +141,13 @@ Do {
         Pause
         }
     }
-Until ($Ping)    
+Until ($Ping) 
+if ($iscsi.IsPresent)
+	{
+	Write-Host " ==>Installing iSCSI Initiator and MPIO"
+	Start-Process -FilePath "$nodescriptdir\enable-labiscsi.ps1" -ArgumentList "-Target_IP $subnet.$Target_IP" -Wait -PassThru
+	}
+   
 $MyDomain = "$($Domain).$($Domainsuffix)"
 $PlainPassword = "Password123!" 
 $password = $PlainPassword | ConvertTo-SecureString -asPlainText -Force

@@ -35,4 +35,8 @@ Start-Service MSiSCSI
 Write-Host -ForegroundColor Magenta " ==>Connecting to iSCSI Portal $Target_IP"
 $Portal = New-IscsiTargetPortal –TargetPortalAddress $Target_IP
 Get-IscsiTargetPortal -TargetPortalAddress $Target_IP | Get-IscsiTarget | Connect-IscsiTarget
+if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
+    {
+    Pause
+    }
 
