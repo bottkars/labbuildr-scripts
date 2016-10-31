@@ -15,7 +15,7 @@ $logpath = "c:\Scripts",
 $ex_version= "E2016",
 $Prereq ="Prereq",
 $ExDatabasesBase = "C:\ExchangeDatabases",
-$ExVolumesBase = "C:\ExchangeVolumes" 
+$ExVolumesBase = "C:\ExchangeVolumes"
 )
 $Nodescriptdir = "$Scriptdir\NODE"
 $ScriptName = $MyInvocation.MyCommand.Name
@@ -32,16 +32,19 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 New-Item -ItemType Directory  $ExVolumesBase
 New-Item -ItemType Directory  $ExDatabasesBase
 $Vol = 1
-$Disks = Get-Disk  | where OperationalStatus -eq "offline" | Sort-Object
+$Disks = Get-Disk  | where {($_.size -ge 500GB) -or ($_.OPerationalStatus -eq "offline") -and ($_.Number -ge 1)} | Sort-Object -Property Number
 Write-Host $Disks
 $Vol = 1
 foreach ($Disk in $Disks)
         {
-        $Disk | Set-Disk -IsReadOnly  $false 
+        # if ($Disk.OperationalStatus -eq "OFFline")
+        $Disk | Set-Disk -IsReadOnly  $false
         $Disk | Set-Disk -IsOffline  $false
+        $Disk | Clear-Disk -RemoveData:$true -RemoveOEM:$true -Confirm:$false
         $Disk | Initialize-Disk -PartitionStyle GPT
         $Partition = $Disk | New-Partition -UseMaximumSize
         $Partition | Set-Partition -NoDefaultDriveLetter:$true
+
         $Job = Format-Volume -Partition $Partition -NewFileSystemLabel $Label -AllocationUnitSize 64kb -FileSystem NTFS -Force -AsJob
         while ($JOB.state -ne "completed"){}
         $VolumeMountpoint = New-Item -ItemType Directory -Path "$ExVolumesBase\Volume$Vol"
@@ -49,7 +52,7 @@ foreach ($Disk in $Disks)
         $Partition | Set-Partition -NoDefaultDriveLetter:$true
         if ($Disk -ne $Disks[-1])
             {
-            $DataBaseMountpoint = New-Item -ItemType Directory -Path "$ExDatabasesBase\DB$vol" 
+            $DataBaseMountpoint = New-Item -ItemType Directory -Path "$ExDatabasesBase\DB$vol"
             $Partition | Add-PartitionAccessPath  -AccessPath "$ExDatabasesBase\DB$vol"
             New-Item -Name "DB$Vol.DB" -ItemType Directory -Path $DataBaseMountpoint
             New-Item -Name "DB$Vol.LOG" -ItemType Directory -Path $DataBaseMountpoint
@@ -60,4 +63,3 @@ foreach ($Disk in $Disks)
         Write-Output $Drive
         $Vol ++
         }
-

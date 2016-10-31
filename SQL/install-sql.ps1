@@ -16,12 +16,12 @@ param(
     [ValidateSet(#'SQL2014SP1slip','SQL2012','SQL2012SP1','SQL2012SP2','SQL2012SP1SLIP','SQL2014','SQL2016',
 	'SQL2012_ISO',
 	'SQL2014SP2_ISO',
-	'SQL2016_ISO')]$SQLVER, 
+	'SQL2016_ISO')]$SQLVER,
 	$Diskparameter = "",
     $DBInstance,
     $ProductDir = "SQL",
     [switch]$DefaultDBpath,
-    [switch]$reboot 
+    [switch]$reboot
 )
 $Nodescriptdir = "$Scriptdir\Node"
 $ScriptName = $MyInvocation.MyCommand.Name
@@ -117,13 +117,13 @@ Switch ($SQLVER)
         .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
         $Arguments = "/install /passive /norestart"
         Start-Process $Setuppath -ArgumentList  $Arguments -Wait
-        $Setupcmd = "setup.exe"        
+        $Setupcmd = "setup.exe"
         $Setuppath = "$SQL_BASEDir\$SQLVER\$Setupcmd"
         .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
         $Features = 'SQL,Tools,Polybase'
         $Java_required  = $true
         }#>
-      'SQL2016_ISO'  
+      'SQL2016_ISO'
         {
 		$Iso_File = "SQLServer2016-x64-ENU.iso"
         Write-Host -ForegroundColor Magenta " ==> Installing NetFramework"
@@ -141,14 +141,14 @@ Switch ($SQLVER)
         $Features = 'SQL,Tools,Polybase'
         $Java_required  = $true
         }
-	    'SQL2012_ISO'  
+	    'SQL2012_ISO'
         {
 		$Iso_File = "SQLFULL_ENU.iso"
         $SQL_BASEVER = "SQL2012"
         $SQL_BASEDir = Join-Path $ProductDir $SQL_BASEVER
         $Features = 'SQL,Tools'
         }
-		'SQL2014SP2_ISO'  
+		'SQL2014SP2_ISO'
         {
 		$Iso_File = "SQLServer2014SP2-FullSlipstream-x64-ENU.iso"
         $SQL_BASEVER = "SQL2014"
@@ -156,7 +156,6 @@ Switch ($SQLVER)
         $Features = 'SQL,Tools'
         }
     }
-
 
 $Isopath = Join-path $SQL_BASEDir $Iso_File
 Write-Verbose $Isopath
@@ -169,7 +168,7 @@ if (!(Test-Path "$env:USERPROFILE\Downloads\$Iso_File"))
 $Temp_Iso = "$env:USERPROFILE\Downloads\$Iso_File"
 $ismount = Mount-DiskImage -ImagePath $Temp_Iso -PassThru
 $Driveletter = (Get-Volume | where { $_.size -eq $ismount.Size}).driveletter
-$Setupcmd = "setup.exe"        
+$Setupcmd = "setup.exe"
 $Setuppath = "$($Driveletter):\$Setupcmd"
 if (!$DefaultDBpath.IsPresent)
     {
@@ -203,7 +202,6 @@ if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     Pause
     }
 if ($reboot.IsPresent)
-    { 
+    {
     Restart-Computer
     }
-

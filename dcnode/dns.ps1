@@ -12,7 +12,7 @@ param(
 $logpath = "c:\Scripts",
 $IPV6Prefix = 'fd2d:3c46:82b2::',
 $IPv4Subnet = "192.168.2",
-[Validateset('IPv4','IPv6','IPv4IPv6')]$AddressFamily, 
+[Validateset('IPv4','IPv6','IPv4IPv6')]$AddressFamily,
 [ValidateSet('24')]$IPv4PrefixLength = '24',
 [ValidateSet('8','24','32','48','64')]$IPv6PrefixLength = '8',
 $DefaultGateway
@@ -73,7 +73,6 @@ if ( $AddressFamily -match 'IPv4')
 if ( $AddressFamily -match 'IPv6')
     {
     $reverse = $IPV6Prefix+'/'+$IPv6PrefixLength
-
     }
 
 # Add-DnsServerPrimaryZone "$reverse.in-addr.arpa" -ZoneFile "$reverse.in-addr.arpa.dns" -DynamicUpdate NonsecureAndSecure
@@ -83,10 +82,7 @@ Add-DnsServerZoneDelegation -Name $zone.ZoneName -ChildZoneName OneFSremote -Nam
 $reversezone =  Get-DnsServerZone | where { $_.IsDsIntegrated -and $_.IsReverseLookupZone}
 $reversezone | Add-DnsServerResourceRecordPtr -AllowUpdateAny -Name "40" -PtrDomainName "smartconnect.$env:USERDNSDOMAIN"
 $reversezone | Add-DnsServerResourceRecordPtr -AllowUpdateAny -Name "60" -PtrDomainName "smartconnectremote.$env:USERDNSDOMAIN"
-## add some hosts vor avamar and ddve  and others. . . 
-
-
-
+## add some hosts vor avamar and ddve  and others. . .
 
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {

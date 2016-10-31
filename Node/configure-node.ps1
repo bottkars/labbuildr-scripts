@@ -56,7 +56,7 @@ if ($OS_Build -le 9200)
 $nics = @()
 $Nics = Get-NetAdapter | Sort-Object -Property Name
 if ($nics.Count -gt 1)
-    { $eth1 = Get-NetIPAddress -PrefixOrigin Dhcp | Get-NetAdapter 
+    { $eth1 = Get-NetIPAddress -PrefixOrigin Dhcp | Get-NetAdapter
     Rename-NetAdapter $eth1.Name -NewName "External DHCP"
     }
 
@@ -65,7 +65,6 @@ $eth0 = Get-NetIPAddress -AddressFamily IPv4 -PrefixOrigin WellKnown -PrefixLeng
 Rename-NetAdapter $eth0.Name -NewName $Domain
 If ($AddressFamily -match 'IPv4')
 {
-
     if ($DefaultGateway)
         {
         New-NetIPAddress -InterfaceAlias "$Domain" -AddressFamily IPv4 –IPAddress "$nodeIP" –PrefixLength $IPv4PrefixLength -DefaultGateway "$DefaultGateway"
@@ -109,13 +108,11 @@ try {
     }
 catch [Microsoft.PowerShell.Cmdletization.Cim.CimJobException]
     {
-    
     }
-
 
 if ($CDDrive)
     {
-    Write-Warning "Starting Tools Update from $($CDDrive.DriveLetter)" 
+    Write-Warning "Starting Tools Update from $($CDDrive.DriveLetter)"
     Start-Process "$($CDDrive.DriveLetter):\setup.exe" -ArgumentList "/S /v `"/qn REBOOT=R ADDLOCAL=ALL" -Wait
     }
 # Rename-Computer -NewName $nodename
@@ -126,7 +123,7 @@ If ($AddressFamily -match "IPv6")
     {
     $subnet = "$IPv6Subnet$IPv4Subnet"
     }
-else 
+else
     {
     $subnet = "$IPv4Subnet"
     }
@@ -141,17 +138,17 @@ Do {
         Pause
         }
     }
-Until ($Ping) 
+Until ($Ping)
 if ($iscsi.IsPresent)
 	{
 	Write-Host " ==>Installing iSCSI Initiator and MPIO"
 	Start-Process -FilePath "$nodescriptdir\enable-labiscsi.ps1" -ArgumentList "-Target_IP $subnet.$Target_IP" -Wait -PassThru
 	}
-   
+
 $MyDomain = "$($Domain).$($Domainsuffix)"
-$PlainPassword = "Password123!" 
+$PlainPassword = "Password123!"
 $password = $PlainPassword | ConvertTo-SecureString -asPlainText -Force
-$username = "$domain\Administrator" 
+$username = "$domain\Administrator"
 $credential = New-Object System.Management.Automation.PSCredential($username,$password)
 #Do {
     $Domain_OK = Add-Computer -DomainName $Mydomain -Credential $credential -PassThru -NewName $Nodename
@@ -174,8 +171,8 @@ $Zonemaps = ("HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings\
     Write-Host "Setting $Zonemap for $Host"
     $Ranges = "$Zonemap\Ranges"
     $Range1 = New-Item -Path $Ranges -Name "Range1" -Force
-    Set-ItemProperty $ZoneMap -Name "UNCAsIntranet" -Value "1" 
-    Set-ItemProperty $ZoneMap -Name "AutoDetect" -Value "1" 
+    Set-ItemProperty $ZoneMap -Name "UNCAsIntranet" -Value "1"
+    Set-ItemProperty $ZoneMap -Name "AutoDetect" -Value "1"
     $Range1 | New-ItemProperty -Name ":Range" -Value $vmwarehost
     $Range1 | New-ItemProperty -Name "file" -PropertyType DWORD -Value  "1"
    }
@@ -191,4 +188,3 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass -Confirm:$false -Force
 New-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce -Name "Pass3" -Value "$PSHOME\powershell.exe -Command `"New-Item -ItemType File -Path c:\scripts\3.pass`""
 ."$Nodescriptdir\set-autologon.ps1" -domain $Domain -user "Administrator" -Password $PlainPassword
 Restart-Computer
-
