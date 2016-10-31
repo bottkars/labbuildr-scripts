@@ -12,7 +12,7 @@ param (
 [parameter(mandatory = $false)]$password = "Password123!",
 [parameter(mandatory = $false)]$VolumeSize = "56",
 [parameter(mandatory = $false)][switch]$singlemdm,
-[parameter(mandatory = $false)][ValidateRange(1,2,'2.0.1')]$scaleio_major = 1,
+[parameter(mandatory = $false)][ValidateSet('1','2','2.0.1')]$scaleio_major = 1,
 [parameter(mandatory = $false)]$IPv4Subnet = "192.168.2",
 
 [switch]$reconfigure
