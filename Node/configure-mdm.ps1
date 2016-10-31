@@ -12,7 +12,7 @@ param (
 [parameter(mandatory = $false)]$password = "Password123!",
 [parameter(mandatory = $false)]$VolumeSize = "56",
 [parameter(mandatory = $false)][switch]$singlemdm,
-[parameter(mandatory = $false)][ValidateRange(1,2)]$scaleio_major = 1,
+[parameter(mandatory = $false)][ValidateRange(1,2,'2.0.1')]$scaleio_major = 1,
 [parameter(mandatory = $false)]$IPv4Subnet = "192.168.2",
 
 [switch]$reconfigure
@@ -91,13 +91,11 @@ do {
             {
             $sclicmd = scli --add_primary_mdm --primary_mdm_ip $mdm_ipa --mdm_management_ip $mdm_ip --accept_license # | out-null
             }
-        2
-            {
-            #$sclicmd = scli  --create_mdm_cluster --master_mdm_ip $mdm_ipa  --master_mdm_management_ip $mdm_ipa  --approve_certificate --accept_license #| Out-Null
+        default
+			{
             $sclicmd = scli  --create_mdm_cluster --master_mdm_ip $mdm_ipa  --master_mdm_management_ip $mdm_ipa --master_mdm_name $mdm_name_a --approve_certificate --accept_license
             }
         }
-            $sclicmd
 
     Write-Verbose $LASTEXITCODE
 }
@@ -148,9 +146,8 @@ if (!$singlemdm.IsPresent)
                 {
                 $sclicmd = scli --add_secondary_mdm --mdm_ip $mdm_ipa --secondary_mdm_ip $mdm_ipb --mdm_ip $mdm_iP 2> $sclierror
                 }
-                2
+                default
                 {
-                #$sclicmd = scli --add_standby_mdm --mdm_role manager --new_mdm_ip $mdm_ipb --mdm_ip $mdm_ipa 2> $sclierror
                 $sclicmd = scli --add_standby_mdm --mdm_role manager --new_mdm_ip $mdm_ipb --new_mdm_management_ip $mdm_ipb --new_mdm_name $mdm_name_b --mdm_ip $mdm_ipa 2> $sclierror
                 }
             }
@@ -170,9 +167,13 @@ if (!$singlemdm.IsPresent)
                 }
                 2
                 {
-                #$sclicmd = scli --add_standby_mdm --mdm_role tb  --new_mdm_ip $tb_ip --mdm_ip $mdm_ipa  #2> $sclierror
                 $sclicmd = scli --add_standby_mdm --mdm_role tb  --new_mdm_ip $tb_ip --tb_name $tb_name --mdm_ip $mdm_ipa
                 }
+				default
+				{
+                $sclicmd = scli --add_standby_mdm --mdm_role tb  --new_mdm_ip $tb_ip --mdm_ip $mdm_ipa
+
+				}
             }
         Write-Verbose $LASTEXITCODE
         }
@@ -186,7 +187,7 @@ if (!$singlemdm.IsPresent)
                 {
                 scli --switch_to_cluster_mode --mdm_ip $mdm_iP 
                 }
-                2
+                default
                 {
                 scli --switch_cluster_mode --cluster_mode 3_node --add_slave_mdm_ip $mdm_ipb --add_tb_ip $tb_ip  --mdm_ip $mdm_ipa  2> $sclierror
                 }
