@@ -9,30 +9,19 @@
 #requires -version 3
 [CmdletBinding()]
 param (
-    $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
-    $SourcePath = "\\vmware-host\Shared Folders\Sources",
-    $logpath = "c:\Scripts"
 
 )
-$Nodescriptdir = "$Scriptdir\Node"
-$ScriptName = $MyInvocation.MyCommand.Name
-$Host.UI.RawUI.WindowTitle = "$ScriptName"
-$Builddir = $PSScriptRoot
-$Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
-if (!(Test-Path $logpath))
-    {
-    New-Item -ItemType Directory -Path $logpath -Force
-    }
-$Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
-Set-Content -Path $Logfile $MyInvocation.BoundParameters
-
 
 function Createvolume {
 param ($Number,$Label,$letter)
 Set-Disk -Number $Number -IsReadOnly  $false 
 Set-Disk -Number $Number -IsOffline  $false
-Initialize-Disk -Number $Number -PartitionStyle GPT
+Clear-Disk -Number $Number -RemoveData -RemoveOEM -Confirm:$false -ErrorAction SilentlyContinue
+Write-Host " ==> Initializing Disk $Number"
+Initialize-Disk -Number $Number -PartitionStyle GPT 
+Write-Host " ==> Partitioning $Number"
 $Partition = New-Partition -DiskNumber $Number -UseMaximumSize 
+Write-Host " ==> Formatting Disk $Number"
 $Job = Format-Volume -Partition $Partition -NewFileSystemLabel $Label -AllocationUnitSize 64kb -FileSystem NTFS -Force -AsJob
 while ($JOB.state -ne "completed"){}
 $Partition | Set-Partition -NewDriveLetter $letter

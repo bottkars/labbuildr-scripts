@@ -38,6 +38,10 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 .$Nodescriptdir\test-sharedfolders.ps1 -Folder $Sourcepath
 ############ adding Domin Service Accounts
 $Domain = $env:USERDOMAIN
+if (!($DefaultDBpath.IsPresent))
+    {
+	.$Builddir\prepare-disks.ps1
+    }
 If (!$DBInstance)
     {
     $DBInstance = "MSSQL$Domain"
@@ -169,14 +173,14 @@ $Temp_Iso = "$env:USERPROFILE\Downloads\$Iso_File"
 $ismount = Mount-DiskImage -ImagePath $Temp_Iso -PassThru
 $Driveletter = (Get-Volume | where { $_.size -eq $ismount.Size}).driveletter
 $Setupcmd = "setup.exe"
-$Setuppath = "$($Driveletter):\$Setupcmd"
-if (!$DefaultDBpath.IsPresent)
+$Setuppath = "$($Driveletter):\$Setupcmd" #>
+if (!($DefaultDBpath.IsPresent))
     {
+	#$Builddir\prepare-disks.ps1
     $Diskparameter = "/SQLUSERDBDIR=m:\ /SQLUSERDBLOGDIR=n:\ /SQLTEMPDBDIR=o:\ /SQLTEMPDBLOGDIR=p:\"
     }
 #$Arguments = "/q /ACTION=Install /FEATURES=SQL,SSMS $UpdateSource $Diskparameter /INSTANCENAME=$DBInstance /SQLSVCACCOUNT=`"$Domain\svc_sqladm`" /SQLSVCPASSWORD=`"Password123!`" /SQLSYSADMINACCOUNTS=`"$Domain\svc_sqladm`" `"$Domain\Administrator`" `"$Domain\sql_admins`" /AGTSVCACCOUNT=`"NT AUTHORITY\Network Service`" /IACCEPTSQLSERVERLICENSETERMS"
 $Arguments = "/q /ACTION=Install /FEATURES=$Features $UpdateSource $Diskparameter /INSTANCENAME=$DBInstance /SQLSVCACCOUNT=`"$Domain\svc_sqladm`" /SQLSVCPASSWORD=`"Password123!`" /SQLSYSADMINACCOUNTS=`"$Domain\svc_sqladm`" `"$Domain\Administrator`" `"$Domain\sql_admins`" /AGTSVCACCOUNT=`"NT AUTHORITY\Network Service`" /IACCEPTSQLSERVERLICENSETERMS"
-
 Write-Verbose $Arguments
 Write-Host -ForegroundColor Magenta " ==> Installing SQL Server"
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
