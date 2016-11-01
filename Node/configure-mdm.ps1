@@ -171,7 +171,7 @@ if (!$singlemdm.IsPresent)
                 }
 				default
 				{
-                $sclicmd = scli --add_standby_mdm --mdm_role tb  --new_mdm_ip $tb_ip --add_tb_name $tb_name--mdm_ip $mdm_ipa
+                $sclicmd = scli --add_standby_mdm --mdm_role tb  --new_mdm_ip $tb_ip --mdm_ip $mdm_ipa
 
 				}
             }
