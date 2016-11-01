@@ -87,7 +87,7 @@ Write-Host -ForegroundColor Magenta "Adding Primary MDM"
 do {
     switch ($scaleio_major)
         {
-        1
+        '1'
             {
             $sclicmd = scli --add_primary_mdm --primary_mdm_ip $mdm_ipa --mdm_management_ip $mdm_ip --accept_license # | out-null
             }
@@ -142,7 +142,7 @@ if (!$singlemdm.IsPresent)
         {
         switch ($scaleio_major)
             {
-                1
+                '1'
                 {
                 $sclicmd = scli --add_secondary_mdm --mdm_ip $mdm_ipa --secondary_mdm_ip $mdm_ipb --mdm_ip $mdm_iP 2> $sclierror
                 }
@@ -161,17 +161,17 @@ if (!$singlemdm.IsPresent)
         {
         switch ($scaleio_major)
             {
-                1
+                '1'
                 {
                 $sclicmd = scli --add_tb --tb_ip $tb_ip --mdm_ip $mdm_iP 2> $sclierror 
                 }
-                2
+                '2'
                 {
                 $sclicmd = scli --add_standby_mdm --mdm_role tb  --new_mdm_ip $tb_ip --tb_name $tb_name --mdm_ip $mdm_ipa
                 }
 				default
 				{
-                $sclicmd = scli --add_standby_mdm --mdm_role tb  --new_mdm_ip $tb_ip --mdm_ip $mdm_ipa
+                $sclicmd = scli --add_standby_mdm --mdm_role tb  --new_mdm_ip $tb_ip --add_tb_name $tb_name--mdm_ip $mdm_ipa
 
 				}
             }
@@ -183,7 +183,7 @@ if (!$singlemdm.IsPresent)
         {
                 switch ($scaleio_major)
             {
-                1
+                '1'
                 {
                 scli --switch_to_cluster_mode --mdm_ip $mdm_iP 
                 }
