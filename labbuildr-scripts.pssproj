@@ -27,6 +27,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Folder Include="Node\" />
     <Folder Include="openstack\" />
     <Folder Include="SQL\" />
     <Folder Include="viprmaster\" />

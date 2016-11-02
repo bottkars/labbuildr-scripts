@@ -33,6 +33,7 @@ New-Item -ItemType Directory  $ExVolumesBase
 New-Item -ItemType Directory  $ExDatabasesBase
 $Vol = 1
 $Disks = Get-Disk  | where {($_.size -ge 500GB) -or ($_.OPerationalStatus -eq "offline") -and ($_.Number -ge 1)} | Sort-Object -Property Number
+
 Write-Host $Disks
 $Vol = 1
 foreach ($Disk in $Disks)

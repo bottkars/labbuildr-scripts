@@ -33,6 +33,10 @@ $Builddir = $PSScriptRoot
 $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
 New-Item -ItemType file  "$Builddir\$ScriptName$Logtime.log"
 ###########
+if ((Get-Disk).count -le 3)
+    {
+    exit 3
+    }
 Createvolume -Number 1 -Label $env:COMPUTERNAME"_DATA" -letter M
 Createvolume -Number 2 -Label $env:COMPUTERNAME"_LOG" -letter N
 Createvolume -Number 3 -Label $env:COMPUTERNAME"_TEMPDB" -letter O
