@@ -28,6 +28,8 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 if ((Get-Disk).count -lt $Diskcount)
     {
+	Write-Error "Minimum number of $Diskcount disks not found"
     exit 3
     }
+Write-Host "Found disks"
 ############
