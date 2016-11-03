@@ -33,7 +33,7 @@ $Disk = Get-Disk -Number $Number
 $Partition | Format-Volume -NewFileSystemLabel $WinVollabel -Confirm:$false
 Write-Host " ==> Adding Disk $Number to CLUSTER"
 $Clusterdisk = $Disk  | Add-ClusterDisk
-$Clusterdisk.Name = $WinVolName
+$Clusterdisk.Name = $CSVName
 Write-Host " ==> Adding $($Clusterdisk.name) as CSV"
 Get-ClusterResource -Name $Clusterdisk.Name | Add-ClusterSharedVolume
 }
