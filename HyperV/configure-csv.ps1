@@ -8,7 +8,7 @@
 #>
 [CmdletBinding()]
 param (
-[parameter(mandatory = $false)][ValidateRange(1,10)]$CSVnum = 3,
+[parameter(mandatory = $false)][ValidateRange(1,10)]$CSVnum = 2,
 [parameter(mandatory = $false)]$password = "Password123!",
 [parameter(mandatory = $false)]$IPv4Subnet = "192.168.2",
 
@@ -27,12 +27,14 @@ Initialize-Disk -Number $Number -PartitionStyle GPT
 Write-Host " ==> Partitioning $Number"
 $Partition = New-Partition -DiskNumber $Number -UseMaximumSize 
 Write-Host " ==> Formatting Disk $Number"
-$Job = Format-Volume -Partition $Partition -NewFileSystemLabel $WinVolName -AllocationUnitSize 64kb -FileSystem NTFS -Force -AsJob
-while ($JOB.state -ne "completed"){}
+#$Job = Format-Volume -Partition $Partition -NewFileSystemLabel $WinVolName -AllocationUnitSize 64kb -FileSystem NTFS -Force -Confirm:$false -AsJob
+# while ($JOB.state -ne "completed"){}
 $Disk = Get-Disk -Number $Number
 $Partition | Format-Volume -NewFileSystemLabel $WinVollabel -Confirm:$false
+Write-Host " ==> Adding Disk $Number to CLUSTER"
 $Clusterdisk = $Disk  | Add-ClusterDisk
 $Clusterdisk.Name = $WinVolName
+Write-Host " ==> Adding $($Clusterdisk.name) as CSV"
 Get-ClusterResource -Name $Clusterdisk.Name | Add-ClusterSharedVolume
 }
 
