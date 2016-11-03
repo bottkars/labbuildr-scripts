@@ -17,8 +17,8 @@ param (
  
 function Create-CSV {
 param ($Number)
-$WinVolName =  "iSCSI_CSV_"+$VolumeName
-$WinVollabel = "iSCSI_CSV_"+$VolumeName
+$CSVName =  "iSCSI_CSV_"+$Number
+$WinVollabel = "iSCSI_VOL"+$Number
 Set-Disk -Number $Number -IsReadOnly  $false 
 Set-Disk -Number $Number -IsOffline  $false
 Clear-Disk -Number $Number -RemoveData -RemoveOEM -Confirm:$false -ErrorAction SilentlyContinue
