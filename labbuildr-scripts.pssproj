@@ -34,6 +34,7 @@
     <Folder Include="viprmaster\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Node\Set-CustomLanguage.ps1" />
     <Compile Include="Script.ps1" />
     <Compile Include="SQL\prepare-disks.ps1" />
   </ItemGroup>
