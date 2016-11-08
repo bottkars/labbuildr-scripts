@@ -31,6 +31,7 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 New-Item -ItemType Directory  $ExVolumesBase
 New-Item -ItemType Directory  $ExDatabasesBase
+Start-Process .\fsutil.exe -ArgumentList "behavior set DisableDeleteNotify 1" -NoNewWindow -Wait
 $Vol = 1
 $Disks = Get-Disk  | where {($_.size -ge 500GB) -or ($_.OPerationalStatus -eq "offline") -and ($_.Number -ge 1)} | Sort-Object -Property Number
 
@@ -63,3 +64,4 @@ foreach ($Disk in $Disks)
         Write-Output $Drive
         $Vol ++
         }
+Start-Process .\fsutil.exe -ArgumentList "behavior set DisableDeleteNotify 0" -NoNewWindow -Wait

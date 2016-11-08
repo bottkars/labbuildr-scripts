@@ -38,11 +38,11 @@ Write-Host " ==> Adding $($Clusterdisk.name) as CSV"
 Get-ClusterResource -Name $Clusterdisk.Name | Add-ClusterSharedVolume
 }
 
-
+Start-Process .\fsutil.exe -ArgumentList "behavior set DisableDeleteNotify 1" -NoNewWindow -Wait
 foreach ($number in 1..$CSVnum)
     {
 	Create-CSV -Number $number
     Write-Output "Waiting for Disk to Appear in Failover Cluster"
 }
-
+Start-Process .\fsutil.exe -ArgumentList "behavior set DisableDeleteNotify 0" -NoNewWindow -Wait
 
