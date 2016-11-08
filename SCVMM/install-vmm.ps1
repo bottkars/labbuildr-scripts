@@ -35,7 +35,7 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ######################################################################
 $Domain = $env:USERDOMAIN
 $SCVMM_Dir = Join-Path "$SourcePath" "$SysCtr\$SC_VERSION\SCVMM"
-$SCVMM_Update_DIr = Join-Path $Sourcepath "$SysCtr\$SC_VERSION\SCVMMUpdates"
+$SCVMM_Update_DIr = Join-Path $SCVMM_Dir "SCVMMUpdates"
 
 if (!$hotfix_only.IsPresent)
     {
