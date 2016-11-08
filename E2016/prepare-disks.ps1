@@ -38,10 +38,9 @@ Write-Host $Disks
 $Vol = 1
 foreach ($Disk in $Disks)
         {
-        # if ($Disk.OperationalStatus -eq "OFFline")
         $Disk | Set-Disk -IsReadOnly  $false
         $Disk | Set-Disk -IsOffline  $false
-        $Disk | Clear-Disk -RemoveData:$true -RemoveOEM:$true -Confirm:$false
+        $Disk | Clear-Disk -RemoveData:$true -RemoveOEM:$true -Confirm:$false -ErrorAction SilentlyContinue
         $Disk | Initialize-Disk -PartitionStyle GPT
         $Partition = $Disk | New-Partition -UseMaximumSize
         $Partition | Set-Partition -NoDefaultDriveLetter:$true
