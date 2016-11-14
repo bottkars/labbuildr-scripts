@@ -185,7 +185,7 @@ if (!(test-path $Associations))
 Set-ItemProperty -Path $Associations -Name "LowRiskFileTypes" -Value ".exe;.bat;.reg;.vbs"
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Confirm:$false -Force
-New-ItemProperty -Path HKCU:\Software\Microsoft\ServerManager -Name DoNotOpenServerManagerAtLogon -PropertyType DWORD -Value “0x1” –Force
+#New-ItemProperty -Path HKCU:\Software\Microsoft\ServerManager -Name DoNotOpenServerManagerAtLogon -PropertyType DWORD -Value “0x1” –Force
 New-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce -Name "Pass3" -Value "$PSHOME\powershell.exe -Command `"New-Item -ItemType File -Path c:\scripts\3.pass`""
 ."$Nodescriptdir\set-autologon.ps1" -domain $Domain -user "Administrator" -Password $PlainPassword
 Restart-Computer
