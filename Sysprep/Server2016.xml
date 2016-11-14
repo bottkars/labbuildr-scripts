@@ -16,11 +16,8 @@
             <UserLocale>de-De</UserLocale>
         </component>
         <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <ProductKey>2KNJJ-33Y9H-2GXGX-KMQWH-G6H67</ProductKey>
-            <OEMName>labbuildr6 image</OEMName>
+            <RegisteredOrganization>labbuildr6 image 11/14/2016</RegisteredOrganization>
             <ShowWindowsLive>false</ShowWindowsLive>
-            <TimeZone>W. Europe Standard Time</TimeZone>
-            <ComputerName>*</ComputerName>
         </component>
     </settings>
     <settings pass="oobeSystem">
@@ -45,7 +42,7 @@
             <OEMInformation>
                 <HelpCustomized>false</HelpCustomized>
                 <SupportURL>https://github.com/bottkars/labbuildr/wiki</SupportURL>
-                <Manufacturer>@sddc_guy</Manufacturer>
+                <Manufacturer>@sddc_guy 11/14/2016</Manufacturer>
                 <Model>labbuildr6</Model>
                 <SupportAppURL>https://github.com/bottkars/labbuildr/wiki</SupportAppURL>
             </OEMInformation>
@@ -64,6 +61,7 @@
                 <GoToDesktopOnSignIn>true</GoToDesktopOnSignIn>
                 <ShowWindowsStoreAppsOnTaskbar>false</ShowWindowsStoreAppsOnTaskbar>
             </DesktopOptimization>
+            <RegisteredOrganization>labbuildr6 image 11/14/2016</RegisteredOrganization>
         </component>
         <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <InputLocale>de-De</InputLocale>
@@ -84,8 +82,8 @@
             <DoNotOpenServerManagerAtLogon>true</DoNotOpenServerManagerAtLogon>
         </component>
         <component name="Microsoft-Windows-PnpSysprep" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <DoNotCleanUpNonPresentDevices>true</DoNotCleanUpNonPresentDevices>
-            <PersistAllDeviceInstalls>true</PersistAllDeviceInstalls>
+            <DoNotCleanUpNonPresentDevices>false</DoNotCleanUpNonPresentDevices>
+            <PersistAllDeviceInstalls>false</PersistAllDeviceInstalls>
         </component>
     </settings>
     <settings pass="windowsPE">
@@ -93,10 +91,10 @@
             <UserData>
                 <ProductKey>
                     <WillShowUI>Never</WillShowUI>
-                    <Key>2KNJJ-33Y9H-2GXGX-KMQWH-G6H67</Key>
+                    <Key></Key>
                 </ProductKey>
             </UserData>
         </component>
     </settings>
-    <cpi:offlineImage cpi:source="wim:c:/dism/install.wim#Windows Server 2016 Technical Preview 4 SERVERDATACENTER" xmlns:cpi="urn:schemas-microsoft-com:cpi" />
+    <cpi:offlineImage cpi:source="wim:d:/wimfiles/2016/install.wim#Windows Server 2016 SERVERDATACENTER" xmlns:cpi="urn:schemas-microsoft-com:cpi" />
 </unattend>

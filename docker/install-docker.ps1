@@ -33,7 +33,6 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 $Docker_Downloadfile = "docker-$($Docker_VER).zip"
 $Docker_Uri = "https://get.docker.com/builds/Windows/x86_64"
 $Uri = "$Docker_Uri/$Docker_Downloadfile"
-
 Start-BitsTransfer $Uri -Description "Downloding Docker $Docker_VER" -Destination $env:TEMP
 Write-Host -ForegroundColor Gray " ==>expanding archive $Docker_Downloadfile"
 Expand-Archive -Path "$env:TEMP\$Docker_Downloadfile" -DestinationPath $env:ProgramFiles
