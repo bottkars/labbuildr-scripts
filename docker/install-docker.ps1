@@ -29,6 +29,10 @@ if (!(Test-Path $logpath))
 $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
+Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+Install-Module -Name DockerMsftProvider -Force
+Install-Package -Name docker -ProviderName DockerMsftProvider -Force
+<#
 .$Nodescriptdir\test-sharedfolders.ps1 -Folder $Sourcepath
 $Docker_Downloadfile = "docker-$($Docker_VER).zip"
 $Docker_Uri = "https://get.docker.com/builds/Windows/x86_64"
@@ -46,12 +50,13 @@ Start-Service Docker
 # Install-PackageProvider ContainerImage -Force
 # Install-ContainerImage -Name WindowsServerCore
 # 
-Write-Host -ForegroundColor Gray " ==>getting nanoserver containerimage from dockerhub"
+#Write-Host -ForegroundColor Gray " ==>getting nanoserver containerimage from dockerhub"
 # docker pull microsoft/windowsservercore:10.0.14300.1030
+#>
 Restart-Service docker
-Start-Process "docker" -ArgumentList "pull microsoft/nanoserver:10.0.14300.1030" -Wait -PassThru
-Write-Host -ForegroundColor Gray " ==>starting nanoserver container using hyper-v as isolator"
-Start-Process "docker" -ArgumentList "run -it --isolation=hyperv microsoft/nanoserver:10.0.14300.1030 cmd"
-Write-Host -ForegroundColor Gray " ==>starting docker statistics"
-Start-Process "docker" -ArgumentList "stats"
+#Start-Process "docker" -ArgumentList "pull microsoft/nanoserver:10.0.14300.1030" -Wait -PassThru
+# Write-Host -ForegroundColor Gray " ==>starting nanoserver container using hyper-v as isolator"
+#Start-Process "docker" -ArgumentList "run -it --isolation=hyperv microsoft/nanoserver:10.0.14300.1030 cmd"
+#Write-Host -ForegroundColor Gray " ==>starting docker statistics"
+#Start-Process "docker" -ArgumentList "stats"
 # docker tag windowsservercore:10.0.14300.1030 windowsservercore:latest
