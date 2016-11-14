@@ -11,12 +11,13 @@
 param(
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
-    $logpath = "c:\Scripts",
-    [ValidateSet(
+    $logpath = "c:\Scripts"
+    <#[ValidateSet(
     '1.12.0','latest'
     )]
     $Docker_VER='latest'
-    )
+    #>
+	)
 $Nodescriptdir = "$Scriptdir\Node"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
