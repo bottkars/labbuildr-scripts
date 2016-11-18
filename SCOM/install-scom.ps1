@@ -88,6 +88,30 @@ foreach ($Updatepattern in ("*AMD64-server.msp","*AMD64-ENU-Console.msp"))
         start-process $LatestSCOMUpdate.FullName -ArgumentList "/Passive" -Wait 
         }
     }
+if ($SC_VERSION -match "SC2016")
+	{
+	foreach ($Updatepattern in ("*AMD64-Server.msp","*AMD64-ENU-Console.msp"))
+    {
+    Try
+        {
+        $SCOMUpdate = Get-ChildItem "$Scom_Update_DIr"  -Filter $Updatepattern -ErrorAction Stop
+        }
+    catch
+        {
+        Write-Host "No Update Found  for $Updatepattern"
+        }
+    if ($SCOMUpdate)
+        {
+        $SCOMUpdate = $SCOMUpdate | Sort-Object -Property Name -Descending
+	    $LatestSCOMUpdate = $SCOMUpdate[0]
+        .$Nodescriptdir\test-setup.ps1 -setup $LatestSCOMUpdate.BaseName -setuppath $LatestSCOMUpdate.FullName
+        Write-Warning "Starting SCOM Patch setup, this may take a while"
+        $argumentList = "/update `"$($LatestSCOMUpdate.FullName)`" /q"
+        start-process  -FilePath "msiexec.exe"  -ArgumentList $argumentList -Wait -NoNewWindow
+        }
+    }
+
+	}
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {
     Pause
