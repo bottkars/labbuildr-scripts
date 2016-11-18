@@ -76,18 +76,6 @@ Write-Warning "Starting $scom_ver setup, this may take a while"
 Start-Process "$Setuppath" -ArgumentList "/install /components:$Components /ManagementGroupName:$MGMTGrp /SqlServerInstance:$DBInstance /DatabaseName:OperationsManager /DWSqlServerInstance:$DBInstance /DWDatabaseName:OperationsManagerDW /ActionAccountUser:$Action_ACT /ActionAccountPassword:$Password /DASAccountUser:$DAS_ACT /DASAccountPassword:$Password /DatareaderUser:$Data_Reader /DatareaderPassword:$Password /DataWriterUser:$Data_Writer /DataWriterPassword:$Password /EnableErrorReporting:Never /SendCEIPReports:0 /UseMicrosoftUpdate:0 /AcceptEndUserLicenseAgreement:1 /silent" -Wait
    
 Write-Warning "Checking for Updates"
-foreach ($Updatepattern in ("*AMD64-server.msp","*AMD64-ENU-Console.msp"))
-    {
-    $SCOMUpdate = Get-ChildItem $Scom_Update_DIr -Filter $Updatepattern -ErrorAction SilentlyContinue
-    if ($SCOMUpdate)
-        {
-        $SOMUpdate = $SCOMUpdate | Sort-Object -Property Name -Descending
-	    $LatestSCOMUpdate = $SCOMUpdate[0]
-        .$NodeScriptDir\test-setup -setup $LatestSCOMUpdate.BaseName -setuppath $LatestSCOMUpdate.FullName
-        Write-Warning "Starting SCOM Patch setup, this may take a while"
-        start-process $LatestSCOMUpdate.FullName -ArgumentList "/Passive" -Wait 
-        }
-    }
 if ($SC_VERSION -match "SC2016")
 	{
 	foreach ($Updatepattern in ("*AMD64-Server.msp","*AMD64-ENU-Console.msp"))
