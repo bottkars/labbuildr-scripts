@@ -50,7 +50,7 @@ $Password = "Password123!"
 $MGMTGrp = "$($Domain)Mgmt"
 $Components = "OMServer,OMConsole"
 $Scom_Dir = Join-Path "$SourcePath" "$SysCtr\$SC_VERSION\SCOM"
-$Scom_Update_DIr = Join-Path $Sourcepath "$SysCtr\$SC_VERSION\SCOMUpdates"
+$Scom_Update_DIr = Join-Path $Scom_Dir "SCOMUpdates"
 
 
 $Setupcmd = "SQLSysClrTypes.msi"
@@ -69,13 +69,12 @@ $SetupArgs = '/i "'+$Setuppath+'" /quiet'
 Start-Process -FilePath "msiexec.exe" -ArgumentList $SetupArgs -PassThru -Wait
 
 $Setupcmd = "setup.exe"
-# D:\Sources\SysCtr\SCTP4\SCOM
 $Setuppath = Join-Path $Scom_Dir $Setupcmd 
 .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
 Write-Warning "Starting $scom_ver setup, this may take a while"
 Start-Process "$Setuppath" -ArgumentList "/install /components:$Components /ManagementGroupName:$MGMTGrp /SqlServerInstance:$DBInstance /DatabaseName:OperationsManager /DWSqlServerInstance:$DBInstance /DWDatabaseName:OperationsManagerDW /ActionAccountUser:$Action_ACT /ActionAccountPassword:$Password /DASAccountUser:$DAS_ACT /DASAccountPassword:$Password /DatareaderUser:$Data_Reader /DatareaderPassword:$Password /DataWriterUser:$Data_Writer /DataWriterPassword:$Password /EnableErrorReporting:Never /SendCEIPReports:0 /UseMicrosoftUpdate:0 /AcceptEndUserLicenseAgreement:1 /silent" -Wait
    
-Write-Warning "Checking for Updates"
+Write-Host  -ForegroundColor Magenta "Checking for Updates"
 if ($SC_VERSION -match "SC2016")
 	{
 	foreach ($Updatepattern in ("*AMD64-Server.msp","*AMD64-ENU-Console.msp"))
