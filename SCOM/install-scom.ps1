@@ -78,7 +78,7 @@ Start-Process "$Setuppath" -ArgumentList "/install /components:$Components /Mana
 Write-Warning "Checking for Updates"
 foreach ($Updatepattern in ("*AMD64-server.msp","*AMD64-ENU-Console.msp"))
     {
-    $SCOMUpdate = Get-ChildItem $UpdateDir -Filter $Updatepattern -ErrorAction SilentlyContinue
+    $SCOMUpdate = Get-ChildItem $Scom_Update_DIr -Filter $Updatepattern -ErrorAction SilentlyContinue
     if ($SCOMUpdate)
         {
         $SOMUpdate = $SCOMUpdate | Sort-Object -Property Name -Descending
@@ -94,7 +94,7 @@ if ($SC_VERSION -match "SC2016")
     {
     Try
         {
-        $SCOMUpdate = Get-ChildItem "$Scom_Update_DIr"  -Filter $Updatepattern -ErrorAction Stop
+        $SCOMUpdate = Get-ChildItem $Scom_Update_DIr  -Filter $Updatepattern -ErrorAction Stop
         }
     catch
         {
