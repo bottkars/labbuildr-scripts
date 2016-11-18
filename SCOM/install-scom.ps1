@@ -54,7 +54,7 @@ $Scom_Update_DIr = Join-Path $Sourcepath "$SysCtr\$SC_VERSION\SCOMUpdates"
 
 
 $Setupcmd = "SQLSysClrTypes.msi"
-$Setuppath = "$SourcePath\$Prereq\$Setupcmd"
+$Setuppath = "$SourcePath\$Prereq\$SC_VERSION\$Setupcmd"
 .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
 Write-Warning "Starting SQL Cleartype Setup"
 $SetupArgs = '/i "'+$Setuppath+'" /quiet'
@@ -62,7 +62,7 @@ Start-Process -FilePath "msiexec.exe" -ArgumentList $SetupArgs -PassThru -Wait
 
 
 $Setupcmd = "ReportViewer.msi"
-$Setuppath = "$SourcePath\$Prereq\$Setupcmd"
+$Setuppath = "$SourcePath\$Prereq\$SC_VERSION\$Setupcmd"
 .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
 Write-Verbose "Starting Report Viewer Setup"
 $SetupArgs = '/i "'+$Setuppath+'" /quiet'
