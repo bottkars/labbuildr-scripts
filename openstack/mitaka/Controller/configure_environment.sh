@@ -272,6 +272,7 @@ if [[ $CINDERBACKENDS == *"unity"* ]]
 						printf " --> Could not create volume Type Unity_iSCSI_Thin - see /tmp/os_logs/conf_env.log\n"
 					fi
 					
+					#### Deactivated because virtual Unity does not support Thick provision - if trying, its going to provision thin anyway
 					#if openstack --os-project-domain-name default --os-user-domain-name default --os-project-name admin --os-username admin --os-password Password123! --os-auth-url  $AUTHURL \
 					#	volume type create Unity_iSCSI_Thick >> /tmp/os_logs/conf_env.log 2>&1; then
 					#		printf " --> Created volume Type Unity_iSCSI_Thick \n "

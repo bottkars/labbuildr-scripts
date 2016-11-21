@@ -14,7 +14,7 @@ param(
     [ValidateSet('de_DE','en_US')]
     [alias('e14_lang')]$ex_lang = 'de_DE',
     [Parameter(Mandatory=$false)]
-    [ValidateSet('ur1','ur2','ur3','ur4','ur5','ur6','ur7','ur8v2','ur9','ur10','ur11','ur12','ur13')]
+    [ValidateSet('ur1','ur2','ur3','ur4','ur5','ur6','ur7','ur8v2','ur9','ur10','ur11','ur12','ur13','ur14','ur15')]
     [alias('ex_ur')]$e14_ur,
     $e14_sp = "sp3",
     $Prereq ="Prereq", 
