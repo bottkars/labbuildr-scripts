@@ -35,6 +35,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Node\enable-ansiblewinrm.ps1" />
+    <Compile Include="Node\disable-hardening.ps1" />
     <Compile Include="Node\Set-CustomLanguage.ps1" />
     <Compile Include="Script.ps1" />
     <Compile Include="SQL\prepare-disks.ps1" />
