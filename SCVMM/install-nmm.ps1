@@ -17,9 +17,9 @@ param(
 	'nmm9010','nmm9011','nmm9012','nmm9013','nmm9014',
     'nmm90.DA','nmm9001','nmm9002','nmm9003','nmm9004','nmm9005','nmm9006','nmm9007','nmm9008',
 	'nmm8240',
-    'nmm8231','nmm8232','nmm8233','nmm8235','nmm8236','nmm8237','nmm8238',
+    'nmm230','nmm8231','nmm8232','nmm8233','nmm8235','nmm8236','nmm8237','nmm8238',
     'nmm8221','nmm8222','nmm8223','nmm8224','nmm8225','nmm8226',
-    'nmm8218','nmm8217','nmm8216','nmm8214','nmm8212','nmm821'
+    'nmm8218','nmm8217','nmm8216','nmm8214','nmm8212','nmm8210'
     )]
     $nmm_ver,
     [switch]$scvmm
