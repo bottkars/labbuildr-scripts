@@ -16,4 +16,4 @@ else
     Invoke-Command -ScriptBlock $code
 }
 
-
+### Computer\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\
