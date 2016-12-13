@@ -28,6 +28,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="HyperV\" />
+    <Folder Include="SP2016\" />
     <Folder Include="Node\" />
     <Folder Include="openstack\" />
     <Folder Include="SQL\" />
@@ -38,6 +39,11 @@
     <Compile Include="Node\disable-hardening.ps1" />
     <Compile Include="Node\Set-CustomLanguage.ps1" />
     <Compile Include="Script.ps1" />
+    <Compile Include="SP2016\configure-sp.ps1" />
+    <Compile Include="SP2016\deploy-library.ps1" />
+    <Compile Include="SP2016\install-nmm.ps1" />
+    <Compile Include="SP2016\install-sp.ps1" />
+    <Compile Include="SP2016\install-spprereqs.ps1" />
     <Compile Include="SQL\prepare-disks.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
