@@ -88,17 +88,25 @@ else
         {
         Write-Host -ForegroundColor Gray " ==>creating postgres user"
         $cn = [ADSI]"WinNT://$env:COMPUTERNAME"
-        $user = $cn.Create("User",$dbusername)
-        $user.SetPassword($Password)
-        $user.setinfo()
-        $user.description = "postgres networker user"
-        $user.SetInfo()
-        Write-Host -ForegroundColor Gray " ==>Starting Install"
-        Start-Process -Wait -NoNewWindow -PassThru -FilePath "$($Setup.fullname)" -ArgumentList "/s /v InstallLevel=300 ConfigureFirewall=1 StartServices=1 OptionGetNMC=1 DbUsername=$dbusername DbPassword=$Password AdminPassword=$Password KSFPassword=$Password TSFPassword=$Password"
+		try
+			{
+			$user = $cn.Create("User",$dbusername)
+			$user.SetPassword($Password)
+			$user.description = "postgres networker user"
+			$user.SetInfo()
+			}
+		catch
+			{
+			Write-Warning "User already exists"
+			}
+		#$NW_INSTALL_OPTS = "InstallLevel=300 OptionGetNMC=1 DbPassword=db_password AdminPassword=authc_admin_password KSFPassword=ks_password TSFPassword=ts_password"
+		$NW_INSTALL_OPTS = "InstallLevel=300 ConfigureFirewall=1 OptionGetNMC=1 DbUsername=$dbusername DbPassword=$Password AdminPassword=$Password KSFPassword=$Password TSFPassword=$Password"
+        Write-Host -ForegroundColor Gray " ==>Starting Networker install with /s /v $NW_INSTALL_OPTS"
+        Start-Process -Wait -NoNewWindow -PassThru -FilePath "$($Setup.fullname)" -ArgumentList "/s /v $NW_INSTALL_OPTS"
         }
     else
         {
-        Write-Error "Networker Setup File fould not be elvaluated"
+        Write-Error "Networker Setup File could not be elvaluated"
         }
     }
 
