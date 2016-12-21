@@ -72,7 +72,7 @@ else
 
 
 $DB1 = "DB1_"+$env:COMPUTERNAME
-$ArgumentList = "/mode:Install /role:Mailbox /OrganizationName:`"$Env:USERDOMAIN`" /IAcceptExchangeServerLicenseTerms /MdbName:$DB1 /DbFilePath:$ExDatabasesBase\DB1\DB1.DB\DB1.EDB /LogFolderPath:$ExDatabasesBase\DB1\DB1.LOG"
+$ArgumentList = "/mode:Install /role:Mailbox /OrganizationName:`"$Env:USERDOMAIN`" /IAcceptExchangeServerLicenseTerms  /InstallWindowsComponents /MdbName:$DB1 /DbFilePath:$ExDatabasesBase\DB1\DB1.DB\DB1.EDB /LogFolderPath:$ExDatabasesBase\DB1\DB1.LOG"
 Start-Process $Setuppath -ArgumentList $ArgumentList -Wait -NoNewWindow
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {

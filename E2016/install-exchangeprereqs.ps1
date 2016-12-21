@@ -13,7 +13,10 @@ $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
 $SourcePath = "\\vmware-host\Shared Folders\Sources",
 $logpath = "c:\Scripts",
 $ex_version= "E2016",
-$Prereq ="Prereq" 
+$Prereq ="Prereq",
+$NET_VER = "452",
+$KB
+
 )
 $Nodescriptdir = "$Scriptdir\Node"
 $ScriptName = $MyInvocation.MyCommand.Name
@@ -36,7 +39,11 @@ $argumentList = "/passive /norestart"
 Start-Process -FilePath $Setuppath -ArgumentList $argumentList -Wait -NoNewWindow
 
 
-.$Nodescriptdir\install-netframework.ps1 -Net_Ver 452
+.$Nodescriptdir\install-netframework.ps1 -Net_Ver $NET_VER 
+if ($KB)
+	{
+	.$Nodescriptdir\install-KB.ps1 -KB $KB -KBFolder WindowsUpdate
+	}
 # $Setupcmd = "NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
 # $Setuppath = "$Prereq_dir\$Setupcmd"
 #.$Nodescriptdir\test-setup -setup $Setupcmd -setuppath $Setuppath

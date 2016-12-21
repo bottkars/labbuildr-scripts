@@ -11,7 +11,7 @@
 param(
     [Parameter(ParameterSetName = "1", Mandatory = $false)]
     [ValidateSet(
-    '451','452','46','461'
+    '451','452','46','461','462'
     )][string]$Net_Ver="452",
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
@@ -48,6 +48,10 @@ switch ($Net_Ver)
         {
         $Setupcmd = "NDP461-KB3102436-x86-x64-AllOS-ENU.exe"
         }
+		'462'
+		{
+		$Setupcmd = "NDP462-KB3151800-x86-x64-AllOS-ENU.exe"
+		}
     }
 
 
