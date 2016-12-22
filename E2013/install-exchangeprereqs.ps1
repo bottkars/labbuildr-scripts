@@ -10,6 +10,7 @@
 [CmdletBinding()]
 param(
 $ex_version= "E2013",
+$NET_VER = "452",
 $Prereq ="Prereq",
 $Scriptdir = '\\vmware-host\Shared Folders\Scripts',
 $SourcePath = '\\vmware-host\Shared Folders\Sources',
@@ -29,6 +30,9 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 $Prereq_dir = Join-Path $SourcePath $Prereq
 .$Nodescriptdir\test-sharedfolders.ps1 -folder $Sourcepath
+
+.$Nodescriptdir\install-netframework.ps1 -Net_Ver $NET_VER 
+
 
 $Setupcmd = "UcmaRuntimeSetup.exe"
 $Setuppath = "$Prereq_dir\$Setupcmd"
