@@ -31,9 +31,6 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 $Prereq_dir = Join-Path $SourcePath $Prereq
 .$Nodescriptdir\test-sharedfolders.ps1 -folder $Sourcepath
 
-.$Nodescriptdir\install-netframework.ps1 -Net_Ver $NET_VER 
-
-
 $Setupcmd = "UcmaRuntimeSetup.exe"
 $Setuppath = "$Prereq_dir\$Setupcmd"
 .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
@@ -51,6 +48,8 @@ $Setuppath = "$Prereq_dir\$Setupcmd"
 .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
 $argumentList = "/passive /norestart"
 Start-Process -FilePath $Setuppath -ArgumentList $argumentList -Wait -NoNewWindow
+
+.$Nodescriptdir\install-netframework.ps1 -Net_Ver $NET_VER 
 
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {

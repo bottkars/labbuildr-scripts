@@ -64,4 +64,4 @@ if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {
     Pause
     }
-Start-Process $Setuppath -ArgumentList "/passive /norestart" -PassThru -Wait
+Start-Process $Setuppath -ArgumentList "REBOOT=R /passive /norestart" -PassThru -Wait
