@@ -103,4 +103,10 @@ if ($setwsman)
     }
 
 New-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce -Name "Pass2" -Value "$PSHOME\powershell.exe -Command `"New-Item -ItemType File -Path c:\scripts\2.pass`""
+
+if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
+    {
+    Pause
+    }
+
 restart-computer -force
