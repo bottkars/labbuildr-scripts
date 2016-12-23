@@ -100,7 +100,14 @@ else
 			Write-Warning "User already exists"
 			}
 		#$NW_INSTALL_OPTS = "InstallLevel=300 OptionGetNMC=1 DbPassword=db_password AdminPassword=authc_admin_password KSFPassword=ks_password TSFPassword=ts_password"
-		$NW_INSTALL_OPTS = "InstallLevel=300 ConfigureFirewall=1 OptionGetNMC=1 DbUsername=$dbusername DbPassword=$Password AdminPassword=$Password KSFPassword=$Password TSFPassword=$Password"
+		if ($nw_ver -lt "nw9100")
+			{
+			$NW_INSTALL_OPTS = "InstallLevel=300 ConfigureFirewall=1 OptionGetNMC=1 DbUsername=$dbusername DbPassword=$Password AdminPassword=$Password KSFPassword=$Password TSFPassword=$Password"
+			}
+		else
+			{
+			$NW_INSTALL_OPTS = "InstallLevel=300 ConfigureFirewall=1 OptionGetNMC=1 DbUsername=$dbusername DbPassword=$Password AdminPassword=$Password KSFPassword=$Password TSFPassword=$Password CacertsPassword=changeit TCCertExistCarerts=no"
+			}
         Write-Host -ForegroundColor Gray " ==>Starting Networker install with /s /v $NW_INSTALL_OPTS"
         Start-Process -Wait -NoNewWindow -PassThru -FilePath "$($Setup.fullname)" -ArgumentList "/s /v $NW_INSTALL_OPTS"
         }
