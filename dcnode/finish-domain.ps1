@@ -45,11 +45,11 @@ if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     Install-ADDSForest -DomainName $MyDomain -SkipPreChecks -safemodeadministratorpassword (convertto-securestring "Password123!" -asplaintext -force) -DomainMode Win2012 -DomainNetbiosname $Domain -ForestMode Win2012 -InstallDNS -NoRebootOnCompletion -Force
 	New-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce -Name "Pass3" -Value "$PSHOME\powershell.exe -Command `"New-Item -ItemType File -Path $logpath\3.pass`""
 	Pause
-    Restart-Computer
+    Restart-Computer -force
     }
 else
     {
     Install-ADDSForest -DomainName $MyDomain -SkipPreChecks -safemodeadministratorpassword (convertto-securestring "Password123!" -asplaintext -force) -DomainMode Win2012 -DomainNetbiosname $Domain -ForestMode Win2012 -InstallDNS -NoRebootOnCompletion -Force
 	New-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce -Name "Pass3" -Value "$PSHOME\powershell.exe -Command `"New-Item -ItemType File -Path $logpath\3.pass`""
-	Restart-Computer
+	Restart-Computer -force
 	}

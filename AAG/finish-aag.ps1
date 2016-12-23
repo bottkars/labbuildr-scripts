@@ -36,4 +36,4 @@ $Domain = $env:USERDOMAIN
 ."$Nodescriptdir\set-autologon.ps1" -domain $Domain -user "SVC_SQLADM" -Password $password
 
 New-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce -Name "FINISHAAG" -Value "$PSHOME\powershell.exe -Command `"New-Item -ItemType File -Path c:\scripts\finishaag.pass`""
-Restart-Computer
+Restart-Computer -force

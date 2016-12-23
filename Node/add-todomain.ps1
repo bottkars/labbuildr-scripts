@@ -78,4 +78,4 @@ move to try catch
 ###>  
 # New-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce -Name "Computerinfo" -Value "$PSHOME\powershell.exe -command `".'$Nodescriptdir\set-computerinfo.ps1' -Scriptdir $Scriptdir`""
 ."$Nodescriptdir\set-autologon.ps1" -domain $Domain -user "Administrator" -Password $PlainPassword
-Restart-Computer
+Restart-Computer -force

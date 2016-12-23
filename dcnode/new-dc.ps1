@@ -109,4 +109,4 @@ if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     Pause
     }
 
-restart-computer -force
+Restart-Computer -force -force

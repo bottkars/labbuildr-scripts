@@ -29,4 +29,4 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 #.$Nodescriptdir\test-sharedfolders.ps1
 New-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce -Name "Pass$step" -Value "$PSHOME\powershell.exe -Command `"New-Item -ItemType File -Path c:\scripts\$step.pass`""
-if ($reboot.IsPresent){restart-computer -force}
+if ($reboot.IsPresent){Restart-Computer -force}

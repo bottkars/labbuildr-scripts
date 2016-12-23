@@ -36,4 +36,4 @@ $Domain = $env:USERDOMAIN
 ##### Disable LUA Approval for NMM
 New-ItemProperty -Path HKLM:Software\Microsoft\Windows\CurrentVersion\policies\system -Name EnableLUA -PropertyType DWord -Value 0 -Force
 New-ItemProperty -Path HKLM:Software\Microsoft\Windows\CurrentVersion\policies\system -Name ConsentPromptBehaviorAdmin -PropertyType DWord -Value 0 -Force
-Restart-Computer
+Restart-Computer -force

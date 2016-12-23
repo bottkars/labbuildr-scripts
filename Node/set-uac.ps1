@@ -41,4 +41,4 @@ if ([environment]::OSVersion.Version.Major -ge 10)
 #>
 
 Write-Verbose "computer needs to be rebooted to finish UAC"
-# Restart-Computer
+# Restart-Computer -force

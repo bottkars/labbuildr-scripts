@@ -117,7 +117,7 @@ if ($CDDrive)
     }
 # Rename-Computer -NewName $nodename
 # New-Item -ItemType File -Path c:\scripts\2.pass
-# restart-computer
+# Restart-Computer -force
 ######Newtwork Sanity Check #######
 If ($AddressFamily -match "IPv6")
     {
@@ -196,4 +196,4 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass -Confirm:$false -Force
 #New-ItemProperty -Path HKCU:\Software\Microsoft\ServerManager -Name DoNotOpenServerManagerAtLogon -PropertyType DWORD -Value “0x1” –Force
 New-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce -Name "Pass3" -Value "$PSHOME\powershell.exe -Command `"New-Item -ItemType File -Path c:\scripts\3.pass`""
 ."$Nodescriptdir\set-autologon.ps1" -domain $Domain -user "Administrator" -Password $PlainPassword
-Restart-Computer
+Restart-Computer -force

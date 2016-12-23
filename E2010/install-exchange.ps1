@@ -67,4 +67,4 @@ if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     Pause
     }
 
-Restart-Computer
+Restart-Computer -force

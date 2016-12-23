@@ -205,5 +205,5 @@ if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     }
 if ($reboot.IsPresent)
     {
-    Restart-Computer
+    Restart-Computer -force
     }
