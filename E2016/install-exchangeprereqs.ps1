@@ -39,7 +39,7 @@ $argumentList = "/passive /norestart"
 Start-Process -FilePath $Setuppath -ArgumentList $argumentList -Wait -NoNewWindow
 
 
-.$Nodescriptdir\install-netframework.ps1 -Net_Ver $NET_VER 
+.$Nodescriptdir\install-netframework.ps1 -Net_Ver $NET_VER  -scriptdir $Scriptdir -sourcepath $SourcePath
 if ($KB)
 	{
 	.$Nodescriptdir\install-KB.ps1 -KB $KB -KBFolder WindowsUpdate
