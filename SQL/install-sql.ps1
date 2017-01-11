@@ -131,9 +131,9 @@ Switch ($SQLVER)
         {
 		$Iso_File = "SQLServer2016-x64-ENU.iso"
         Write-Host -ForegroundColor Magenta " ==> Installing NetFramework"
-        .$NodeScriptDir\install-netframework.ps1 -net_ver 461
+        .$NodeScriptDir\install-netframework.ps1 -net_ver 461 -sourcepath $sourcepath
         Write-Host -ForegroundColor Magenta " ==> Installing Java"
-        .$NodeScriptDir\install-java.ps1 -java_ver 8
+        .$NodeScriptDir\install-java.ps1 -java_ver 8 -sourcepath $sourcepath
         $SQL_BASEVER = "SQL2016"
         $SQL_BASEDir = Join-Path $ProductDir $SQL_BASEVER
         Write-Host -ForegroundColor Magenta " ==> Installing SQL Server Management Studio"
