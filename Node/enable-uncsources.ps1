@@ -13,10 +13,10 @@ $Credential = New-Object –TypeName System.Management.Automation.PSCredential �
 
 $uri = new-object System.Uri("$Sources")
 $HostIP = $uri.Host
-Get-PSDrive Sources -ErrorAction SilentlyContinue | Remove-PSDrive
+Get-PSDrive X -ErrorAction SilentlyContinue | Remove-PSDrive
 try
     {
-    New-PSDrive –Name “Sources” -Persist –PSProvider FileSystem –Root “$Sources” -Credential $Credential -Scope Global -ErrorAction Stop
+    New-PSDrive -Persist –Name “X” –PSProvider FileSystem –Root “$Sources” -Credential $Credential -Scope Global -ErrorAction Stop
     }
 catch
     {
