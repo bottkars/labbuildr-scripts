@@ -16,7 +16,7 @@ $HostIP = $uri.Host
 Get-PSDrive Sources -ErrorAction SilentlyContinue | Remove-PSDrive
 try
     {
-    New-PSDrive –Name “Sources” –PSProvider FileSystem –Root “$Sources” -Credential $Credential -Scope Global -ErrorAction Stop
+    New-PSDrive –Name “Sources” -Persist –PSProvider FileSystem –Root “$Sources” -Credential $Credential -Scope Global -ErrorAction Stop
     }
 catch
     {
