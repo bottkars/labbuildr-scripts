@@ -40,3 +40,11 @@ $Zonemaps = ("HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings\
     $Range1 | New-ItemProperty -Name "file" -PropertyType DWORD -Value  "1"
    }
 
+Write-Host -ForegroundColor Gray " ==>setting low risk associations"
+$Associations = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments"
+if (!(test-path $Associations))
+	{
+	$Item = New-Item -ItemType Directory $Associations
+	}
+Set-ItemProperty -Path $Associations -Name "LowRiskFileTypes" -Value ".exe;.bat;.reg;.vbs;.msi"
+
