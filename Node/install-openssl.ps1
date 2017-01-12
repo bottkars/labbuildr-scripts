@@ -28,7 +28,7 @@ $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 .$Nodescriptdir\test-sharedfolders.ps1 -Folder $Sourcepath
-$Setuppath = "\\vmware-host\Shared Folders\Sources\Win64OpenSSL*-$openssl_ver.exe"
+$Setuppath = "$SourcePath\Win64OpenSSL*-$openssl_ver.exe"
 .$NodeScriptDir\test-setup -setup OpenSSL -setuppath $Setuppath
 
 Write-Warning "Installing OPENSSL $openssl_ver"
