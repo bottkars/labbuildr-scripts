@@ -32,12 +32,12 @@ $Zonemaps = ("HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings\
     # $Ranges = New-Item -Path $Zonemap -Name "Ranges" -Force
     Write-Host "Setting $Zonemap for $Host"
     $Ranges = "$Zonemap\Ranges"
-    $Range1 = New-Item -Path $Ranges -Name "Range1" -Force
+    $Range2 = New-Item -Path $Ranges -Name "Range2" -Force
     Set-ItemProperty $ZoneMap -Name "UNCAsIntranet" -Value "1" 
     Set-ItemProperty $ZoneMap -Name "AutoDetect" -Value "1" 
-    $Range1 | New-ItemProperty -Name ":Range" -Value $HostIP
+    $Range2 | New-ItemProperty -Name ":Range" -Value $HostIP
     # $Range1 | New-ItemProperty -Name "*" -PropertyType DWORD -Value  "1"
-    $Range1 | New-ItemProperty -Name "file" -PropertyType DWORD -Value  "1"
+    $Range2 | New-ItemProperty -Name "file" -PropertyType DWORD -Value  "1"
    }
 
 Write-Host -ForegroundColor Gray " ==>setting low risk associations"
