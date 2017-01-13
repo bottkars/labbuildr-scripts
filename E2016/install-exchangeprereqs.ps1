@@ -39,10 +39,10 @@ $argumentList = "/passive /norestart"
 Start-Process -FilePath $Setuppath -ArgumentList $argumentList -Wait -NoNewWindow
 
 
-.$Nodescriptdir\install-netframework.ps1 -Net_Ver $NET_VER  -scriptdir $Scriptdir -sourcepath $SourcePath
+.$Nodescriptdir\install-netframework.ps1 -Net_Ver $NET_VER  -scriptdir $Scriptdir -Sourcepath $SourcePath
 if ($KB)
 	{
-	.$Nodescriptdir\install-KB.ps1 -KB $KB -KBFolder WindowsUpdate
+	.$Nodescriptdir\install-KB.ps1 -KB $KB -KBFolder WindowsUpdate -Sourcepath $SourcePath
 	}
 # $Setupcmd = "NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
 # $Setuppath = "$Prereq_dir\$Setupcmd"
