@@ -32,12 +32,6 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 $Prereq_dir = Join-Path $SourcePath $Prereq
 .$Nodescriptdir\test-sharedfolders.ps1 -folder $SourcePath
-$Setupcmd = "UcmaRuntimeSetup.exe"
-$Setuppath = "$Prereq_dir\$Setupcmd"
-.$Nodescriptdir\test-setup -setup $Setupcmd -setuppath $Setuppath
-$argumentList = "/passive /norestart"
-Start-Process -FilePath $Setuppath -ArgumentList $argumentList -Wait -NoNewWindow
-
 
 .$Nodescriptdir\install-netframework.ps1 -Net_Ver $NET_VER  -scriptdir $Scriptdir -Sourcepath $SourcePath
 if ($KB)
@@ -49,6 +43,11 @@ if ($KB)
 #.$Nodescriptdir\test-setup -setup $Setupcmd -setuppath $Setuppath
 #$argumentList = "/passive /norestart"
 #Start-Process -FilePath $Setuppath -ArgumentList $argumentList -Wait -NoNewWindow
+$Setupcmd = "UcmaRuntimeSetup.exe"
+$Setuppath = "$Prereq_dir\$Setupcmd"
+.$Nodescriptdir\test-setup -setup $Setupcmd -setuppath $Setuppath
+$argumentList = "/passive /norestart"
+Start-Process -FilePath $Setuppath -ArgumentList $argumentList -Wait -NoNewWindow
 
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {
