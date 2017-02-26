@@ -17,7 +17,7 @@ param(
     '3.7.1.0','3.7.0.0',
     '3.6.0.3'
     )]
-    $SRM_VER='4.0.0.0'
+    $SRM_VER='4.0.2'
     )
 $Nodescriptdir = "$Scriptdir\Node"
 $ScriptName = $MyInvocation.MyCommand.Name
