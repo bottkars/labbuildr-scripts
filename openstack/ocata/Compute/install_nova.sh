@@ -32,7 +32,6 @@ rm -f /var/lib/nova/nova.sqlite; printf " --> SUCCESSFUL - Removed Dummy Databas
 printf " ### Discover Compute Nodes on Controller \n"
 if (ssh-keyscan -H $CONTROLLERNAME >> ~/.ssh/known_hosts)  >> $LOGFILE 2>&1; then printf " --> SUCCESSFUL - Added $CONTROLLERNAME SSH Key to ~/.ssh/known_hosts \n"; else printf " --> ERROR - could not add $CONTROLLERNAME SSH Key to ~/.ssh/known_hosts \n" | tee -a $LOGFILE; fi
 if (sshpass -p 'Password123!' ssh root@$CONTROLLERNAME /bin/bash /root/discover_hosts.sh)  >> $LOGFILE 2>&1; then printf " --> SUCCESSFUL - Discovered Compute Nodes on $CONTROLLERNAME \n";  else printf " --> ERROR - could not discover Compute Nodes on $CONTROLLERNAME \n" | tee -a $LOGFILE; fi
-if (sshpass -p 'Password123!' ssh root@$CONTROLLERNAME rm /root/discover_hosts.sh)  >> $LOGFILE 2>&1; then printf " --> SUCCESSFUL - Remove discover_hosts.sh from $CONTROLLERNAME \n";  else printf " --> ERROR - could not discover_hosts.sh from $CONTROLLERNAME \n" | tee -a $LOGFILE; fi
 
 printf "
   ---------------------------------------
