@@ -11,7 +11,7 @@ printf "
   ------------------------------------\n\n" | tee -a $LOGFILE
  
  printf " ### Install Packages\n" | tee -a $LOGFILE
- if (apt-get install nova-compute sshpass -y) >> $LOGFILE 2>&1; then printf " --> SUCCESSFUL - installed Nova Packages\n"; else printf " --> ERROR - could not install Nova Packages - Logfile: $LOGFILE \n" | tee -a $LOGFILE; fi
+ if (apt-get install ipxe-qemu=1.0.0+git-20150424.a25a16d-1ubuntu1 qemu-block-extra:amd64=1:2.5+dfsg-5ubuntu10.9 qemu-kvm=1:2.5+dfsg-5ubuntu10.9 qemu-system-common=1:2.5+dfsg-5ubuntu10.9 qemu-system-x86=1:2.5+dfsg-5ubuntu10.9 qemu-utils=1:2.5+dfsg-5ubuntu10.9 libvirt-bin=1.3.1-1ubuntu10.8 libvirt0:amd64=1.3.1-1ubuntu10.8 python-libvirt=1.3.1-1ubuntu1 nova-compute sshpass -y) >> $LOGFILE 2>&1; then printf " --> SUCCESSFUL - installed Nova Packages\n"; else printf " --> ERROR - could not install Nova Packages - Logfile: $LOGFILE \n" | tee -a $LOGFILE; fi
  
 printf " ### Configure Nova \n"
 

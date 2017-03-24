@@ -7,7 +7,7 @@ INSTALLPATH=$4
 
 printf "
   ------------------------------------------
- | #### Finished Neutron Installation ##### |
+ | #### Start Neutron Installation ##### |
   ------------------------------------------\n\n" | tee -a $LOGFILE
  
 printf " ### Install Packages\n" | tee -a $LOGFILE
@@ -34,5 +34,5 @@ printf " ### Configure Neutron \n" | tee -a $LOGFILE
 
 printf "
   ---------------------------------------
- | #### Start Neutron Installation ##### |
+ | #### Finished Neutron Installation ##### |
   ---------------------------------------\n\n" | tee -a $LOGFILE

@@ -32,7 +32,7 @@ os_region_name = RegionOne" >> /etc/nova/nova.conf); then printf " --> SUCCESSFU
 	sed -i '/transport_url = */c\transport_url = rabbit://cinder:Password123!@'$CONTROLLERNAME  /etc/cinder/cinder.conf
 	sed -i '/auth_uri = */c\auth_uri = http://'$CONTROLLERNAME':5000' /etc/cinder/cinder.conf
 	sed -i '/auth_url = */c\auth_url = http://'$CONTROLLERNAME':35357' /etc/cinder/cinder.conf
-	sed -i '/enabled_backends=*/c\enabled_backends='$CINDERBACKENDS /etc/cinder/cinder.conf
+	sed -i '/enabled_backends =*/c\enabled_backends = '$CINDERBACKENDS /etc/cinder/cinder.conf
 
 if [[ $CINDERBACKENDS == *"scaleio"* ]]
 	then
@@ -48,10 +48,10 @@ san_thin_provision = true
 volume_driver = cinder.volume.drivers.dell_emc.scaleio.driver.ScaleIODriver
 volume_backend_name = scaleio
 	" >> /etc/cinder/cinder.conf
-		sed -i '/default_volume_type=*/c\default_volume_type=ScaleIO_Thin' /etc/cinder/cinder.conf
+		sed -i '/default_volume_type =*/c\default_volume_type = ScaleIO_Thin' /etc/cinder/cinder.conf
 		printf " --> SUCCESSFUL - Added ScaleIO Config \n"
 	else
-		sed -i '/default_volume_type=*/c\default_volume_type=Unity_iSCSI_Thin' /etc/cinder/cinder.conf
+		sed -i '/default_volume_type =*/c\default_volume_type = Unity_iSCSI_Thin' /etc/cinder/cinder.conf
 fi
 
 	if [[ $CINDERBACKENDS == *"unity"* ]]
@@ -67,7 +67,7 @@ volume_driver = cinder.volume.drivers.dell_emc.unity.driver.UnityDriver
 volume_backend_name = unity
 " >> /etc/cinder/cinder.conf
 			printf " --> SUCCESSFUL - Added Unity Config \n"
-			if ( apt-get install python-pip ) >> $LOGFILE 2>&1; then printf " --> SUCCESSFUL - Installed Python-Pip \n"; else printf " --> ERROR - could not install Python-Pip - Logfile: $LOGFILE \n" | tee -a $LOGFILE; fi
+			if ( apt-get install python-pip -y ) >> $LOGFILE 2>&1; then printf " --> SUCCESSFUL - Installed Python-Pip \n"; else printf " --> ERROR - could not install Python-Pip - Logfile: $LOGFILE \n" | tee -a $LOGFILE; fi
 			if ( pip install storops ) >> $LOGFILE 2>&1; then printf " --> SUCCESSFUL - Installed  storops \n"; else printf " --> ERROR - install storops - Logfile: $LOGFILE \n" | tee -a $LOGFILE; fi
 	fi
 	
