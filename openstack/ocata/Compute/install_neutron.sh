@@ -28,10 +28,14 @@ printf " ### Configure Neutron \n" | tee -a $LOGFILE
 	sed -i '/url = neutron_api/c\url = http://'$CONTROLLERNAME':9696' /etc/nova/nova.conf
 	sed -i '/auth_url = auth_neutron/c\auth_url = http://'$CONTROLLERNAME':35357' /etc/nova/nova.conf
 	
-	
 	if (service nova-compute restart)  >> $LOGFILE 2>&1; then printf " --> SUCCESSFUL - restarted nova-compute service \n"; else printf " --> ERROR - could not restart nova-compute service - Logfile: $LOGFILE \n" | tee -a $LOGFILE; fi
 	if (service neutron-linuxbridge-agent restart)  >> $LOGFILE 2>&1; then printf " --> SUCCESSFUL - restarted neutron-linuxbridge-agent service \n"; else printf " --> ERROR - could not restart neutron-linuxbridge-agent service - Logfile: $LOGFILE \n" | tee -a $LOGFILE; fi
 
+printf " ### Discover Compute Nodes on Controller \n"
+	if (ssh-keyscan -H $CONTROLLERNAME >> ~/.ssh/known_hosts)  >> $LOGFILE 2>&1; then printf " --> SUCCESSFUL - Added $CONTROLLERNAME SSH Key to ~/.ssh/known_hosts \n"; else printf " --> ERROR - could not add $CONTROLLERNAME SSH Key to ~/.ssh/known_hosts \n" | tee -a $LOGFILE; fi
+	if (sshpass -p 'Password123!' ssh root@$CONTROLLERNAME 'su -s /bin/sh -c "nova-manage cell_v2 discover_hosts --verbose" nova')  >> $LOGFILE 2>&1; then printf " --> SUCCESSFUL - Discovered Compute Nodes on $CONTROLLERNAME \n";  else printf " --> ERROR - could not discover Compute Nodes on $CONTROLLERNAME \n" | tee -a $LOGFILE; fi
+	if (sshpass -p 'Password123!' ssh root@$CONTROLLERNAME 'su -s /bin/sh -c "nova-manage cell_v2 discover_hosts --verbose" nova')  >> $LOGFILE 2>&1; then printf " --> SUCCESSFUL - Discovered Compute Nodes on $CONTROLLERNAME \n";  else printf " --> ERROR - could not discover Compute Nodes on $CONTROLLERNAME \n" | tee -a $LOGFILE; fi
+	
 printf "
   ---------------------------------------
  | #### Finished Neutron Installation ##### |

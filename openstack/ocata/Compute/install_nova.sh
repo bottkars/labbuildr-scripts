@@ -25,13 +25,8 @@ printf " ### Configure Nova \n"
 	sed -i '/api_servers = */c\api_servers = http://'$CONTROLLERNAME':9292' /etc/nova/nova.conf
 	sed -i '/novncproxy_base_url = /c\novncproxy_base_url =http://'$CONTROLLERNAME':6080/vnc_auto.html' /etc/nova/nova.conf
 
-	
-if (service nova-compute restart)  >> $LOGFILE 2>&1; then printf " --> SUCCESSFUL - restarted nova-compute service \n"; else printf " --> ERROR - could not restart nova-compute service - Logfile: $LOGFILE \n" | tee -a $LOGFILE; fi
-rm -f /var/lib/nova/nova.sqlite; printf " --> SUCCESSFUL - Removed Dummy Database \n"
-
-printf " ### Discover Compute Nodes on Controller \n"
-if (ssh-keyscan -H $CONTROLLERNAME >> ~/.ssh/known_hosts)  >> $LOGFILE 2>&1; then printf " --> SUCCESSFUL - Added $CONTROLLERNAME SSH Key to ~/.ssh/known_hosts \n"; else printf " --> ERROR - could not add $CONTROLLERNAME SSH Key to ~/.ssh/known_hosts \n" | tee -a $LOGFILE; fi
-if (sshpass -p 'Password123!' ssh root@$CONTROLLERNAME /bin/bash /root/discover_hosts.sh)  >> $LOGFILE 2>&1; then printf " --> SUCCESSFUL - Discovered Compute Nodes on $CONTROLLERNAME \n";  else printf " --> ERROR - could not discover Compute Nodes on $CONTROLLERNAME \n" | tee -a $LOGFILE; fi
+	if (service nova-compute restart)  >> $LOGFILE 2>&1; then printf " --> SUCCESSFUL - restarted nova-compute service \n"; else printf " --> ERROR - could not restart nova-compute service - Logfile: $LOGFILE \n" | tee -a $LOGFILE; fi
+	rm -f /var/lib/nova/nova.sqlite; printf " --> SUCCESSFUL - Removed Dummy Database \n"
 
 printf "
   ---------------------------------------
