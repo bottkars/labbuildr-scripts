@@ -11,7 +11,7 @@ printf "
   ------------------------------------------\n\n" | tee -a $LOGFILE
  
 printf " ### Install Packages\n" | tee -a $LOGFILE
-	if (apt-get install neutron-plugin-linuxbridge-agent -y) >> $LOGFILE 2>&1; then printf " --> SUCCESSFUL - installed Neutron Packages\n"; else printf " --> ERROR - could not install Neutron Packages - Logfile: $LOGFILE \n" | tee -a $LOGFILE; fi
+	if (apt-get install neutron-plugin-linuxbridge-agent sshpass -y) >> $LOGFILE 2>&1; then printf " --> SUCCESSFUL - installed Neutron Packages\n"; else printf " --> ERROR - could not install Neutron Packages - Logfile: $LOGFILE \n" | tee -a $LOGFILE; fi
 
 printf " ### Configure Neutron \n" | tee -a $LOGFILE
 	if (cp ${INSTALLPATH}/configs/neutron.conf /etc/neutron/neutron.conf) >> $LOGFILE 2>&1; 											then printf " --> SUCCESSFUL - Copied neutron.conf file \n"; else printf " --> ERROR - Could not copy neutron.conf file - Logfile: $LOGFILE \n" | tee -a $LOGFILE; fi 

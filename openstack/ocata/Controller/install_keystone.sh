@@ -44,6 +44,7 @@ printf " ### Create Services \n"
 	if ($BASECOMMAND service create --name cinderv2 --description "OpenStack Block Storage" volumev2) >> $LOGFILE 2>&1; then printf " --> SUCCESSFUL Created Keystone Service Cinder (volumev2) \n"; 	else printf " --> ERROR - Could not create Keystone Service Cinder (volumev2) - see $LOGFILE \n" | tee -a $LOGFILE; fi
 	if ($BASECOMMAND service create --name heat --description "Orchestration" orchestration) >> $LOGFILE 2>&1; 					then printf " --> SUCCESSFUL Created Keystone Service Heat (Orchestration) \n"; 	else printf " --> ERROR - Could not create Keystone Service Heat (Orchestration) - see $LOGFILE \n" | tee -a $LOGFILE; fi
 	if ($BASECOMMAND service create --name heat-cfn --description "Orchestration"  cloudformation) >> $LOGFILE 2>&1; 		then printf " --> SUCCESSFUL Created Keystone Service Heat-cfn (cloudformation) \n"; 	else printf " --> ERROR - Could not create Keystone Service Heat-cfn (cloudformation) - see $LOGFILE \n" | tee -a $LOGFILE; fi
+	if ($BASECOMMAND service create --name swift --description "OpenStack Object Storage" object-store) >> $LOGFILE 2>&1; 		then printf " --> SUCCESSFUL Created Keystone Service Swift (object-store) \n"; 	else printf " --> ERROR - Could not create Keystone Service Swift (object-store) - see $LOGFILE \n" | tee -a $LOGFILE; fi	
 printf " ### Create Endpoints \n"
 	#Glance
 	if ($BASECOMMAND endpoint create --region RegionOne image public http://$CONTROLLERNAME:9292) >> $LOGFILE 2>&1; 	then printf " --> SUCCESSFUL Created Glance public endpoint\n"; 	else printf " --> ERROR - Could not create Glance public endpoint - see $LOGFILE \n" | tee -a $LOGFILE; fi
@@ -75,6 +76,10 @@ printf " ### Create Endpoints \n"
 	if ($BASECOMMAND endpoint create --region RegionOne cloudformation public http://$CONTROLLERNAME:8000/v1) >> $LOGFILE 2>&1; 	then printf " --> SUCCESSFUL Created Heat Cloudformation public endpoint\n"; 	else printf " --> ERROR - Could not create Heat Cloudformation public endpoint - see $LOGFILE \n" | tee -a $LOGFILE; fi
 	if ($BASECOMMAND endpoint create --region RegionOne cloudformation internal http://$CONTROLLERNAME:8000/v1) >> $LOGFILE 2>&1; 	then printf " --> SUCCESSFUL Created Heat Cloudformation  internal endpoint\n"; 	else printf " --> ERROR - Could not create Heat Cloudformation internal endpoint - see $LOGFILE \n" | tee -a $LOGFILE; fi
 	if ($BASECOMMAND endpoint create --region RegionOne cloudformation admin http://$CONTROLLERNAME:8000/v1) >> $LOGFILE 2>&1; 	then printf " --> SUCCESSFUL Created Heat Cloudformation admin endpoint\n"; 	else printf " --> ERROR - Could not create Heat Cloudformation admin endpoint - see $LOGFILE \n" | tee -a $LOGFILE; fi
+	## Neutron
+	if ($BASECOMMAND endpoint create --region RegionOne object-store public http://$CONTROLLERNAME:8080/v1/AUTH_%\(tenant_id\)s) >> $LOGFILE 2>&1; 	then printf " --> SUCCESSFUL Created Swift public endpoint\n"; 	else printf " --> ERROR - Could not create Swift public endpoint - see $LOGFILE \n" | tee -a $LOGFILE; fi
+	if ($BASECOMMAND endpoint create --region RegionOne object-store internal http://$CONTROLLERNAME:8080/v1/AUTH_%\(tenant_id\)s) >> $LOGFILE 2>&1; then printf " --> SUCCESSFUL Created Swift internal endpoint\n"; 	else printf " --> ERROR - Could not create Swift internal endpoint - see $LOGFILE \n" | tee -a $LOGFILE; fi
+	if ($BASECOMMAND endpoint create --region RegionOne object-store admin http://$CONTROLLERNAME:8080/v1) >> $LOGFILE 2>&1; 	then printf " --> SUCCESSFUL Created Swift admin endpoint\n"; 	else printf " --> ERROR - Could not create Swift admin endpoint - see $LOGFILE \n" | tee -a $LOGFILE; fi	
 printf " ### Create Projects \n"		
 	if ($BASECOMMAND project create --domain default --description "Service Project" service ) >> $LOGFILE 2>&1; 	then printf " --> SUCCESSFUL Created Project service\n"; 	else printf " ERROR --> Could not create Project service \n"; fi
 printf " ### Create Roles \n"
@@ -88,6 +93,7 @@ printf " ### Create Users \n"
 	if ($BASECOMMAND user create --domain default --project service --password Password123! neutron ) >> $LOGFILE 2>&1; 	then printf " --> SUCCESSFUL Created User neutron\n"; else printf " --> ERROR - Could not create User neutron  - see $LOGFILE \n" | tee -a $LOGFILE; fi
 	if ($BASECOMMAND user create --domain default --project service --password Password123! cinder ) >> $LOGFILE 2>&1; 		then printf " --> SUCCESSFUL Created User cinder\n"; 	else printf " --> ERROR - Could not create User cinder  - see $LOGFILE \n" | tee -a $LOGFILE; fi
 	if ($BASECOMMAND user create --domain default --project service --password Password123! heat ) >> $LOGFILE 2>&1; 		then printf " --> SUCCESSFUL Created User heat\n"; 		else printf " --> ERROR - Could not create User heat - see $LOGFILE \n" | tee -a $LOGFILE; fi
+	if ($BASECOMMAND user create --domain default --project service --password Password123! swift ) >> $LOGFILE 2>&1; 		then printf " --> SUCCESSFUL Created User swift\n"; 		else printf " --> ERROR - Could not create User swift - see $LOGFILE \n" | tee -a $LOGFILE; fi
 	# In Domain Heat
 	if ($BASECOMMAND user create --domain heat --password Password123! HeatDomainAdmin ) >> $LOGFILE 2>&1; 	then printf " --> SUCCESSFUL Created User HeatDomainAdmin in Domain heat\n"; 	else printf " --> ERROR - Could not create User HeatDomainAdmin in Domain heat - see $LOGFILE \n" | tee -a $LOGFILE; fi
 
@@ -100,6 +106,7 @@ printf " ### Map User to Role and Project \n"
 	if ($BASECOMMAND role add --project service --user neutron admin) >> $LOGFILE 2>&1; then printf " --> SUCCESSFUL Mapped user neutron to project service and role admin \n"; else printf " --> ERROR - Could not map user neutron to project service and role admin - see $LOGFILE \n" | tee -a $LOGFILE; fi
 	if ($BASECOMMAND role add --project service --user cinder admin) >> $LOGFILE 2>&1; 	then printf " --> SUCCESSFUL Mapped user cinder to project service and role admin \n"; 		else printf " --> ERROR - Could not map user cinder to project service and role admin - see $LOGFILE \n" | tee -a $LOGFILE; fi
 	if ($BASECOMMAND role add --project service --user heat admin) >> $LOGFILE 2>&1; 	then printf " --> SUCCESSFUL Mapped user heat to project service and role admin \n"; 		else printf " --> ERROR - Could not map user heat to project service and role admin - see $LOGFILE \n" | tee -a $LOGFILE; fi
+	if ($BASECOMMAND role add --project service --user swift admin) >> $LOGFILE 2>&1; 	then printf " --> SUCCESSFUL Mapped user swift to project service and role admin \n"; 		else printf " --> ERROR - Could not map user swift to project service and role admin - see $LOGFILE \n" | tee -a $LOGFILE; fi
 	# In Domain heat
 	if ($BASECOMMAND role add --domain heat --user HeatDomainAdmin admin) >> $LOGFILE 2>&1; 	then printf " --> SUCCESSFUL Mapped user HeatDomainAdmin to role admin in Domain Heat \n"; else printf " --> ERROR - Could not map user HeatDomainAdmin to role admin in Domain Heat - see $LOGFILE \n" | tee -a $LOGFILE; fi
 printf "

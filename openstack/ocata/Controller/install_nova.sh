@@ -16,7 +16,6 @@ printf "
 printf " ### Configure Nova \n"
 
 	if (cp ${INSTALLPATH}/configs/nova.conf /etc/nova/nova.conf) >> $LOGFILE 2>&1; then printf " --> SUCCESSFUL - Copied nova.conf file \n"; else printf " --> ERROR - Could not copy nova.conf file - Logfile: $LOGFILE \n" | tee -a $LOGFILE; fi 
-	if (cp ${INSTALLPATH}/discover_hosts.sh /root/discover_hosts.sh) >> $LOGFILE 2>&1; then printf " --> SUCCESSFUL - Copied discover_hosts.sh file \n"; else printf " --> ERROR - Could not copy discover_hosts.sh file - Logfile: $LOGFILE \n" | tee -a $LOGFILE; fi 
 	
 	sed -i '/my_ip = x.x.x.x/c\my_ip = '$CONTROLLERIP /etc/nova/nova.conf
 	sed -i '/memcached_servers= */c\memcached_servers = '$CONTROLLERNAME':11211' /etc/nova/nova.conf

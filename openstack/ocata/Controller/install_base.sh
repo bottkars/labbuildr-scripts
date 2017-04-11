@@ -11,11 +11,13 @@ DOMAINSUFFIX="local"			#Default
 SIO_PD="PD_labbuildr"			#Default
 SIO_SP="SP_labbuildr"			#Default
 SIO_GW=$(hostname)			#Default
-UNITYIP="192.168.2.171"		#Default
+UNITYIP="192.168.2.171"	#Default
 UNITYPOOL="vPool"				#Default
 CINDERBACKENDS="scaleio"	#Default
 BASECONFIG="true"				#Default
 
+#SWIFTLAYOUT='[{"NODE_TYPE":"compute","swiftdisks":["/dev/sdc","/dev/sdd"],"NODE_NAME":"ubuntu4","NODE_IP":"192.168.2.204"},{"NODE_TYPE":"compute","NODE_NAME":"ubuntu5","NODE_IP":"192.168.2.205","swiftdisks":["/dev/sdc","/dev/sdd"]},{"NODE_TYPE":"controller","NODE_NAME":"ubuntu6","NODE_IP":"192.168.2.206"}]'
+SWIFTLAYOUT=
 
 #Parameter Handling
 while [ $# -gt 1 ]
@@ -56,6 +58,10 @@ case $key in
 	;;
 	 -c | --config)
         BASECONFIG="$2"
+        shift # past argument
+	;;
+		 -sl | --swiftdisks)
+        SWIFTLAYOUT="$2"
         shift # past argument
 	;;
     *)
@@ -130,4 +136,5 @@ ${INSTALLPATH}/install_neutron.sh $LOGFILE $CONTROLLERNAME $CONTROLLERIP $BUILDD
 ${INSTALLPATH}/install_horizon.sh $LOGFILE $CONTROLLERNAME $INSTALLPATH
 ${INSTALLPATH}/install_heat.sh $LOGFILE $CONTROLLERNAME $INSTALLPATH
 ${INSTALLPATH}/install_cinder.sh $LOGFILE $CONTROLLERNAME $CONTROLLERIP $SIO_GW $SIO_PD $SIO_SP $INSTALLPATH $UNITYIP $UNITYPOOL $CINDERBACKENDS
+if [ -n "$SWIFTLAYOUT" ]; then ${INSTALLPATH}/install_swift.sh $LOGFILE $CONTROLLERNAME $INSTALLPATH $SWIFTLAYOUT ; fi
 if [ $BASECONFIG = "true" ]; then ${INSTALLPATH}/conf_env.sh $LOGFILE $CONTROLLERNAME $BUILDDOMAIN $CINDERBACKENDS; fi 
