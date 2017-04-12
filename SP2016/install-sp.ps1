@@ -62,20 +62,21 @@ else
     $Temp_Iso = "$env:USERPROFILE\Downloads\$Iso"
     $ismount = Mount-DiskImage -ImagePath $Temp_Iso -PassThru
     $Driveletter = (Get-Volume | where { $_.size -eq $ismount.Size}).driveletter
+    Write-Verbose $Driveletter
     $Setuppath = "$($Driveletter):\$Setupcmd"
     }
 switch ($DBtype)
     {
     'AAG'
     {
-    $arguments = "/config `"$Driveletter\files\setupfarmsilent\config.xml`""
+    $arguments = "/config `"$Scriptdir\SP2016\config.xml`""
     }
     'MSDE'
     {
     }
     default
     {
-    $arguments = "/config `"$Driveletter\files\setupsilent\config.xml`""
+    $arguments = "/config `"$Scriptdir\SP2016\config.xml`""
     }
 
     }
