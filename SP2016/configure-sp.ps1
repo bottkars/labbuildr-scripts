@@ -88,7 +88,7 @@ New-SPSite -URL $url -OwnerAlias $PrimaryLogin -SecondaryOwnerAlias $SecondaryLo
 # $Template = Get-SPWebTemplate STS#0
 # New-SPSite "$($url):$webPort/sites/Teams1" -OwnerAlias "$env:USERDOMAIN\Administrator" -Name "$env:USERDOMAIN" -Template $Template 
 $web = Get-SPWeb $webApp.url                             
-$web.CreateDefaultAssociatedGroups($PrimaryLogin,$SecondaryLogin,"") 
+#$web.CreateDefaultAssociatedGroups($PrimaryLogin,$SecondaryLogin,"") 
 ADD-SPShellAdmin -UserName "$Domain\$env:COMPUTERNAME$"
 Remove-PSSnapin Microsoft.SharePoint.PowerShell
 Write-Verbose "Setting Sharepoint VSS Writer"
