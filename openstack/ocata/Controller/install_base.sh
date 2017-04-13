@@ -60,7 +60,7 @@ case $key in
         BASECONFIG="$2"
         shift # past argument
 	;;
-		 -sl | --swiftdisks)
+	-sl | --swiftdisks)
         SWIFTLAYOUT="$2"
         shift # past argument
 	;;
@@ -75,6 +75,7 @@ case $key in
 		\t [ --unityip | -uip ] <Unity IP | Unity Hostname>
 		\t [ --unitypool | -up ] < Unity Storage Pool>
 		\t [ --config | -c ] <true | false>
+		\t [-sl | --swiftdisks ] < Swift layout as compressed json >
 	"
 	;;
 esac

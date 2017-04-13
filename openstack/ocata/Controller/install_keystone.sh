@@ -85,7 +85,7 @@ printf " ### Create Projects \n"
 printf " ### Create Roles \n"
 	if ($BASECOMMAND role create user ) >> $LOGFILE 2>&1; 		then printf " --> SUCCESSFUL Created Role user\n"; 		else printf " --> ERROR - Could not create role user \n"; fi
 	if ($BASECOMMAND role create HeatStackOwner ) >> $LOGFILE 2>&1; 	then printf " --> SUCCESSFUL Created Role HeatStackOwner\n"; 	else printf " --> ERROR - Could not create role HeatStackOwner \n"; fi
-	if ($BASECOMMAND role create HeatStackUser ) >> $LOGFILE 2>&1; 	then printf " --> SUCCESSFUL Created Role HeatStackUser\n"; 	else printf " --> ERROR - Could not create role HeatStackUser \n"; fi
+	if ($BASECOMMAND role create heat_stack_user ) >> $LOGFILE 2>&1; 	then printf " --> SUCCESSFUL Created Role heat_stack_user\n"; 	else printf " --> ERROR - Could not create role heat_stack_user \n"; fi
 printf " ### Create Users \n"		
 	if ($BASECOMMAND user create --domain default --project service --password Password123! glance ) >> $LOGFILE 2>&1; 		then printf " --> SUCCESSFUL Created User glance\n"; 	else printf " --> ERROR - Could not create User glance  - see $LOGFILE \n" | tee -a $LOGFILE; fi
 	if ($BASECOMMAND user create --domain default --project service --password Password123! nova ) >> $LOGFILE 2>&1; 		then printf " --> SUCCESSFUL Created User nova\n"; 	else printf " --> ERROR - Could not create User nova  - see $LOGFILE \n" | tee -a $LOGFILE; fi
