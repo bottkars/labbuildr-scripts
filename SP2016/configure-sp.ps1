@@ -52,7 +52,7 @@ switch ($DBtype)
     default
         {
         Write-Verbose "Setting Sharepoint VSS Writer"
-        Start-Process "C:\Program Files\Common Files\microsoft shared\Web Server Extensions\15\BIN\STSADM.EXE" -ArgumentList "-o registerwsswriter" -Wait
+        Start-Process "C:\Program Files\Common Files\microsoft shared\Web Server Extensions\16\BIN\STSADM.EXE" -ArgumentList "-o registerwsswriter" -Wait
         exit
     }
 
@@ -61,7 +61,7 @@ $credential = New-Object System.Management.Automation.PSCredential($SQLUsername,
 Write-Warning  "Creating $ConfigDB and $AdminDB, this might take a while..."
 $FarmCredentials = New-Object System.Management.Automation.PSCredential $SQLUsername, (ConvertTo-SecureString $SQLPassword -AsPlainText -Force)
 Add-PsSnapin Microsoft.SharePoint.PowerShell -ErrorAction SilentlyContinue
-New-SPConfigurationDatabase -DatabaseServer "$SQLServer\$DBInstance" -DatabaseName $ConfigDB -AdministrationContentDatabaseName $AdminDB -Passphrase (ConvertTo-SecureString $FarmPassphrase -AsPlainText -Force) -FarmCredentials $FarmCredentials -Verbose
+New-SPConfigurationDatabase -DatabaseServer "$SQLServer\$DBInstance" -DatabaseName $ConfigDB -AdministrationContentDatabaseName $AdminDB -LocalServerRole SingleServerFarm -Passphrase (ConvertTo-SecureString $FarmPassphrase -AsPlainText -Force) -FarmCredentials $FarmCredentials  -Verbose
 Write-Warning "Installing Helpcollection"
 Install-SPHelpCollection -All
 Initialize-SPResourceSecurity
