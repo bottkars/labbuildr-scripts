@@ -92,4 +92,4 @@ $web.CreateDefaultAssociatedGroups($PrimaryLogin,$SecondaryLogin,"")
 ADD-SPShellAdmin -UserName "$Domain\$env:COMPUTERNAME$"
 Remove-PSSnapin Microsoft.SharePoint.PowerShell
 Write-Verbose "Setting Sharepoint VSS Writer"
-Start-Process "C:\Program Files\Common Files\microsoft shared\Web Server Extensions\15\BIN\STSADM.EXE" -ArgumentList "-o registerwsswriter" -Wait
+Start-Process "C:\Program Files\Common Files\microsoft shared\Web Server Extensions\16\BIN\STSADM.EXE" -ArgumentList "-o registerwsswriter" -Wait
