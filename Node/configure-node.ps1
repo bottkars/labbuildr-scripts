@@ -11,12 +11,13 @@
 param(
     $nodeIP,
     $nodename,
+	[switch]$NO_DOMAIN_JOIN,
     $IPv4Subnet = "192.168.2",
     $IPv6Subnet,
     [ValidateSet('24')]$IPv4PrefixLength = '24',
     $IPv6Prefix = "",
     [ValidateSet('8','24','32','48','64')]$IPv6PrefixLength = '8',
-    [Validateset('IPv4','IPv6','IPv4IPv6')]$AddressFamily,
+    [Validateset('IPv4','IPv6','IPv4IPv6')]$AddressFamily = 'IPv4',
     $AddonFeatures,
     [ipaddress]$DefaultGateway,
     $Domain="labbuildr",
@@ -38,15 +39,19 @@ if (!(Test-Path $logpath))
     }
 $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile -Value "$($MyInvocation.BoundParameters)"
-$Addonfeatures = $Addonfeatures.Replace(" ","")
-$Features = $AddonFeatures.split(",")
+if ($AddonFeatures)
+	{
+	Write-Verbose $AddonFeatures
+	$Addonfeatures = $Addonfeatures.Replace(" ","")
+	$Features = $AddonFeatures.split(",")
+	}
 $IPv6subnet = "$IPv6Prefix$IPv4Subnet"
 $IPv6Address = "$IPv6Prefix$nodeIP"
 Set-Content -Path $Logfile -Value "$nodeIP, $IPv4Subnet, $nodename"
 Write-Verbose $IPv6PrefixLength
 Write-Verbose $IPv6Address
 Write-Verbose $IPv6subnet
-Write-Verbose $AddonFeatures
+
 $OS_Build = ([Environment]::OSVersion.Version).Build
 if ($OS_Build -le 9200)
     {
@@ -96,8 +101,11 @@ if ( $AddressFamily -notmatch 'IPv4')
 Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server' -Name fDenyTSConnections -Value 0
 Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name UserAuthentication -Value 1
 Set-NetFirewallRule -DisplayGroup 'Remote*Desktop' -Enabled True
+if ($AddonFeatures)
+	{
 Write-Host "Running Feature Installer"
 Get-WindowsFeature $Features | Add-WindowsFeature –IncludeManagementTools
+	}
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {
     Pause
@@ -128,42 +136,45 @@ else
     $subnet = "$IPv4Subnet"
     }
 
-Do {
-    $Ping = Test-Connection "$Subnet.10" -ErrorAction SilentlyContinue
-    If (!$Ping)
-        {
-        Write-Warning "Can Not reach Domain Controller with $subnet.10
-                        This is most Likely a VMnet Configuration Issue
-                        please Fix Network Assignments ( vmnet ) and specify correct Addressfamily"
-        Pause
-        }
-    }
-Until ($Ping)
+
 if ($iscsi.IsPresent)
 	{
 	Write-Host " ==>Installing iSCSI Initiator and MPIO"
 	Start-Process -FilePath "$nodescriptdir\enable-labiscsi.ps1" -ArgumentList "-Target_IP $subnet.$Target_IP" -Wait -PassThru
 	}
 
-$MyDomain = "$($Domain).$($Domainsuffix)"
-$PlainPassword = "Password123!"
-$password = $PlainPassword | ConvertTo-SecureString -asPlainText -Force
-$username = "$domain\Administrator"
-$credential = New-Object System.Management.Automation.PSCredential($username,$password)
-#Do {
-    $Domain_OK = Add-Computer -DomainName $Mydomain -Credential $credential -PassThru -NewName $Nodename
-    If (!$Domain_OK.HasSucceeded)
-        {
-        Write-Warning "Can Not Join Domain $Domain, please verify and retry
-                    Most likely this Computer has not been removed from Domain or Domain needs to refresh
-                    Please Check Active Directory Users and Computers on the DC. Most likely the computer could not be re-named"
-        Write-Host "after keypress, we will try rename-computer -newname $nodename , as this is most-likely the issue"
-		pause
-		Rename-Computer -NewName $Nodename
-        }
-#    }
-#Until ($Domain_OK.HasSucceeded)
-
+If (!$NO_DOMAIN_JOIN.IsPresent)
+	{
+	Do {
+		$Ping = Test-Connection "$Subnet.10" -ErrorAction SilentlyContinue
+		If (!$Ping)
+			{
+			Write-Warning "Can Not reach Domain Controller with $subnet.10
+							This is most Likely a VMnet Configuration Issue
+							please Fix Network Assignments ( vmnet ) and specify correct Addressfamily"
+			Pause
+			}
+		}
+	Until ($Ping)
+	$MyDomain = "$($Domain).$($Domainsuffix)"
+	$PlainPassword = "Password123!"
+	$password = $PlainPassword | ConvertTo-SecureString -asPlainText -Force
+	$username = "$domain\Administrator"
+	$credential = New-Object System.Management.Automation.PSCredential($username,$password)
+	#Do {
+		$Domain_OK = Add-Computer -DomainName $Mydomain -Credential $credential -PassThru -NewName $Nodename
+		If (!$Domain_OK.HasSucceeded)
+			{
+			Write-Warning "Can Not Join Domain $Domain, please verify and retry
+						Most likely this Computer has not been removed from Domain or Domain needs to refresh
+						Please Check Active Directory Users and Computers on the DC. Most likely the computer could not be re-named"
+			Write-Host "after keypress, we will try rename-computer -newname $nodename , as this is most-likely the issue"
+			pause
+			Rename-Computer -NewName $Nodename
+			}
+	#    }
+	#Until ($Domain_OK.HasSucceeded)
+	}
 Write-Host -ForegroundColor Magenta "Disabling IESEC"
 $AdminKey = “HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}”
 $UserKey = “HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4b3f-8CFC-4F3A74704073}”
@@ -195,5 +206,12 @@ Set-ItemProperty -Path $Associations -Name "LowRiskFileTypes" -Value ".exe;.bat;
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Confirm:$false -Force
 #New-ItemProperty -Path HKCU:\Software\Microsoft\ServerManager -Name DoNotOpenServerManagerAtLogon -PropertyType DWORD -Value “0x1” –Force
 New-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce -Name "Pass3" -Value "$PSHOME\powershell.exe -Command `"New-Item -ItemType File -Path c:\scripts\3.pass`""
-."$Nodescriptdir\set-autologon.ps1" -domain $Domain -user "Administrator" -Password $PlainPassword
-Restart-Computer -force
+If (!$NO_DOMAIN_JOIN.IsPresent)
+	{
+	."$Nodescriptdir\set-autologon.ps1" -domain $Domain -user "Administrator" -Password $PlainPassword
+	Restart-Computer -force
+	}
+else
+	{
+	."$Nodescriptdir\set-autologon.ps1" -user "Administrator" -Password $PlainPassword
+	}
