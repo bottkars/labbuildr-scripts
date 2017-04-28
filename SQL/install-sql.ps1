@@ -145,9 +145,13 @@ Switch ($SQLVER)
             .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
             $Arguments = "/install /passive /norestart"
             Start-Process $Setuppath -ArgumentList  $Arguments -Wait -PassThru
+            $Features = 'SQL,Tools,Polybase'
+            $Java_required  = $true
             }
-        $Features = 'SQL,Tools,Polybase'
-        $Java_required  = $true
+        else 
+            {
+            $Features = 'SQL,Polybase'
+            }
         }
 	    'SQL2012_ISO'
         {
