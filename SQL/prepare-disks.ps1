@@ -33,7 +33,7 @@ $Builddir = $PSScriptRoot
 $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
 New-Item -ItemType file  "$Builddir\$ScriptName$Logtime.log"
 ###########
-Start-Process .\fsutil.exe -ArgumentList "behavior set DisableDeleteNotify 1" -NoNewWindow -Wait
+Start-Process fsutil.exe -ArgumentList "behavior set DisableDeleteNotify 1" -NoNewWindow -Wait
 if ((Get-Disk).count -le 3)
     {
     exit 3
