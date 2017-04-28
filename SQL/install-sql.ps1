@@ -151,6 +151,7 @@ Switch ($SQLVER)
         else 
             {
             $Features = 'SQL,Polybase'
+            $Java_required  = $true
             }
         }
 	    'SQL2012_ISO'
