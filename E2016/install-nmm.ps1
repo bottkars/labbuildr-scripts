@@ -59,12 +59,14 @@ else
     {
     $Setuppath = "$SourcePath\$nmm_ver\win_x64\networkr\nwvss.exe" 
     .$Nodescriptdir\test-setup -setup NMM -setuppath $Setuppath
-	if ($nmm_ver -ge 'nmm9010')
+	if (($nmm_ver -ge 'nmm9010') -or ($nmm_ver -eq 'nmmunknown'))
 		{
-		$argumentlist = "/s /q /log `"C:\scripts\NMM_nw_install_detail.log`" InstallLevel=200 RebootMachine=0 NwGlrFeature=1 EnableExchangeGLR=1 EnableClientPush=1 WriteCacheFolder=`"C:\Program Files\EMC NetWorker\nsr\tmp\nwfs`" MountPointFolder=`"C:\Program Files\EMC NetWorker\nsr\tmp\nwfs\NetWorker Virtual File System`" BBBMountPointFolder=`"C:\Program Files\EMC NetWorker\nsr\tmp\BBBMountPoint`" SetupType=Install"
+        Write-Verbose "greater or equal unknown"
+		$argumentlist = "/s /q /log `"C:\scripts\NMM_nw_install_detail.log`" InstallLevel=200 RebootMachine=0 NwGlrFeature=1 EnableExchangeGLR=0 EnableClientPush=1 WriteCacheFolder=`"C:\Program Files\EMC NetWorker\nsr\tmp\nwfs`" MountPointFolder=`"C:\Program Files\EMC NetWorker\nsr\tmp\nwfs\NetWorker Virtual File System`" BBBMountPointFolder=`"C:\Program Files\EMC NetWorker\nsr\tmp\BBBMountPoint`" SetupType=Install"
 		}
 	else
 		{
+        Write-Verbose "less or equal unknown"
 		$argumentlist = "/s /q /log `"C:\scripts\NMM_nw_install_detail.log`" InstallLevel=200 RebootMachine=0 NwGlrFeature=1 EnableClientPush=1 WriteCacheFolder=`"C:\Program Files\EMC NetWorker\nsr\tmp\nwfs`" MountPointFolder=`"C:\Program Files\EMC NetWorker\nsr\tmp\nwfs\NetWorker Virtual File System`" BBBMountPointFolder=`"C:\Program Files\EMC NetWorker\nsr\tmp\BBBMountPoint`" SetupType=Install"
 		}
     Start-Process -Wait -FilePath $Setuppath -ArgumentList $argumentlist
