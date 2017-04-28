@@ -16,17 +16,20 @@ param(
 	'nmm8240','nmm8241','nmm8242','nmm8243','nmm8244','nmm8245',#-#
     'nmm230','nmm8231','nmm8232','nmm8233','nmm8235','nmm8236','nmm8237','nmm8238',
     'nmm8221','nmm8222','nmm8223','nmm8224','nmm8225','nmm8226',
-    'nmm8218','nmm8217','nmm8216','nmm8214','nmm8212','nmm8210'
+    'nmm8218','nmm8217','nmm8216','nmm8214','nmm8212','nmm8210',
+    'nmmunknown'
     )]
     $nmm_ver,
     $nmmusername = "NMMBackupUser",
     $nmmPassword = "Password123!",
-    $nmmdatabase = "DB1_$Env:COMPUTERNAME",  
-    $Prereq ="Prereq", 
-    $Scriptdir = '\\vmware-host\Shared Folders\Scripts',
-    $SourcePath = '\\vmware-host\Shared Folders\Sources',
-    $logpath = "c:\Scripts"
-    )
+    $nmmdatabase = "DB1_$Env:COMPUTERNAME",
+    $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
+    $SourcePath = "\\vmware-host\Shared Folders\Sources",
+    $logpath = "c:\Scripts",
+    $ex_version= "E2016",
+    $Prereq ="Prereq" 
+)
+$Nodescriptdir = "$Scriptdir\NODE"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
@@ -44,25 +47,26 @@ $SourcePath = Join-Path $SourcePath "Networker"
 $EXScriptDir = Join-Path $Scriptdir "$ex_version"
 $Domain = $env:USERDNSDOMAIN
 Write-Verbose $Domain
-
-.$NodeScriptDir\test-sharedfolders.ps1 -Folder $SourcePath
+.$Nodescriptdir\test-sharedfolders.ps1 -Folder $SourcePath
 if ($Nmm_ver -lt 'nmm85')
     {
-    $Setuppath = "$Sourcepath\$nmm_ver\win_x64\networkr\setup.exe" 
-    .$NodeScriptDir\test-setup -setup NMM -setuppath $Setuppath
+    $Setuppath = "$SourcePath\$nmm_ver\win_x64\networkr\setup.exe" 
+    .$Nodescriptdir\test-setup -setup NMM -setuppath $Setuppath
     $argumentlist = '/s /v" /qn /l*v c:\scripts\nmm.log RMEXCHDOMAIN='+$Domain+' RMEXCHUSER=NMMBackupUser RMEXCHPASSWORD=Password123! RMCPORT=6730 RMDPORT=6731"'
     start-process -filepath $Setuppath -ArgumentList $argumentlist -wait -PassThru
     }
 else
     {
-    $Setuppath = "$Sourcepath\$nmm_ver\win_x64\networkr\nwvss.exe" 
-    .$NodeScriptDir\test-setup -setup NMM -setuppath $Setuppath
-	if ($nmm_ver -ge 'nmm9010')
+    $Setuppath = "$SourcePath\$nmm_ver\win_x64\networkr\nwvss.exe" 
+    .$Nodescriptdir\test-setup -setup NMM -setuppath $Setuppath
+	if (($nmm_ver -ge 'nmm9010') -or ($nmm_ver -eq 'nmmunknown'))
 		{
-		$argumentlist = "/s /q /log `"C:\scripts\NMM_nw_install_detail.log`" InstallLevel=200 RebootMachine=0 NwGlrFeature=1 EnableExchangeGLR=1 EnableClientPush=1 WriteCacheFolder=`"C:\Program Files\EMC NetWorker\nsr\tmp\nwfs`" MountPointFolder=`"C:\Program Files\EMC NetWorker\nsr\tmp\nwfs\NetWorker Virtual File System`" BBBMountPointFolder=`"C:\Program Files\EMC NetWorker\nsr\tmp\BBBMountPoint`" SetupType=Install"
+        Write-Verbose "greater or equal unknown"
+		$argumentlist = "/s /q /log `"C:\scripts\NMM_nw_install_detail.log`" InstallLevel=200 RebootMachine=0 NwGlrFeature=1 EnableExchangeGLR=0 EnableClientPush=1 WriteCacheFolder=`"C:\Program Files\EMC NetWorker\nsr\tmp\nwfs`" MountPointFolder=`"C:\Program Files\EMC NetWorker\nsr\tmp\nwfs\NetWorker Virtual File System`" BBBMountPointFolder=`"C:\Program Files\EMC NetWorker\nsr\tmp\BBBMountPoint`" SetupType=Install"
 		}
 	else
 		{
+        Write-Verbose "less or equal unknown"
 		$argumentlist = "/s /q /log `"C:\scripts\NMM_nw_install_detail.log`" InstallLevel=200 RebootMachine=0 NwGlrFeature=1 EnableClientPush=1 WriteCacheFolder=`"C:\Program Files\EMC NetWorker\nsr\tmp\nwfs`" MountPointFolder=`"C:\Program Files\EMC NetWorker\nsr\tmp\nwfs\NetWorker Virtual File System`" BBBMountPointFolder=`"C:\Program Files\EMC NetWorker\nsr\tmp\BBBMountPoint`" SetupType=Install"
 		}
     Start-Process -Wait -FilePath $Setuppath -ArgumentList $argumentlist

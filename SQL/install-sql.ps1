@@ -21,6 +21,7 @@ param(
     $DBInstance,
     $ProductDir = "SQL",
     [switch]$DefaultDBpath,
+    [switch]$ServerCore,
     [switch]$reboot
 )
 $Nodescriptdir = "$Scriptdir\Node"
@@ -136,12 +137,15 @@ Switch ($SQLVER)
         .$NodeScriptDir\install-java.ps1 -java_ver 8 -sourcepath $sourcepath
         $SQL_BASEVER = "SQL2016"
         $SQL_BASEDir = Join-Path $ProductDir $SQL_BASEVER
-        Write-Host -ForegroundColor Magenta " ==> Installing SQL Server Management Studio"
-        $Setupcmd = 'SSMS-Setup-ENU.exe'
-        $Setuppath = "$SQL_BASEDir\$Setupcmd"
-        .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
-        $Arguments = "/install /passive /norestart"
-        Start-Process $Setuppath -ArgumentList  $Arguments -Wait -PassThru
+        if (!$ServerCore.ispresent)
+            {
+            Write-Host -ForegroundColor Magenta " ==> Installing SQL Server Management Studio"
+            $Setupcmd = 'SSMS-Setup-ENU.exe'
+            $Setuppath = "$SQL_BASEDir\$Setupcmd"
+            .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
+            $Arguments = "/install /passive /norestart"
+            Start-Process $Setuppath -ArgumentList  $Arguments -Wait -PassThru
+            }
         $Features = 'SQL,Tools,Polybase'
         $Java_required  = $true
         }
