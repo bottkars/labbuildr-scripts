@@ -19,6 +19,7 @@ $IPv6Prefix = "",
 [ValidateSet('8','24','32','48','64')]$IPv6PrefixLength = '8',
 [ipaddress]$DefaultGateway,
 [switch]$setwsman,
+$TimeZone = 'W. Europe Standard Time'
 $logpath = "c:\Scripts"
 )
 $ScriptName = $MyInvocation.MyCommand.Name
@@ -89,7 +90,7 @@ if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {
     Pause
     }
-
+Set-TimeZone $TimeZone
 Rename-Computer -NewName $DCName
 Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server' -Name fDenyTSConnections -Value 0
 Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name UserAuthentication -Value 1

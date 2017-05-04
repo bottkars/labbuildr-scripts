@@ -26,7 +26,8 @@ param(
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
     $logpath = "c:\Scripts",
 	[switch]$iscsi,
-	$Target_IP = "173"
+	$Target_IP = "173",
+    $TimeZone = 'W. Europe Standard Time'
 )
 $Nodescriptdir = "$Scriptdir\Node"
 $ScriptName = $MyInvocation.MyCommand.Name
@@ -156,6 +157,7 @@ If (!$NO_DOMAIN_JOIN.IsPresent)
 			}
 		}
 	Until ($Ping)
+    Set-TimeZone $TimeZone
 	$MyDomain = "$($Domain).$($Domainsuffix)"
 	$PlainPassword = "Password123!"
 	$password = $PlainPassword | ConvertTo-SecureString -asPlainText -Force
