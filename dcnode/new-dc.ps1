@@ -19,7 +19,7 @@ $IPv6Prefix = "",
 [ValidateSet('8','24','32','48','64')]$IPv6PrefixLength = '8',
 [ipaddress]$DefaultGateway,
 [switch]$setwsman,
-$TimeZone = 'W. Europe Standard Time'
+$TimeZone = 'W. Europe Standard Time',
 $logpath = "c:\Scripts"
 )
 $ScriptName = $MyInvocation.MyCommand.Name
