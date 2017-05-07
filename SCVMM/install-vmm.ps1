@@ -17,6 +17,7 @@ param(
     $Prereq ="Prereq",
     [string]$SysCtr = "sysctr",
     $DBInstance,
+    [switch]$ServerCore,  
     [switch]$fix_ACL,
     [switch]$hotfix_only 
 )
