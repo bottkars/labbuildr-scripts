@@ -43,7 +43,6 @@ printf " ### Configure Swift Rings \n" | tee -a $LOGFILE
 		#Current Node count disks
 		NODE_DEVICE_COUNT=$(echo $SWIFTLAYOUT | jq '.['$NODE'].swiftdisks | length')
 		NODE_IP=$(echo $SWIFTLAYOUT | jq '.['$NODE'].NODE_IP')
-		echo $NODE_IP
 
 		#Loop runs through all disks in current compute node
 		DEVICE=0

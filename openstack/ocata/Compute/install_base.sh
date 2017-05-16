@@ -4,7 +4,7 @@ LOGFILE="/tmp/os_install.log"
 INSTALLPATH=$(dirname "${BASH_SOURCE[0]}")
 LOCALNAME=$(hostname)
 LOCALIP=$(ifconfig ens160 | awk '/inet addr/{print substr($2,6)}')
-SWIFTLAYOUT='[{"NODE_TYPE":"compute","swiftdisks":["/dev/sdc","/dev/sdd"],"NODE_NAME":"ubuntu4","NODE_IP":"192.168.2.204"},{"NODE_TYPE":"compute","NODE_NAME":"ubuntu5","NODE_IP":"192.168.2.205","swiftdisks":["/dev/sdc","/dev/sdd"]},{"NODE_TYPE":"controller","NODE_NAME":"ubuntu6","NODE_IP":"192.168.2.206"}]'
+SWIFTLAYOUT=
 
 while [ $# -gt 1 ]
 do
@@ -85,4 +85,4 @@ printf "
 
 ${INSTALLPATH}/install_nova.sh $LOGFILE $CONTROLLERNAME $LOCALIP $INSTALLPATH
 ${INSTALLPATH}/install_neutron.sh $LOGFILE $CONTROLLERNAME $LOCALIP $INSTALLPATH
-${INSTALLPATH}/install_swift.sh $LOGFILE $CONTROLLERNAME $LOCALIP $INSTALLPATH $SWIFTLAYOUT
+if [ -n "$SWIFTLAYOUT" ]; then ${INSTALLPATH}/install_swift.sh $LOGFILE $CONTROLLERNAME $LOCALIP $INSTALLPATH $SWIFTLAYOUT ; fi
