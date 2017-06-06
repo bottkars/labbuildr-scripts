@@ -28,7 +28,7 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 # Test-Cluster –Node GenNode1, GenNode2, GenNode3, GenNode4–Include “Storage Spaces Direct”,Inventory,Network,”System Configuration”
 Write-Host "Enabling Spaces Direct"
 # Enable-ClusterStorageSpacesDirect
-Enable-ClusterStorageSpacesDirect -SkipEligibilityChecks -Autoconfig:$false -PoolFriendlyName S2DPool
+Enable-ClusterStorageSpacesDirect -SkipEligibilityChecks -Autoconfig:$false -PoolFriendlyName S2DPool -confirm:$false
 #Enable-ClusterS2D -S2DCacheMode Disabled
 $Domain = $env:USERDOMAIN
 $FQDN = $env:USERDNSDOMAIN
