@@ -9,6 +9,7 @@
 #requires -version 3
 [CmdletBinding()]
 param(
+    $nodes,
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
     $logpath = "c:\Scripts"
@@ -42,7 +43,10 @@ $Storagepool = $StorageSubSystem | New-StoragePool  -FriendlyName "$Domain-Pool1
 Write-Host "Building CSV Volumes with ReFS"
 
 $Storagepool | New-Volume -FriendlyName VDISK1 -PhysicalDiskRedundancy 1 -FileSystem CSVFS_REFS –Size 50GB
+if ($Nodes -ge 3)
+{
 $Storagepool | New-VOlume -FriendlyName VDISK2 -PhysicalDiskRedundancy 2 -FileSystem CSVFS_REFS –Size 50GB
 $Storagepool | New-Volume -FriendlyName VDISK3 -PhysicalDiskRedundancy 1 -FileSystem CSVFS_REFS –Size 50GB -ResiliencySettingName Parity
 $Storagepool | New-Volume -FriendlyName VDISK4 -PhysicalDiskRedundancy 2 -FileSystem CSVFS_REFS -Size 50GB -ResiliencySettingName Parity
+}
 #Set-FileIntegrity C:\ClusterStorage\Volume1 –Enable $false
