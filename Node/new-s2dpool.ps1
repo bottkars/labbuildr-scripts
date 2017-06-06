@@ -9,7 +9,7 @@
 #requires -version 3
 [CmdletBinding()]
 param(
-    $nodes,
+    $nodes = 2,
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
     $logpath = "c:\Scripts"
