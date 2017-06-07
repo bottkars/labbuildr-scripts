@@ -14,7 +14,6 @@ $SourcePath = "\\vmware-host\Shared Folders\Sources",
 $logpath = "c:\Scripts"
 )
 $Nodescriptdir = "$Scriptdir\NODE"
-$EXScriptDir = "$Scriptdir\$ex_version"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
@@ -26,8 +25,10 @@ if (!(Test-Path $logpath))
 $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ######################################################################
+$Domainnname = (get-addomain).name
+$DNS = (Get-DnsClientServerAddress -InterfaceAlias $Domainnname -AddressFamily IPv4).serveraddresses | Select-Object -First 1
 Write-Verbose "Setting Switches"
 New-VMSwitch -Name External -NetAdapterName $env:USERDOMAIN -AllowManagementOS $True -Notes "Management,VM´s and External"
 New-VMSwitch -Name Internal -SwitchType Internal -Notes "VM´s and VMHost"
 New-VMSwitch -Name Internal -SwitchType Private -Notes "VM´s only"
-
+Set-DnsClientServerAddress -InterfaceAlias $Domainnname -ServerAddresses $DNS
