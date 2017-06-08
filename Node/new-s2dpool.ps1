@@ -9,6 +9,7 @@
 #requires -version 3
 [CmdletBinding()]
 param(
+    $nodes = 2,
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
     $logpath = "c:\Scripts"
@@ -28,7 +29,8 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 # Test-Cluster –Node GenNode1, GenNode2, GenNode3, GenNode4–Include “Storage Spaces Direct”,Inventory,Network,”System Configuration”
 Write-Host "Enabling Spaces Direct"
 # Enable-ClusterStorageSpacesDirect
-Enable-ClusterS2D -S2DCacheMode Disabled
+Enable-ClusterStorageSpacesDirect -SkipEligibilityChecks -Autoconfig:$false -PoolFriendlyName S2DPool -confirm:$false
+#Enable-ClusterS2D -S2DCacheMode Disabled
 $Domain = $env:USERDOMAIN
 $FQDN = $env:USERDNSDOMAIN
 $ClusterName = (Get-Cluster .).Name
@@ -39,9 +41,14 @@ Write-Host "Creating S2D Pool for $Clusterfqdn"
 $Storagepool = $StorageSubSystem | New-StoragePool  -FriendlyName "$Domain-Pool1" -WriteCacheSizeDefault 0 -ProvisioningTypeDefault Fixed -ResiliencySettingNameDefault Mirror -PhysicalDisk ($StorageSubSystem | Get-PhysicalDisk)
 # Get-StoragePool Pool1 | Get-PhysicalDisk |? MediaType -eq SSD | Set-PhysicalDisk -Usage Journal
 Write-Host "Building CSV Volumes with ReFS"
-
-$Storagepool | New-Volume -FriendlyName VDISK1 -PhysicalDiskRedundancy 1 -FileSystem CSVFS_REFS –Size 50GB
-$Storagepool | New-VOlume -FriendlyName VDISK2 -PhysicalDiskRedundancy 2 -FileSystem CSVFS_REFS –Size 50GB
-$Storagepool | New-Volume -FriendlyName VDISK3 -PhysicalDiskRedundancy 1 -FileSystem CSVFS_REFS –Size 50GB -ResiliencySettingName Parity
-$Storagepool | New-Volume -FriendlyName VDISK4 -PhysicalDiskRedundancy 2 -FileSystem CSVFS_REFS -Size 50GB -ResiliencySettingName Parity
+foreach ($vdisk in 1..3)
+    {
+    $Storagepool | New-Volume -FriendlyName "VDISK$vdisk" -PhysicalDiskRedundancy 1 -FileSystem CSVFS_REFS –Size 50GB
+    }
+if ($Nodes -ge 3)
+{
+$Storagepool | New-VOlume -FriendlyName VDISK4 -PhysicalDiskRedundancy 2 -FileSystem CSVFS_REFS –Size 50GB
+$Storagepool | New-Volume -FriendlyName VDISK5 -PhysicalDiskRedundancy 1 -FileSystem CSVFS_REFS –Size 50GB -ResiliencySettingName Parity
+$Storagepool | New-Volume -FriendlyName VDISK6 -PhysicalDiskRedundancy 2 -FileSystem CSVFS_REFS -Size 50GB -ResiliencySettingName Parity
+}
 #Set-FileIntegrity C:\ClusterStorage\Volume1 –Enable $false
