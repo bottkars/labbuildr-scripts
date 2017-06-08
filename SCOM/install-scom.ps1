@@ -16,7 +16,8 @@ param(
     $logpath = "c:\Scripts",
     $Prereq ="Prereq",
     [string]$SysCtr = "sysctr",
-    $DBInstance 
+    $DBInstance,
+    [switch]$servercore 
 )
 $Nodescriptdir = "$Scriptdir\Node"
 $ScriptName = $MyInvocation.MyCommand.Name
@@ -48,7 +49,16 @@ $Data_Reader = "$($Domain)\SVC_SQLADM"
 $Data_Writer = "$($Domain)\SVC_SQLADM"
 $Password = "Password123!"
 $MGMTGrp = "$($Domain)Mgmt"
-$Components = "OMServer,OMConsole"
+if ($servercore.IsPresent)
+    {
+        $Components = "OMServer"
+        $Updatepatterns = ("*AMD64-Server.msp")
+    }
+else {
+ $Components = "OMServer,OMConsole"
+ $Updatepatterns = ("*AMD64-Server.msp","*AMD64-ENU-Console.msp")   
+}    
+
 $Scom_Dir = Join-Path "$SourcePath" "$SysCtr\$SC_VERSION\SCOM"
 $Scom_Update_DIr = Join-Path $Scom_Dir "SCOMUpdates"
 
@@ -77,7 +87,7 @@ Start-Process "$Setuppath" -ArgumentList "/install /components:$Components /Mana
 Write-Host  -ForegroundColor Magenta "Checking for Updates"
 if ($SC_VERSION -match "SC2016")
 	{
-	foreach ($Updatepattern in ("*AMD64-Server.msp","*AMD64-ENU-Console.msp"))
+	foreach ($Updatepattern in $Updatepatterns)
     {
     Try
         {
