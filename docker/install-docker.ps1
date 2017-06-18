@@ -11,7 +11,8 @@
 param(
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
-    $logpath = "c:\Scripts"
+    $logpath = "c:\Scripts",
+    $docker_registry = "192.168.2.40"
     <#[ValidateSet(
     '1.12.0','latest'
     )]
@@ -33,6 +34,11 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
 Install-Module -Name DockerMsftProvider -Repository PSGallery -Force
 Install-Package -Name docker -ProviderName DockerMsftProvider -Force
+$content = "
+{`"insecure-registries`":[`"$docker_registry:5000`"],
+`"allow-nondistributable-artifacts`": [`"$docker_registry:5000`"]}"
+$content | set-content c:\programdata\docker\config\daemon.json 
+
 <#
 .$Nodescriptdir\test-sharedfolders.ps1 -Folder $Sourcepath
 $Docker_Downloadfile = "docker-$($Docker_VER).zip"
