@@ -37,7 +37,7 @@ Install-Package -Name docker -ProviderName DockerMsftProvider -Force
 $content = "
 {`"insecure-registries`":[`"$($docker_registry):5000`"],
 `"allow-nondistributable-artifacts`": [`"$($docker_registry):5000`"]}"
-$content | set-content c:\programdata\docker\config\daemon.json 
+$content | set-content -Path c:\programdata\docker\config\daemon.json 
 
 <#
 .$Nodescriptdir\test-sharedfolders.ps1 -Folder $Sourcepath
