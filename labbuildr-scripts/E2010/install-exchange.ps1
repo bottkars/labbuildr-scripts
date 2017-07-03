@@ -13,7 +13,7 @@ param(
     [ValidateSet('sp3')]
     [alias('ex_sp')]$e14_sp,
     [Parameter(Mandatory=$false)]
-    [ValidateSet('ur1','ur2','ur3','ur4','ur5','ur6','ur7','ur8v2','ur9','ur10','ur11','ur12','ur13','ur14','ur15','ur16')]
+    [ValidateSet('ur1','ur2','ur3','ur4','ur5','ur6','ur7','ur8v2','ur9','ur10','ur11','ur12','ur13','ur14','ur15','ur16','ur17')]
     [alias('ex_ur')]$e14_ur,
     [Parameter(Mandatory = $false)]
     [ValidateSet('de_DE','en_US')]
