@@ -11,6 +11,7 @@
 [CmdletBinding()]
 Param
 (
+	$sourcepath = '\\vmware-host\Shared Folders\Sources\'
 )
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
