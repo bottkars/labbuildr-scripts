@@ -157,12 +157,6 @@ If (!$NO_DOMAIN_JOIN.IsPresent)
 			}
 		}
     Until ($Ping)
-    Write-Host "setting timezone to $Timezone"
-    if ($OS_Build -lt 10000)
-    { tzutil.exe /s $TimeZone}
-    else {
-    Set-TimeZone $TimeZone    
-    }
 	$MyDomain = "$($Domain).$($Domainsuffix)"
 	$PlainPassword = "Password123!"
 	$password = $PlainPassword | ConvertTo-SecureString -asPlainText -Force
@@ -181,7 +175,13 @@ If (!$NO_DOMAIN_JOIN.IsPresent)
 			}
 	#    }
 	#Until ($Domain_OK.HasSucceeded)
-	}
+    }
+Write-Host "setting timezone to $Timezone"
+if ($OS_Build -lt 10000)
+    { tzutil.exe /s $TimeZone}
+else {
+    Set-TimeZone $TimeZone    
+    }
 Write-Host -ForegroundColor Magenta "Disabling IESEC"
 $AdminKey = “HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}”
 $UserKey = “HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4b3f-8CFC-4F3A74704073}”
