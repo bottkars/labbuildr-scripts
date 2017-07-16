@@ -156,8 +156,12 @@ If (!$NO_DOMAIN_JOIN.IsPresent)
 			Pause
 			}
 		}
-	Until ($Ping)
-    Set-TimeZone $TimeZone
+    Until ($Ping)
+    if ($OS_Build -lt 10000)
+    { tzutil.exe /s $TimeZone}
+    else {
+    Set-TimeZone $TimeZone    
+    }
 	$MyDomain = "$($Domain).$($Domainsuffix)"
 	$PlainPassword = "Password123!"
 	$password = $PlainPassword | ConvertTo-SecureString -asPlainText -Force
