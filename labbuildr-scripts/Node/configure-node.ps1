@@ -158,7 +158,7 @@ If (!$NO_DOMAIN_JOIN.IsPresent)
 		}
     Until ($Ping)
     if ($OS_Build -lt 10000)
-    { tzutil.exe /s $TimeZone}
+    { tzutil.exe /s "$TimeZone"}
     else {
     Set-TimeZone $TimeZone    
     }
