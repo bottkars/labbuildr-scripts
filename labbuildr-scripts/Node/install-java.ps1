@@ -75,3 +75,16 @@ if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     Pause
     }
 Start-Process $Setuppath -ArgumentList $ArgumentList -PassThru -Wait
+
+switch ($java_ver)
+{
+    '7'
+    {
+    } 
+    '8'
+    {
+    Write-Host "Setting Java Path"    
+    [Environment]::SetEnvironmentVariable("JAVA_HOME",(Get-ItemProperty 'HKLM:\SOFTWARE\JavaSoft\Java Runtime Environment\1.8' -PSProperty JavaHome).JavaHome, "User")
+    [Environment]::SetEnvironmentVariable("JRE_HOME",(Get-ItemProperty 'HKLM:\SOFTWARE\JavaSoft\Java Runtime Environment\1.8' -PSProperty JavaHome).JavaHome, "User")        
+    }     
+}    
