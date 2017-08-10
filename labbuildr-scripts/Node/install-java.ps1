@@ -37,12 +37,12 @@ switch ($java_ver)
     '7'
     {
     Write-Verbose "Checking for Java 7"
-    if (!($Java7 = Get-ChildItem -Path $SourcePath -Filter 'jre-7*x64*'))
+    if (!($Java7 = Get-ChildItem -Path $SourcePath -Filter 'jre-7*x64*.exe'))
 	    {
 		Write-Host -ForegroundColor Yellow " ==> Java7 not found, please download from labbuildr repo"
         break
         }
-    $Java7 = Get-ChildItem -Path $SourcePath -Filter 'jre-7*x64*'	    
+    $Java7 = Get-ChildItem -Path $SourcePath -Filter 'jre-7*x64*.exe'	    
     $Java7 = $Java7 | Sort-Object -Property Name -Descending
     $SetupCMD = $Java7[0].Name
         $ArgumentList = '/s SPONSORS=DISABLE WEB_JAVA_SECURITY_LEVEL=M'
@@ -51,7 +51,7 @@ switch ($java_ver)
     '8'
     {
     Write-Verbose "Checking for Java 8"
-    if (!($Java8 = Get-ChildItem -Path $Sourcepath -Filter 'jre-8*x64*'))
+    if (!($Java8 = Get-ChildItem -Path $Sourcepath -Filter 'jre-8*x64*.exe'))
         {
 	    Write-Host -ForegroundColor Gray " ==> Java8 not found, please use receive-labjava64"
         break
