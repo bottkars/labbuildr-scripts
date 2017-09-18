@@ -42,4 +42,4 @@ Createvolume -Number 1 -Label $env:COMPUTERNAME"_DATA" -letter M
 Createvolume -Number 2 -Label $env:COMPUTERNAME"_LOG" -letter N
 Createvolume -Number 3 -Label $env:COMPUTERNAME"_TEMPDB" -letter O
 Createvolume -Number 4 -Label $env:COMPUTERNAME"_TEMPLOG" -letter P
-Start-Process .\fsutil.exe -ArgumentList "behavior set DisableDeleteNotify 0" -NoNewWindow -Wait
+Start-Process fsutil.exe -ArgumentList "behavior set DisableDeleteNotify 0" -NoNewWindow -Wait
