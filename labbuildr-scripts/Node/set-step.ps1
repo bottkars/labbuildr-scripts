@@ -11,6 +11,7 @@
 param(
 $step,
 [switch]$reboot,
+$KB,
 $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
 $SourcePath = "\\vmware-host\Shared Folders\Sources",
 $logpath = "c:\Scripts"
@@ -27,6 +28,11 @@ if (!(Test-Path $logpath))
 $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
-#.$Nodescriptdir\test-sharedfolders.ps1
+if ($KB)
+{
+.$Nodescriptdir\install-kb.ps1 -KB $KB    
+}
+
+
 New-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce -Name "Pass$step" -Value "$PSHOME\powershell.exe -Command `"New-Item -ItemType File -Path c:\scripts\$step.pass`""
 if ($reboot.IsPresent){Restart-Computer -force}
