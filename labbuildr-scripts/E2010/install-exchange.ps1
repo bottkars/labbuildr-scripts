@@ -29,7 +29,6 @@ param(
 $Nodescriptdir = "$Scriptdir\NODE"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
-$Builddir = $PSScriptRoot
 $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
 if (!(Test-Path $logpath))
     {
@@ -54,7 +53,7 @@ if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
 ## getting cu file
 if ($e14_ur)
     {
-    $Llng = $ex_lang.Substring(0,2)
+    $Lang = $ex_lang.Substring(0,2)
     $UR_Path = "$Exchange_Dir\$($ex_version)\$($e14_ur)"
     $ur_cmd = (Get-ChildItem -Path $UR_Path -Filter "*$($lang).msp").FullName
     $argument = "/update "+ '"' + $ur_cmd +'"' + " /passive"
