@@ -21,7 +21,6 @@ param(
 $Nodescriptdir = "$Scriptdir\Node"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
-$Builddir = $PSScriptRoot
 $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
 if (!(Test-Path $logpath))
     {

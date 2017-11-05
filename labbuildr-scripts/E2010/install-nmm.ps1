@@ -34,7 +34,6 @@ param(
 $Nodescriptdir = "$Scriptdir\NODE"
 $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
-$Builddir = $PSScriptRoot
 $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
 if (!(Test-Path $logpath))
     {
@@ -44,9 +43,7 @@ $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 $Nodescriptdir = Join-Path $Scriptdir "Node"
-$NWScriptDir = Join-Path $Scriptdir "nwserver"
 $SourcePath = Join-Path $SourcePath "Networker"
-$EXScriptDir = Join-Path $Scriptdir "$ex_version"
 $Domain = $env:USERDNSDOMAIN
 Write-Verbose $Domain
 .$Nodescriptdir\test-sharedfolders.ps1 -Folder $SourcePath
