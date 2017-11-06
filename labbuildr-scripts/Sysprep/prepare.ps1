@@ -14,6 +14,22 @@ Write-host -ForegroundColor Yellow "Running OS Version $OS_VER"
 $OS_Major = ([Environment]::OSVersion.Version).Major
 $OS_Build = ([Environment]::OSVersion.Version).Build
 
+Write-Host -ForegroundColor Magenta "Checking Machine Type"
+if ((Get-WmiObject -Class Win32_ComputerSystem).Manufacturer -match "VMware")    
+    {
+    Write-Host "Found VMware Virtual Machine, Checking for VMware Tools Installed"
+    $VMware_Tools_Ver = (get-itemproperty 'hklm:\software\microsoft\windows\currentversion\uninstall\*' |where-object{ $_.DisplayName -match "VMware Tools"}).Displayversion
+    If (!$VMware_Tools_Ver)
+        {
+        Write-Warning "Please Install VMware Tools!"
+        break
+        }
+    else
+        {
+        Write-Host -ForegroundColor Magenta "Found VMware Tools $VMware_Tools_Ver"
+        }
+    }
+
 $DISM_Param1 = "/online /Cleanup-Image /StartComponentCleanup /ResetBase"
 $DISM_Param2 = "/online /Cleanup-Image /SPSuperseded"
 Switch ($OS_Major)
@@ -44,21 +60,7 @@ Write-Host -ForegroundColor Magenta "==> Cleaning Image Phase 2"
 Start-Process "c:\windows\system32\Dism.exe" -ArgumentList $DISM_Param2 -Wait
 
 
-Write-Host -ForegroundColor Magenta "Checking Machine Type"
-if ((Get-WmiObject -Class Win32_ComputerSystem).Manufacturer -match "VMware")    
-    {
-    Write-Host "Found VMware Virtual Machine, Checking for VMware Tools Installed"
-    $VMware_Tools_Ver = (get-itemproperty 'hklm:\software\microsoft\windows\currentversion\uninstall\*' |where-object{ $_.DisplayName -match "VMware Tools"}).Displayversion
-    If (!$VMware_Tools_Ver)
-        {
-        Write-Warning "Please Install VMware Tools!"
-        break
-        }
-    else
-        {
-        Write-Host -ForegroundColor Magenta "Found VMware Tools $VMware_Tools_Ver"
-        }
-    }
+
 write-host "Generating Answerfile with Locale $Locale"
 $Content = get-content "$Builddir\$Version.xml"
 foreach ($Pattern in ('InputLocale','SystemLocale','UserLocale','UILanguage'))
