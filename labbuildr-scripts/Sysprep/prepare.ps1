@@ -29,6 +29,7 @@ if ((Get-WmiObject -Class Win32_ComputerSystem).Manufacturer -match "VMware")
         Write-Host -ForegroundColor Magenta "Found VMware Tools $VMware_Tools_Ver"
         }
     }
+    
 
 $DISM_Param1 = "/online /Cleanup-Image /StartComponentCleanup /ResetBase"
 $DISM_Param2 = "/online /Cleanup-Image /SPSuperseded"
