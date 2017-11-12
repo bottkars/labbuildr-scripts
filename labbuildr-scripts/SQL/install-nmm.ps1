@@ -15,7 +15,7 @@ param(
 	#[ValidateSet('nmm8221','nmm822','nmm8211','nmm8212','nmm8214','nmm8216','nmm8217','nmm8218','nmm822','nmm821','nmm300', 'nmm301', 'nmm2012', 'nmm3013', 'nmm82','nmm85','nmm85.BR1','nmm85.BR2','nmm85.BR3','nmm85.BR4','nmm90.DA','nmm9001','nmm9002')]
     [ValidateSet(
     'nmm9201','nmm9203',#-#    
-    'nmm9111','nmm9112','nmm9113',#-#   
+    'nmm9111','nmm9112','nmm9113','nmm9114','nmm9115',#-#   
 	'nmm9100','nmm9102','nmm9103','nmm9104','nmm9105','nmm9106',#-#
     'nmm9010','nmm9011','nmm9012','nmm9013','nmm9014','nmm9015','nmm9016','nmm9017','nmm9018','nmm9019',#
     'nmm90.DA','nmm9001','nmm9002','nmm9003','nmm9004','nmm9005','nmm9006','nmm9007','nmm9008',
