@@ -16,7 +16,8 @@ param(
     [ValidateSet(#'SQL2014SP1slip','SQL2012','SQL2012SP1','SQL2012SP2','SQL2012SP1SLIP','SQL2014','SQL2016',
 	'SQL2012_ISO',
 	'SQL2014SP2_ISO',
-	'SQL2016_ISO')]$SQLVER,
+    'SQL2016_ISO',
+    'SQL2017_ISO')]$SQLVER,
 	$Diskparameter = "",
     $DBInstance,
     $ProductDir = "SQL",
@@ -128,6 +129,32 @@ Switch ($SQLVER)
         $Features = 'SQL,Tools,Polybase'
         $Java_required  = $true
         }#>
+        'SQL2017_ISO'
+        {
+		$Iso_File = "SQLServer2017-x64-ENU.iso"
+        Write-Host -ForegroundColor Magenta " ==> Installing NetFramework"
+        .$NodeScriptDir\install-netframework.ps1 -net_ver 461 -sourcepath $sourcepath
+        Write-Host -ForegroundColor Magenta " ==> Installing Java"
+        .$NodeScriptDir\install-java.ps1 -java_ver 8 -sourcepath $sourcepath
+        $SQL_BASEVER = "SQL2017"
+        $SQL_BASEDir = Join-Path $ProductDir $SQL_BASEVER
+        if (!$ServerCore.ispresent)
+            {
+            Write-Host -ForegroundColor Magenta " ==> Installing SQL Server Management Studio"
+            $Setupcmd = 'SSMS-Setup-ENU.exe'
+            $Setuppath = "$SQL_BASEDir\$Setupcmd"
+            .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
+            $Arguments = "/install /passive /norestart"
+            Start-Process $Setuppath -ArgumentList  $Arguments -Wait -PassThru
+            $Features = 'SQL,Tools,Polybase'
+            $Java_required  = $true
+            }
+        else 
+            {
+            $Features = 'SQL,Polybase'
+            $Java_required  = $true
+            }
+        }        
       'SQL2016_ISO'
         {
 		$Iso_File = "SQLServer2016-x64-ENU.iso"

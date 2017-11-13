@@ -9,7 +9,7 @@
 #requires -version 3
 [CmdletBinding()]
 param(
-    [ValidateSet('SC2012_R2','SC2016')]
+    [ValidateSet('SC2012_R2','SC2016','SC1711')]
     $SC_VERSION = "SC2012_R2",
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
@@ -41,6 +41,10 @@ switch ($SC_VERSION)
         {
         $WAIK = "WAIK_10_1607"
         }
+    'SC1711'
+        {
+        $WAIK = "WAIK_10_1709"
+        }
     }
 $Setupcmd = "adksetup.exe"
 $Setuppath = "$SourcePath\$WAIK\$Setupcmd"
@@ -65,8 +69,11 @@ $Setuppath = "$SourcePath\$Prereq\$SC_VERSION\$Setupcmd"
 $SetupArgs = '/i "'+$Setuppath+'" /quiet'
 Start-Process -FilePath "msiexec.exe" -ArgumentList $SetupArgs -PassThru -Wait
 
-# NETFX 4.52 Setup
-$Setupcmd = "NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
-$Setuppath = "$SourcePath\$Prereq\$SC_VERSION\$Setupcmd"
-.$NodeScriptDir\test-setup.ps1 -setup $Setupcmd -setuppath $Setuppath
-Start-Process $Setuppath -ArgumentList "/passive /norestart" -PassThru -Wait
+if ($SC_VERSION -ne 'SC1711')
+    {
+    # NETFX 4.52 Setup
+    $Setupcmd = "NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
+    $Setuppath = "$SourcePath\$Prereq\$SC_VERSION\$Setupcmd"
+    .$NodeScriptDir\test-setup.ps1 -setup $Setupcmd -setuppath $Setuppath
+    Start-Process $Setuppath -ArgumentList "/passive /norestart" -PassThru -Wait
+    }
