@@ -25,17 +25,15 @@ if (!(Test-Path $logpath))
     New-Item -ItemType Directory -Path $logpath -Force
     }
 $Setuppath = "$SourcePath\$Program"
-    
 $SetupMsi = Get-ChildItem -Path $Setuppath
-$SetupMsi = $SetupMsi  | Select-Object -First
+$SetupMsi = $SetupMsi  | Select-Object -First 1
 $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 .$Nodescriptdir\test-sharedfolders.ps1 -folder $Sourcepath
-$Setuppath = "$SourcePath\$Program"
 .$NodeScriptDir\test-setup -setup $Program -setuppath $Setuppath
 # Start-Process -FilePath $Setuppath -ArgumentList $ArgumentList -Wait
-Start-Process msiexec.exe -ArgumentList "/i `"$Setuppath`" /qn /L*v c:\scripts\honolululog.txt SME_PORT=8088 SSL_CERTIFICATE_OPTION=generate" -Wait
+Start-Process -FilePath msiexec.exe -ArgumentList "/i `"$Setupmsi`" /qn /L*v c:\scripts\honolululog.txt SME_PORT=8088 SSL_CERTIFICATE_OPTION=generate" -Wait
 
 if ($PSCmdlet.MyInvocation.BoundParameters["verbose"].IsPresent)
     {
