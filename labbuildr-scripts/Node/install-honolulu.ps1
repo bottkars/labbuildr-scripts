@@ -9,7 +9,7 @@
 #requires -version 3
 [CmdletBinding()]
 param(
-    $Program = "*honolulu*.msi",
+    $Honolulu_setup = "*honolulu*.msi",
     $ArgumentList,
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
@@ -24,14 +24,14 @@ if (!(Test-Path $logpath))
     {
     New-Item -ItemType Directory -Path $logpath -Force
     }
-$Setuppath = "$SourcePath\$Program"
+$Setuppath = "$SourcePath\$Honolulu_setup"
 $SetupMsi = Get-ChildItem -Path $Setuppath
 $SetupMsi = $SetupMsi  | Select-Object -First 1
 $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 .$Nodescriptdir\test-sharedfolders.ps1 -folder $Sourcepath
-.$NodeScriptDir\test-setup -setup $Program -setuppath $Setuppath
+.$NodeScriptDir\test-setup -setup $Honolulu_setup -setuppath $Setuppath
 # Start-Process -FilePath $Setuppath -ArgumentList $ArgumentList -Wait
 Start-Process -FilePath msiexec.exe -ArgumentList "/i `"$Setupmsi`" /qn /L*v c:\scripts\honolululog.txt SME_PORT=8088 SSL_CERTIFICATE_OPTION=generate" -Wait
 
