@@ -52,7 +52,15 @@ Switch ($OS_Major)
         }
     10
         {
-        $Version = 'Server2016'
+        if ($OS_Build -ge 17000)
+            {
+                $Version = 'WS_INSIDER'
+            } 
+        else {
+            {
+                $Version = 'Server2016'
+            }
+        }       
         }
     }
 Write-Host -ForegroundColor Magenta "==> Starting Image Optimization Phase 1"
