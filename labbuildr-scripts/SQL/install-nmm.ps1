@@ -12,8 +12,8 @@ param(
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
     $logpath = "c:\Scripts",
-	#[ValidateSet('nmm8221','nmm822','nmm8211','nmm8212','nmm8214','nmm8216','nmm8217','nmm8218','nmm822','nmm821','nmm300', 'nmm301', 'nmm2012', 'nmm3013', 'nmm82','nmm85','nmm85.BR1','nmm85.BR2','nmm85.BR3','nmm85.BR4','nmm90.DA','nmm9001','nmm9002')]
     [ValidateSet(
+    'nmm9210',#-#    
     'nmm9201','nmm9203',#-#    
     'nmm9111','nmm9112','nmm9113','nmm9114','nmm9115',#-#   
 	'nmm9100','nmm9102','nmm9103','nmm9104','nmm9105','nmm9106',#-#
