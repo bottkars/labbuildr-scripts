@@ -42,23 +42,35 @@ $Domain = $env:USERDOMAIN
 Write-Verbose $Domain
 
 .$Nodescriptdir\test-sharedfolders.ps1 -Folder $SourcePath
-if ($Nmm_ver -lt 'nmm85')
+switch ($nmm_ver)
     {
-    $Setuppath = "$Sourcepath\$nmm_ver\win_x64\networkr\setup.exe" 
-    .$Nodescriptdir\test-setup -setup NMM -setuppath $Setuppath
-    Write-Host -ForegroundColor Magenta " ==> Doing NMM Base Install"
-    start-process -filepath "$Setuppath" -ArgumentList '/s /v" /qn /L*v c:\scripts\nmm.log'  -Wait -PassThru
-    Write-Host -ForegroundColor Magenta " ==> Doing NWVSS Install"
-    start-process -filepath "$Setuppath" -ArgumentList '/s /v" /qn /L*v c:\scripts\nmmglr.log NW_INSTALLLEVEL=200 REBOOTMACHINE=0 NW_GLR_FEATURE=1 WRITECACHEDIR="C:\Program Files\EMC NetWorker\nsr\tmp\nwfs" MOUNTPOINTDIR="C:\Program Files\EMC NetWorker\nsr\tmp\nwfs\NetWorker Virtual File System" HYPERVMOUNTPOINTDIR="C:\Program Files\EMC NetWorker\nsr\tmp" SETUPTYPE=Install"' -Wait -PassThru
-#    Write-Host -ForegroundColor Magenta " ==> Doing SSMS Plugin Install"
-#    start-process -filepath "$Setuppath" -ArgumentList '/s /v" /qn /L*v c:\scripts\nmmglr.log INSTALLLEVEL=150 SETUPTYPE=Install INSTCLIENTPUSH=1 RMCPORT=6728 RMDPORT=6729 NW_SSMS_FEATURE=1"' -Wait -PassThru
-    }
-else
-    {
-    $Setuppath = "$Sourcepath\$nmm_ver\win_x64\networkr\nwvss.exe" 
-    .$Nodescriptdir\test-setup -setup NMM -setuppath $Setuppath
-    Start-Process -Wait -FilePath $Setuppath -ArgumentList "/s /q /log `"C:\scripts\NMM_nw_install_detail.log`" InstallLevel=200 RebootMachine=0 EnableSSMS=1 EnableSSMSBackupTab=1 EnableSSMSScript=1 NwGlrFeature=1 EnableClientPush=1 WriteCacheFolder=`"C:\Program Files\EMC NetWorker\nsr\tmp\nwfs`" MountPointFolder=`"C:\Program Files\EMC NetWorker\nsr\tmp\nwfs\NetWorker Virtual File System`" BBBMountPointFolder=`"C:\Program Files\EMC NetWorker\nsr\tmp\BBBMountPoint`" SetupType=Install"
-    }
+    {($_ -lt 'nmm85')}
+        {
+        $Setuppath = "$Sourcepath\$nmm_ver\win_x64\networkr\setup.exe" 
+        .$Nodescriptdir\test-setup -setup NMM -setuppath $Setuppath
+        Write-Host -ForegroundColor Magenta " ==> Doing NMM Base Install"
+        start-process -filepath "$Setuppath" -ArgumentList '/s /v" /qn /L*v c:\scripts\nmm.log'  -Wait -PassThru
+        Write-Host -ForegroundColor Magenta " ==> Doing NWVSS Install"
+        start-process -filepath "$Setuppath" -ArgumentList '/s /v" /qn /L*v c:\scripts\nmmglr.log NW_INSTALLLEVEL=200 REBOOTMACHINE=0 NW_GLR_FEATURE=1 WRITECACHEDIR="C:\Program Files\EMC NetWorker\nsr\tmp\nwfs" MOUNTPOINTDIR="C:\Program Files\EMC NetWorker\nsr\tmp\nwfs\NetWorker Virtual File System" HYPERVMOUNTPOINTDIR="C:\Program Files\EMC NetWorker\nsr\tmp" SETUPTYPE=Install"' -Wait -PassThru
+    #    Write-Host -ForegroundColor Magenta " ==> Doing SSMS Plugin Install"
+    #    start-process -filepath "$Setuppath" -ArgumentList '/s /v" /qn /L*v c:\scripts\nmmglr.log INSTALLLEVEL=150 SETUPTYPE=Install INSTCLIENTPUSH=1 RMCPORT=6728 RMDPORT=6729 NW_SSMS_FEATURE=1"' -Wait -PassThru
+        }
+    {($_ -ge 'nmm85') -and ($_ -lt 'nmm92')}
+        {
+        $Setuppath = "$Sourcepath\$nmm_ver\win_x64\networkr\nwvss.exe" 
+        .$Nodescriptdir\test-setup -setup NMM -setuppath $Setuppath
+        Start-Process -Wait -FilePath $Setuppath -ArgumentList "/s /q /log `"C:\scripts\NMM_nw_install_detail.log`" InstallLevel=200 RebootMachine=0 EnableSSMS=1 EnableSSMSBackupTab=1 EnableSSMSScript=1 NwGlrFeature=1 EnableClientPush=1 WriteCacheFolder=`"C:\Program Files\EMC NetWorker\nsr\tmp\nwfs`" MountPointFolder=`"C:\Program Files\EMC NetWorker\nsr\tmp\nwfs\NetWorker Virtual File System`" BBBMountPointFolder=`"C:\Program Files\EMC NetWorker\nsr\tmp\BBBMountPoint`" SetupType=Install"
+        }
+    {($_ -ge 'nmm92')}
+        {
+            $Setuppath = "$Sourcepath\$nmm_ver\win_x64\networkr\nwvss.exe" 
+            .$Nodescriptdir\test-setup -setup NMM -setuppath $Setuppath
+            Start-Process -Wait -FilePath $Setuppath -ArgumentList "/s /q /log `"C:\scripts\NMM_nw_install_detail.log`" InstallLevel=150 RebootMachine=0 EnableSSMS=1 BBBMountPointFolder=`"C:\Program Files\EMC NetWorker\nsr\tmp\BBBMountPoint`" SetupType=Install"
+            
+        }
+}   
+
+
 if ($scvmm.IsPresent)
     {
     if ($nmm_ver -ge "nmm85" )
