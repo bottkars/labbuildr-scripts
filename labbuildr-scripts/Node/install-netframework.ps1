@@ -11,7 +11,7 @@
 param(
     [Parameter(ParameterSetName = "1", Mandatory = $false)]
     [ValidateSet(
-    '451','452','46','461','462'
+    '451','452','46','461','462','471'
     )][string]$Net_Ver="452",
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
