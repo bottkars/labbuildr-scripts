@@ -57,10 +57,8 @@ Switch ($OS_Major)
                 $Version = 'WS_INSIDER'
             } 
         else {
-            {
                 $Version = 'Server2016'
             }
-        }       
         }
     }
 Write-Host -ForegroundColor Magenta "==> Starting Image Optimization Phase 1"
