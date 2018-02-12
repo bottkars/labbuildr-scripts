@@ -13,7 +13,7 @@ param(
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
     $logpath = "c:\Scripts",
     [ValidateSet(
-    'nmm9210',#-#      
+    'nmm9211','nmm9210',#-#      
     'nmm9201','nmm9203',#-#  
     'nmm9111','nmm9112','nmm9113','nmm9114','nmm9115',#-#   
 	'nmm9100','nmm9102','nmm9103','nmm9104','nmm9105','nmm9106',#-#
