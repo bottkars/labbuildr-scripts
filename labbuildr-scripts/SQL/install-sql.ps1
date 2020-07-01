@@ -14,10 +14,10 @@ param(
     $logpath = "c:\Scripts",
     $Prereq ="Prereq",
     [ValidateSet(#'SQL2014SP1slip','SQL2012','SQL2012SP1','SQL2012SP2','SQL2012SP1SLIP','SQL2014','SQL2016',
-	'SQL2012_ISO',
-	'SQL2014SP2_ISO',
-    'SQL2016_ISO',
-    'SQL2017_ISO',
+	#'SQL2012_ISO',
+	#'SQL2014SP2_ISO',
+    #'SQL2016_ISO',
+    #'SQL2017_ISO',
     'SQL2019_ISO')]$SQLVER,
 	$Diskparameter = "",
     $DBInstance,
@@ -38,7 +38,7 @@ if (!(Test-Path $logpath))
 $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
-.$Nodescriptdir\test-sharedfolders.ps1 -Folder $Sourcepath
+#.$Nodescriptdir\test-sharedfolders.ps1 -Folder $Sourcepath
 ############ adding Domin Service Accounts
 $Domain = $env:USERDOMAIN
 if (!($DefaultDBpath.IsPresent))
@@ -50,7 +50,7 @@ If (!$DBInstance)
     $DBInstance = "MSSQL$Domain"
     }
 $DBInstance = $DBInstance.substring(0, [System.Math]::Min(16, $DBInstance.Length))
-$ProductDir = Join-Path $SourcePath $ProductDir
+# $ProductDir = Join-Path $SourcePath $ProductDir
 net localgroup "Backup Operators" $Domain\SVC_SQLADM /Add
 net localgroup "Administrators" $DOMAIN\SVC_SQLADM /Add
 net localgroup "Administrators" $DOMAIN\SVC_SCVMM /Add
@@ -130,33 +130,32 @@ Switch ($SQLVER)
         $Features = 'SQL,Tools,Polybase'
         $Java_required  = $true
         }#>
-        'SQL2019_ISO'
+    'SQL2019_ISO'
         {
-		$Iso_File = "SQLServer2019-x64-ENU.iso"
-        Write-Host -ForegroundColor Magenta " ==> Installing NetFramework"
-        .$NodeScriptDir\install-netframework.ps1 -net_ver 461 -sourcepath $sourcepath
-        Write-Host -ForegroundColor Magenta " ==> Installing Java"
-        .$NodeScriptDir\install-java.ps1 -java_ver 8 -sourcepath $sourcepath
-        $SQL_BASEVER = "SQL2017"
-        $SQL_BASEDir = Join-Path $ProductDir $SQL_BASEVER
-        if (!$ServerCore.ispresent)
-            {
-            Write-Host -ForegroundColor Magenta " ==> Installing SQL Server Management Studio"
-            $Setupcmd = 'SSMS-Setup-ENU.exe'
-            $Setuppath = "$SQL_BASEDir\$Setupcmd"
-            .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
-            $Arguments = "/install /passive /norestart"
-            Start-Process $Setuppath -ArgumentList  $Arguments -Wait -PassThru
-            $Features = 'SQL,Tools,Polybase'
-            $Java_required  = $true
-            }
-        else 
-            {
+		#$Iso_File = "SQLServer2019-x64-ENU.iso"
+        #Write-Host -ForegroundColor Magenta " ==> Installing NetFramework"
+        #.$NodeScriptDir\install-netframework.ps1 -net_ver 461 -sourcepath $sourcepath
+        #Write-Host -ForegroundColor Magenta " ==> Installing Java"
+        #.$NodeScriptDir\install-java.ps1 -java_ver 8 -sourcepath $sourcepath
+        $SQL_BASEVER = "SQL2019"
+        #if (!$ServerCore.ispresent)
+        #    {
+        #    Write-Host -ForegroundColor Magenta " ==> Installing SQL Server Management Studio"
+        #    $Setupcmd = 'SSMS-Setup-ENU.exe'
+        #    $Setuppath = "$SQL_BASEDir\$Setupcmd"
+        #    .$NodeScriptDir\test-setup -setup $Setupcmd -setuppath $Setuppath
+        #    $Arguments = "/install /passive /norestart"
+        #    Start-Process $Setuppath -ArgumentList  $Arguments -Wait -PassThru
+            $Features = 'SQL,Tools' #,Polybase'
+        #    $Java_required  = $true
+        #    }
+        #else 
+        #    {
             $Features = 'SQL,Polybase'
             $Java_required  = $true
-            }
+        #    }
         }        
-
+<#
         'SQL2017_ISO'
         {
 		$Iso_File = "SQLServer2017-x64-ENU.iso"
@@ -223,19 +222,20 @@ Switch ($SQLVER)
         $SQL_BASEDir = Join-Path $ProductDir $SQL_BASEVER
         $Features = 'SQL,Tools'
         }
+        #>
     }
 
-$Isopath = Join-path $SQL_BASEDir $Iso_File
-Write-Verbose $Isopath
-.$Nodescriptdir\test-setup -setup $SQL_BASEVER -setuppath $Isopath
-if (!(Test-Path "$env:USERPROFILE\Downloads\$Iso_File"))
-	{
-	Write-Host -ForegroundColor Gray "Copying $SQL_BASEVER ISO locally"
-	Copy-Item $Isopath -Destination "$env:USERPROFILE\Downloads"
-	}
-$Temp_Iso = "$env:USERPROFILE\Downloads\$Iso_File"
-$ismount = Mount-DiskImage -ImagePath $Temp_Iso -PassThru
-$Driveletter = (Get-Volume | where { $_.size -eq $ismount.Size}).driveletter
+#$Isopath = Join-path $SQL_BASEDir $Iso_File
+#Write-Verbose $Isopath
+#.$Nodescriptdir\test-setup -setup $SQL_BASEVER -setuppath $Isopath
+#if (!(Test-Path "$env:USERPROFILE\Downloads\$Iso_File"))
+#	{
+#	Write-Host -ForegroundColor Gray "Copying $SQL_BASEVER ISO locally"
+#	Copy-Item $Isopath -Destination "$env:USERPROFILE\Downloads"
+#	}
+#$Temp_Iso = "$env:USERPROFILE\Downloads\$Iso_File"
+#$ismount = Mount-DiskImage -ImagePath $Temp_Iso -PassThru
+$Driveletter = (Get-Volume | where FileSystemLabel -eq "SqlSetup_x64_ENU").DriveLetter
 $Setupcmd = "setup.exe"
 $Setuppath = "$($Driveletter):\$Setupcmd" 
 if (!($DefaultDBpath.IsPresent))
