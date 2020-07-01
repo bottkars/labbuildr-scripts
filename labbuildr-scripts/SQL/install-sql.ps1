@@ -151,8 +151,8 @@ Switch ($SQLVER)
         #    }
         #else 
         #    {
-            $Features = 'SQL,Polybase'
-            $Java_required  = $true
+            $Features = 'SQL'
+        #    $Java_required  = $true
         #    }
         }        
 <#
