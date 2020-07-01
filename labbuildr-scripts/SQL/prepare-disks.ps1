@@ -9,7 +9,7 @@
 #requires -version 3
 [CmdletBinding()]
 param (
-
+$logpath = "c:\Scripts"
 )
 
 function Createvolume {
@@ -31,7 +31,7 @@ $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
 $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
-New-Item -ItemType file  "$Builddir\$ScriptName$Logtime.log"
+New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 ###########
 Start-Process fsutil.exe -ArgumentList "behavior set DisableDeleteNotify 1" -NoNewWindow -Wait
 if ((Get-Disk).count -le 3)
