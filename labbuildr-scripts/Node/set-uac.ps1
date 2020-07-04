@@ -26,8 +26,8 @@ $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 #.$Nodescriptdir\test-sharedfolders.ps1
-Set-Service MpsSvc -StartupType Automatic
-Start-Service  MpsSvc
+# Set-Service MpsSvc -StartupType Automatic < Server 2019 no longer required
+# Start-Service  MpsSvc 
 Set-NetFirewallProfile -Profile Domain,Private -Enabled False
 write-verbose "Configuring UAC"
 set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "ConsentPromptBehaviorAdmin" -Value 00000000 
