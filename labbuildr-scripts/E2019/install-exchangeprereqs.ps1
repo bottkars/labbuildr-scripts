@@ -12,9 +12,9 @@ param(
 $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
 $SourcePath = "\\vmware-host\Shared Folders\Sources",
 $logpath = "c:\Scripts",
-$ex_version= "E2016",
+$ex_version= "E2019",
 $Prereq ="Prereq",
-$NET_VER = "452",
+$NET_VER = "48",
 $KB
 
 )
@@ -38,12 +38,19 @@ if ($KB)
 	{
 	.$Nodescriptdir\install-KB.ps1 -KB $KB -KBFolder WindowsUpdate -Sourcepath $SourcePath
 	}
-# $Setupcmd = "NDP452-KB2901907-x86-x64-AllOS-ENU.exe"
-# $Setuppath = "$Prereq_dir\$Setupcmd"
-#.$Nodescriptdir\test-setup -setup $Setupcmd -setuppath $Setuppath
-#$argumentList = "/passive /norestart"
-#Start-Process -FilePath $Setuppath -ArgumentList $argumentList -Wait -NoNewWindow
 $Setupcmd = "UcmaRuntimeSetup.exe"
+$Setuppath = "$Prereq_dir\$Setupcmd"
+.$Nodescriptdir\test-setup -setup $Setupcmd -setuppath $Setuppath
+$argumentList = "/passive /norestart"
+Start-Process -FilePath $Setuppath -ArgumentList $argumentList -Wait -NoNewWindow
+
+$Setupcmd = "vcredist11.exe"
+$Setuppath = "$Prereq_dir\$Setupcmd"
+.$Nodescriptdir\test-setup -setup $Setupcmd -setuppath $Setuppath
+$argumentList = "/passive /norestart"
+Start-Process -FilePath $Setuppath -ArgumentList $argumentList -Wait -NoNewWindow
+
+$Setupcmd = "vcredist12.exe"
 $Setuppath = "$Prereq_dir\$Setupcmd"
 .$Nodescriptdir\test-setup -setup $Setupcmd -setuppath $Setuppath
 $argumentList = "/passive /norestart"
