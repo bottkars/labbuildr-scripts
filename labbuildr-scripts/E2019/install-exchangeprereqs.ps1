@@ -13,7 +13,7 @@ $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
 $SourcePath = "\\vmware-host\Shared Folders\Sources",
 $logpath = "c:\Scripts",
 $ex_version= "E2019",
-$Prereq ="Prereq",
+$Prereq ="Prereqs",
 $NET_VER = "48",
 $KB
 
@@ -33,7 +33,7 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 $Prereq_dir = Join-Path $SourcePath $Prereq
 .$Nodescriptdir\test-sharedfolders.ps1 -folder $SourcePath
 
-.$Nodescriptdir\install-netframework.ps1 -Net_Ver $NET_VER  -scriptdir $Scriptdir -Sourcepath $SourcePath
+.$Nodescriptdir\install-netframework.ps1 -Net_Ver $NET_VER -Prereq $Prereq -scriptdir $Scriptdir -Sourcepath $SourcePath
 if ($KB)
 	{
 	.$Nodescriptdir\install-KB.ps1 -KB $KB -KBFolder WindowsUpdate -Sourcepath $SourcePath
