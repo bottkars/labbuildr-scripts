@@ -37,7 +37,7 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 $ADDomain = (get-addomain).forest
 $maildom= "@"+$ADDomain
-$BackupAdmin = "NMMBackupUser"
+$BackupAdmin = "DPSBackupUser"
 $PlainPassword = "Password123!"
 $SecurePassword = $PlainPassword | ConvertTo-SecureString -AsPlainText -Force
 $ContentSubmitters = "ContentSubmitters"

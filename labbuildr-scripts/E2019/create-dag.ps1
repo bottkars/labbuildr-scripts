@@ -11,7 +11,7 @@
 param (
 $DAGIP = ([System.Net.IPAddress])::None,
 [ValidateSet('IPv4','IPv6','IPv4IPv6')][string]$AddressFamily = 'IPv4',
-  $ex_version= "E2016",
+$ex_version= "E2019",
 $ExDatabasesBase = "C:\ExchangeDatabases",
 $ExVolumesBase = "C:\ExchangeVolumes",
 $Scriptdir = "\\vmware-host\Shared Folders\Scripts",

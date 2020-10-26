@@ -23,7 +23,7 @@ param(
     'nmmunknown'
     )]
     $nmm_ver,
-    $nmmusername = "NMMBackupUser",
+    $nmmusername = "DPSBackupUser",
     $nmmPassword = "Password123!",
     $nmmdatabase = "DB1_$Env:COMPUTERNAME",
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
@@ -52,7 +52,7 @@ if ($Nmm_ver -lt 'nmm85')
     {
     $Setuppath = "$SourcePath\$nmm_ver\win_x64\networkr\setup.exe" 
     .$Nodescriptdir\test-setup -setup NMM -setuppath $Setuppath
-    $argumentlist = '/s /v" /qn /l*v c:\scripts\nmm.log RMEXCHDOMAIN='+$Domain+' RMEXCHUSER=NMMBackupUser RMEXCHPASSWORD=Password123! RMCPORT=6730 RMDPORT=6731"'
+    $argumentlist = '/s /v" /qn /l*v c:\scripts\nmm.log RMEXCHDOMAIN='+$Domain+' RMEXCHUSER=DPSBackupUser RMEXCHPASSWORD=Password123! RMCPORT=6730 RMDPORT=6731"'
     start-process -filepath $Setuppath -ArgumentList $argumentlist -wait -PassThru
     }
 else

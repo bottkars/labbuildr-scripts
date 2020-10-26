@@ -29,7 +29,7 @@ Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 $ADDomain = (get-addomain).forest
 $maildom= "@"+$ADDomain
-$BackupAdmin = "NMMBackupUser"
+$BackupAdmin = "DPSBackupUser"
 $PlainPassword = "Password123!"
 $SecurePassword = $PlainPassword | ConvertTo-SecureString -AsPlainText -Force
 $ContentSubmitters = "ContentSubmitters"
@@ -89,7 +89,8 @@ Try
 Catch [Microsoft.ActiveDirectory.Management.ADIdentityNotFoundException]
     {
     Write-Warning "Group Not Found, now creating"
-    New-ADGroup -DisplayName $ContentSubmitters -GroupCategory Security -GroupScope Universal -Name $ContentSubmitters -SamAccountName $ContentSubmitters -Path "OU=Microsoft Exchange Security Groups,DC=$Domain,DC=local" -Description "Indexing permissions group (KB2807668)"
+    $DistinguishedName=(Get-ADDomain).DistinguishedName
+    New-ADGroup -DisplayName $ContentSubmitters -GroupCategory Security -GroupScope Universal -Name $ContentSubmitters -SamAccountName $ContentSubmitters -Path "OU=Microsoft Exchange Security Groups,$DistinguishedName" -Description "Indexing permissions group (KB2807668)"
     }
 Finally
     {
@@ -128,7 +129,7 @@ $Setuppath = "$SourcePath\$ex_version$Prereq\ExchangeMapiCdo\$Setupcmd"
 .$Nodescriptdir\test-setup -setup $Setupcmd -setuppath $Setuppath
 Start-Process $Setuppath -ArgumentList "/quiet /passive" -Wait
 ######################>
-cd c:\windows\system32\inetsrv
+set-location c:\windows\system32\inetsrv
 c:\windows\system32\inetsrv\appcmd.exe set config "Default Web Site/Powershell" -section:system.webServer/security/authentication/windowsAuthentication /useKernelMode:"False"  /commit:apphost
 
 write-output "setting exchange powershell to full language"

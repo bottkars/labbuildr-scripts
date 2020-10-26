@@ -39,7 +39,7 @@ $Database = "DB1_"+$env:COMPUTERNAME
 $Subject = "Welcome to $Domain"
 $SenderSMTP = "Administrator"+$maildom
 $Smtpserver = $env:COMPUTERNAME+$Dot+$ADDomain
-$BackupAdmin = "NMMBackupUser"
+$BackupAdmin = "DPSBackupUser"
 $Body = "Welcome to Exchange at $Domain
 Enjoy the new Features
 Try Neworker and/or Avamar with the new Environment !
@@ -138,7 +138,7 @@ If ($NewPFMailbox)
         Send-MailMessage -From $SenderSMTP -Subject "Welcome To Public Folders" -To $Folder$maildom -Body "This is Public Folder $Folder" -DeliveryNotificationOption None -SmtpServer $Smtpserver -Credential $Credential -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
         }
     }
-ipmo dnsserver
+Import-Module dnsserver
 Write-Host -ForegroundColor Yellow "Setting Up C-record for mailhost"
 If ($AddressFamily -match 'IPv4')
     {

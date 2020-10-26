@@ -11,7 +11,7 @@
 param(
     $Password = "Password123!",
     $ex_version= "E2013",
-    $BackupUser = "NMMBackupUser",
+    $BackupUser = "DPSBackupUser",
     $Scriptdir = '\\vmware-host\Shared Folders\Scripts',
     $SourcePath = '\\vmware-host\Shared Folders\Sources',
     $logpath = "c:\Scripts"

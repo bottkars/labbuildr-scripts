@@ -27,7 +27,7 @@ if (!(Test-Path $logpath))
 $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
-$BackupAdmin = "NMMBackupUser"
+$BackupAdmin = "DPSBackupUser"
 $Dot = "."
 $Domain = $Env:USERDOMAIN
 $PlainPassword = "Password123!"

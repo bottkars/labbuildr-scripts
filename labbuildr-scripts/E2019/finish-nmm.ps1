@@ -15,7 +15,7 @@ $logpath = "c:\Scripts",
 $ex_version= "E2016",
 $Prereq ="Prereq",
 $Password = "Password123!",
-$BackupUser = "NMMBackupUser"
+$BackupUser = "DPSBackupUser"
  
 )
 $Nodescriptdir = "$Scriptdir\NODE"

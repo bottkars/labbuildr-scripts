@@ -39,7 +39,7 @@ $Database = "DB1_"+$env:COMPUTERNAME
 $Subject = "Welcome to $Domain"
 $SenderSMTP = "Administrator"+$maildom
 $Smtpserver = $env:COMPUTERNAME+$Dot+$ADDomain
-$BackupAdmin = "NMMBackupUser"
+$BackupAdmin = "DPSBackupUser"
 $Body = "Welcome to Exchange at $Domain
 Enjoy the new Features
 Try Networker and/or Avamar with the new Environment !

@@ -57,11 +57,11 @@ $dclanguage = (Get-WmiObject Win32_OperatingSystem -ComputerName $Computername )
 
 
 foreach ($Client in (Get-ADComputer -Filter * | where name -match "E201*").DNSHostname) { 
-& 'C:\Program Files\EMC NetWorker\nsr\bin\nsraddadmin.exe'  -u "user=NMMBAckupUser,host=$Client"
+& 'C:\Program Files\EMC NetWorker\nsr\bin\nsraddadmin.exe'  -u "user=DPSBackupUser,host=$Client"
 }
 
 foreach ($Client in (Get-ADComputer -Filter * | where name -match "DAG").DNSHostname) { 
-& 'C:\Program Files\EMC NetWorker\nsr\bin\nsraddadmin.exe'  -u "user=NMMBAckupUser,host=$Client"
+& 'C:\Program Files\EMC NetWorker\nsr\bin\nsraddadmin.exe'  -u "user=DPSBackupUser,host=$Client"
 }
 
 foreach ($SID in (Get-ADGroup -Filter * | where name -eq $Adminuser).SID.Value) { 
