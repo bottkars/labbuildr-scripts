@@ -59,6 +59,11 @@ if ($OS_Build -le 9200)
     Import-Module ServerManager
     }
 
+Write-Host "Resizing C Partition"
+$driveletter="C"
+$Size=(Get-PartitionSupportedSize -DriveLetter $driveletter)
+Resize-Partition -DriveLetter $driveletter -Size $Size.SizeMax -ErrorAction SilentlyContinue
+
 $nics = @()
 $Nics = Get-NetAdapter | Sort-Object -Property Name
 if ($nics.Count -gt 1)
