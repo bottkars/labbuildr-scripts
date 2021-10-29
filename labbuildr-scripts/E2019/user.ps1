@@ -15,8 +15,7 @@ $IPV6Prefix,
 $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
 $SourcePath = "\\vmware-host\Shared Folders\Sources",
 $logpath = "c:\Scripts",
-$ex_version= "E2016",
-$Prereq ="Prereq" 
+$ex_version= "E2019"
 )
 $Nodescriptdir = "$Scriptdir\NODE"
 $ScriptName = $MyInvocation.MyCommand.Name
@@ -43,9 +42,8 @@ $BackupAdmin = "DPSBackupUser"
 $Body = "Welcome to Exchange at $Domain
 Enjoy the new Features
 Try Neworker and/or Avamar with the new Environment !
-... for Questions drop an email to Karsten.Bott@emc.com
-Follow me on twritter @sddc_guy
-Make sure to Rate in my Blog !
+... for Questions drop an email to Karsten.Bott@dell.com
+Follow me on twritter @azurestack_guy
 https://github.com/bottkars/labbuildr/wiki
 "
 $AttachDir =  "$SourcePath\Attachments"
