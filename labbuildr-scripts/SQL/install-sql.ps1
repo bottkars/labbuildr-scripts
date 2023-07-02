@@ -138,9 +138,10 @@ Switch ($SQLVER)
         } 
     'SQL2022_ISO'
         {
-        $SQL_BASEVER = "SQL2019"
+        $SQL_BASEVER = "SQL2022"
             $Features = 'SQL,Tools' #,Polybase'
-        } 	
+        } 
+	
 <#
         'SQL2017_ISO'
         {
