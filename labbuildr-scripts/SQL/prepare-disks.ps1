@@ -25,6 +25,7 @@ Write-Host " ==> Formatting Disk $Number"
 $Job = Format-Volume -Partition $Partition -NewFileSystemLabel $Label -AllocationUnitSize 64kb -FileSystem NTFS -Force -AsJob
 while ($JOB.state -ne "completed"){}
 $Partition | Set-Partition -NewDriveLetter $letter
+New-Item -ItemType Directory "$($Letter):\SQL\DATA" -Force
 }
 
 $ScriptName = $MyInvocation.MyCommand.Name

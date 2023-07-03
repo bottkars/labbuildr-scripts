@@ -224,7 +224,7 @@ $Setupcmd = "setup.exe"
 $Setuppath = "$($Driveletter):\$Setupcmd" 
 if (!($DefaultDBpath.IsPresent))
     {
-    $Diskparameter = "/SQLUSERDBDIR=m:\ /SQLUSERDBLOGDIR=n:\ /SQLTEMPDBDIR=o:\ /SQLTEMPDBLOGDIR=p:\"
+    $Diskparameter = "/SQLUSERDBDIR=m:\SQL\DATA /SQLUSERDBLOGDIR=n:\SQL\DATA /SQLTEMPDBDIR=o:\SQL\DATA /SQLTEMPDBLOGDIR=p:\SQL\DATA"
     }
 $Arguments = "/q /ACTION=Install /FEATURES=$Features $UpdateSource $Diskparameter /INSTANCENAME=$DBInstance /SQLSVCACCOUNT=`"$Domain\svc_sqladm`" /SQLSVCPASSWORD=`"Password123!`" /SQLSYSADMINACCOUNTS=`"$Domain\svc_sqladm`" `"$Domain\Administrator`" `"$Domain\sql_admins`" /AGTSVCACCOUNT=`"NT AUTHORITY\Network Service`" /IACCEPTSQLSERVERLICENSETERMS"
 Write-Verbose $Arguments
