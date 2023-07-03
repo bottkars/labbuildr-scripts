@@ -134,12 +134,14 @@ Switch ($SQLVER)
     'SQL2019_ISO'
         {
         $SQL_BASEVER = "SQL2019"
-            $Features = 'SQL,Tools' #,Polybase'
+            $Features = 'SQL' #,Polybase'
+	$FSLABEL="SqlSetup_x64_ENU    
         } 
     'SQL2022_ISO'
         {
         $SQL_BASEVER = "SQL2022"
-            $Features = 'SQL,Tools' #,Polybase'
+            $Features = 'SQL' #,Polybase'
+	$FSLABEL = "SQLServer2022"   
         } 
 	
 <#
@@ -222,7 +224,7 @@ Switch ($SQLVER)
 #	}
 #$Temp_Iso = "$env:USERPROFILE\Downloads\$Iso_File"
 #$ismount = Mount-DiskImage -ImagePath $Temp_Iso -PassThru
-$Driveletter = (Get-Volume | where FileSystemLabel -eq "SqlSetup_x64_ENU").DriveLetter
+$Driveletter = (Get-Volume | where FileSystemLabel -eq "$($FSLABEL)").DriveLetter
 $Setupcmd = "setup.exe"
 $Setuppath = "$($Driveletter):\$Setupcmd" 
 if (!($DefaultDBpath.IsPresent))
