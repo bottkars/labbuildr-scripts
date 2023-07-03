@@ -12,15 +12,15 @@ param(
     $Scriptdir = "\\vmware-host\Shared Folders\Scripts",
     $SourcePath = "\\vmware-host\Shared Folders\Sources",
     $logpath = "c:\Scripts",
-    $Prereq ="Prereq",
+    $Prereq = "Prereq",
     [ValidateSet(#'SQL2014SP1slip','SQL2012','SQL2012SP1','SQL2012SP2','SQL2012SP1SLIP','SQL2014','SQL2016',
-	#'SQL2012_ISO',
-	#'SQL2014SP2_ISO',
-    #'SQL2016_ISO',
-    #'SQL2017_ISO',
-    'SQL2019_ISO',
-    'SQL2022_ISO')]$SQLVER,
-	$Diskparameter = "",
+        #'SQL2012_ISO',
+        #'SQL2014SP2_ISO',
+        #'SQL2016_ISO',
+        #'SQL2017_ISO',
+        'SQL2019_ISO',
+        'SQL2022_ISO')]$SQLVER,
+    $Diskparameter = "",
     $DBInstance,
     $ProductDir = "SQL",
     [switch]$DefaultDBpath,
@@ -32,24 +32,21 @@ $ScriptName = $MyInvocation.MyCommand.Name
 $Host.UI.RawUI.WindowTitle = "$ScriptName"
 $Builddir = $PSScriptRoot
 $Logtime = Get-Date -Format "MM-dd-yyyy_hh-mm-ss"
-if (!(Test-Path $logpath))
-    {
+if (!(Test-Path $logpath)) {
     New-Item -ItemType Directory -Path $logpath -Force
-    }
+}
 $Logfile = New-Item -ItemType file  "$logpath\$ScriptName$Logtime.log"
 Set-Content -Path $Logfile $MyInvocation.BoundParameters
 ############
 #.$Nodescriptdir\test-sharedfolders.ps1 -Folder $Sourcepath
 ############ adding Domin Service Accounts
 $Domain = $env:USERDOMAIN
-if (!($DefaultDBpath.IsPresent))
-    {
-	.$Builddir\prepare-disks.ps1
-    }
-If (!$DBInstance)
-    {
+if (!($DefaultDBpath.IsPresent)) {
+    .$Builddir\prepare-disks.ps1
+}
+If (!$DBInstance) {
     $DBInstance = "MSSQL$Domain"
-    }
+}
 $DBInstance = $DBInstance.substring(0, [System.Math]::Min(16, $DBInstance.Length))
 # $ProductDir = Join-Path $SourcePath $ProductDir
 net localgroup "Backup Operators" $Domain\SVC_SQLADM /Add
@@ -58,9 +55,8 @@ net localgroup "Administrators" $DOMAIN\SVC_SCVMM /Add
 $UpdateSource = ""
 $Features = 'SQL,SSMS'
 
-Switch ($SQLVER)
-    {
-<#    'SQL2012SP1'
+Switch ($SQLVER) {
+    <#    'SQL2012SP1'
         {
         $SQL_BASEVER = "SQL2012"
         $SQL_BASEDir = Join-Path $ProductDir $SQL_BASEVER
@@ -131,16 +127,15 @@ Switch ($SQLVER)
         $Features = 'SQL,Tools,Polybase'
         $Java_required  = $true
         }#>
-    'SQL2019_ISO'
-        {
+    'SQL2019_ISO' {
         $SQL_BASEVER = "SQL2019"
-            $Features = 'SQL' #,Polybase'
-	$FSLABEL="SqlSetup_x64_ENU    
+        $Features = 'SQL' #,Polybase'
+        $FSLABEL = "SqlSetup_x64_ENU"    
         } 
     'SQL2022_ISO'
         {
         $SQL_BASEVER = "SQL2022"
-            $Features = 'SQL' #,Polybase'
+            $Features = 'SQL' #,Polybase
 	$FSLABEL = "SQLServer2022"   
         } 
 	
