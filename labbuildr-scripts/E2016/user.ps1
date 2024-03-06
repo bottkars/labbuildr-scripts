@@ -60,7 +60,7 @@ if (Test-Path $AttachDir)
     {
     [array]$Attachment = Get-ChildItem -Path $AttachDir -Recurse -Filter *.pdf
     }
-$RoleGroup = "EMC NMM Exchange Admin Roles"
+$RoleGroup = "EMC NMM Exchange Admin Roles" # EMC App Agent Exchange Admin Roles
 $Roles = ("Database Copies", "Databases", "Disaster Recovery", "Mailbox Import Export", "Mail Recipient Creation", "Mail Recipients", "View-Only Configuration", "View-Only Recipients")
 New-RoleGroup -Name $RoleGroup -DisplayName $RoleGroup -Members $BackupAdmin -Roles $Roles -Description "This role group allows its users to perform database recovery and GLR"
 Add-RoleGroupMember "Discovery Management" –Member $BackupAdmin
